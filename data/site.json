@@ -1,0 +1,93 @@
+{
+  "profile": {
+    "name": "dmj74",
+    "role": "برنامه‌نویس",
+    "tagline": "عاشق فوتبال و گیم و برنامه‌نویسی",
+    "about": "❰ GOD IS WHIT ME ❱\nFind someone who changes your life, not your instagram bio .\n꧁ⒷⓇⒶⓏⒶ ⒶⒸⒽⒾⒶ꧂",
+    "avatar": "assets/img/avatar.png"
+  },
+  "appearance": { "background": "assets/img/gallery-1.jpg", "bgOpacity": 42 },
+  "skills": [
+    {
+      "title": "بک‌اند",
+      "items": [
+        { "name": "PHP / Laravel", "level": 90 },
+        { "name": "Python / FastAPI", "level": 82 },
+        { "name": "Django", "level": 74 },
+        { "name": "PostgreSQL / MySQL", "level": 78 }
+      ]
+    },
+    {
+      "title": "فرانت‌اند",
+      "items": [
+        { "name": "HTML / CSS", "level": 92 },
+        { "name": "JavaScript", "level": 85 },
+        { "name": "React", "level": 80 }
+      ]
+    },
+    {
+      "title": "زیرساخت و ابزار",
+      "items": [
+        { "name": "Git / GitHub", "level": 88 },
+        { "name": "Docker", "level": 68 },
+        { "name": "Redis", "level": 65 },
+        { "name": "Linux", "level": 72 }
+      ]
+    }
+  ],
+  "portfolio": [
+    {
+      "title": "فروشگاه آنلاین",
+      "desc": "فروشگاه با درگاه پرداخت و پنل مدیریت.",
+      "year": "1403",
+      "type": "وب‌سایت",
+      "status": "فعال",
+      "tags": ["Laravel", "MySQL"],
+      "link": "#",
+      "cover": "assets/img/gallery-2.jpg"
+    },
+    {
+      "title": "ربات فروش تلگرام",
+      "desc": "ربات فروش و پشتیبانی خودکار.",
+      "year": "1402",
+      "type": "ربات",
+      "status": "فعال",
+      "tags": ["Python", "FastAPI"],
+      "link": "#",
+      "cover": "assets/img/gallery-3.jpg"
+    }
+  ],
+  "projects": [
+    { "title": "طراحی وب‌سایت", "desc": "طراحی و توسعه کامل وب‌سایت، از بک‌اند تا رابط کاربری.", "tags": ["PHP", "Laravel", "React"], "link": "#", "file": "" },
+    { "title": "ربات‌های تلگرامی", "desc": "ربات‌های اتوماسیون، فروش و پشتیبانی.", "tags": ["Python", "FastAPI", "Redis"], "link": "#", "file": "" },
+    { "title": "ربات‌های ترید و داشبورد مدیریتی", "desc": "ربات معامله‌گر، پنل مدیریت و گزارش‌گیری لحظه‌ای.", "tags": ["Python", "PostgreSQL", "Django"], "link": "#", "file": "" }
+  ],
+  "gallery": [
+    { "src": "assets/img/gallery-1.jpg", "caption": "شفق قطبی — والپیپر موردعلاقه" },
+    { "src": "assets/img/gallery-2.jpg", "caption": "میز کار من در شب" },
+    { "src": "assets/img/gallery-3.jpg", "caption": "شب‌های فوتبال" }
+  ],
+  "music": [
+    { "title": "آهنگ جدید", "artist": "dmj74", "cover": "assets/img/music-cover.jpg", "src": "", "duration": 212 }
+  ],
+  "interests": [
+    { "title": "فوتبال", "icon": "ball" },
+    { "title": "گیم", "icon": "gamepad" },
+    { "title": "برنامه‌نویسی", "icon": "code" },
+    { "title": "موسیقی", "icon": "music" }
+  ],
+  "socials": [
+    { "key": "telegram", "title": "تلگرام", "id": "dmj74", "url": "https://t.me/dmj74", "icon": "telegram", "color": "#2aabee", "on": true },
+    { "key": "instagram", "title": "اینستاگرام", "id": "dmj.74", "url": "https://instagram.com/dmj.74", "icon": "instagram", "color": "#e1306c", "on": true },
+    { "key": "youtube", "title": "یوتیوب", "id": "dmj 74", "url": "https://youtube.com/@dmj%2074", "icon": "youtube", "color": "#ff0033", "on": true },
+    { "key": "twitter", "title": "ایکس (توییتر)", "id": "dmj_74", "url": "https://x.com/dmj_74", "icon": "twitter", "color": "#9aa4c4", "on": true },
+    { "key": "whatsapp", "title": "واتساپ", "id": "", "url": "", "icon": "whatsapp", "color": "#25d366", "on": true }
+  ],
+  "settings": {
+    "siteTitle": "dmj74",
+    "adminUser": "admin",
+    "adminPass": "admin123",
+    "formEndpoint": "",
+    "github": { "owner": "", "repo": "", "branch": "main", "dataPath": "data/site.json", "mediaPath": "media/", "syncPath": "sync.json", "token": "" }
+  }
+}

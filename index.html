@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-theme="dark" data-accent="aurora">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>dmj74 | پروفایل</title>
+  <meta name="description" content="پروفایل شخصی dmj74 — مهارت‌ها، نمونه‌کارها، گالری تصاویر، موسیقی، پروژه‌ها و راه‌های ارتباطی.">
+  <meta name="theme-color" content="#060913">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%237c5cff'/%3E%3Cstop offset='1' stop-color='%2322d3ee'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='url(%23g)'/%3E%3Ctext x='32' y='42' font-family='sans-serif' font-size='26' font-weight='800' fill='%2308061a' text-anchor='middle'%3Ed7%3C/text%3E%3C/svg%3E">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fa_IR">
+  <meta property="og:title" content="dmj74 | پروفایل">
+  <meta property="og:description" content="مهارت‌ها، نمونه‌کارها، گالری تصاویر، موسیقی، پروژه‌ها و راه‌های ارتباطی.">
+  <meta property="og:image" content="assets/img/gallery-1.jpg">
+  <link rel="preload" href="assets/fonts/Vazirmatn-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/base.css">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+  <!-- ambient background -->
+  <div class="bg" aria-hidden="true">
+    <i class="bg__orb bg__orb--1"></i><i class="bg__orb bg__orb--2"></i><i class="bg__orb bg__orb--3"></i>
+  </div>
+  <div class="bg__img" id="bgImg" aria-hidden="true"></div>
+
+  <!-- top bar -->
+  <header class="topbar" id="topbar">
+    <div class="wrap topbar__in">
+      <a class="brand" href="#/">
+        <span class="brand__mark">d7</span>
+        <span>
+          <span class="brand__name" id="brandName">dmj74</span>
+          <span class="brand__sub" id="brandSub">برنامه‌نویس</span>
+        </span>
+      </a>
+      <div class="topbar__actions">
+        <div class="accents" id="accentDots" role="group" aria-label="تم رنگی"></div>
+        <button class="iconbtn" id="themeBtn" aria-label="تغییر حالت روشن/تاریک"></button>
+        <a class="iconbtn" href="admin.html" aria-label="پنل مدیریت" title="پنل مدیریت">
+          <svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- routed views -->
+  <main id="app"></main>
+
+  <!-- footer -->
+  <footer class="footer">
+    <div class="wrap footer__in">
+      <span class="footer__love">dmj74.ir · ساخته‌شده با <b>♥</b> — قالب «Aurora Glass»</span>
+      <span class="row" style="gap:8px">
+        <a class="chip" href="admin.html"><svg class="icon" style="width:13px;height:13px" aria-hidden="true"><use href="#i-lock"/></svg> پنل مدیریت</a>
+        <span class="chip num" id="yearChip"></span>
+      </span>
+    </div>
+  </footer>
+
+  <!-- bottom dock -->
+  <nav class="dock" aria-label="بخش‌های سایت">
+    <div class="dock__in" id="dockIn"></div>
+  </nav>
+
+  <!-- music player -->
+  <div class="player" id="player" aria-label="پخش‌کننده موسیقی">
+    <div class="wrap">
+      <div class="player__in">
+        <span class="player__cover" id="plCover"></span>
+        <span class="player__meta">
+          <span class="player__title" id="plTitle"></span>
+          <span class="player__time num" id="plTime"></span>
+        </span>
+        <span class="player__seek" id="plSeek" role="slider" aria-label="نوار پیشرفت"><i class="player__fill" id="plFill"></i></span>
+        <span class="player__btns">
+          <button class="iconbtn" id="plPlay" aria-label="پخش / توقف"></button>
+          <button class="iconbtn" id="plNext" aria-label="آهنگ بعدی"><svg class="icon" style="transform:scaleX(-1)" aria-hidden="true"><use href="#i-next"/></svg></button>
+          <button class="iconbtn" id="plClose" aria-label="بستن پخش‌کننده"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- lightbox -->
+  <div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="نمایش تصویر">
+    <figure>
+      <img id="lbImg" alt="">
+      <figcaption id="lbCap"></figcaption>
+    </figure>
+    <div class="lightbox__nav">
+      <button class="iconbtn" id="lbPrev" aria-label="تصویر قبلی"><svg class="icon" aria-hidden="true"><use href="#i-chevron"/></svg></button>
+      <button class="iconbtn" id="lbNext" aria-label="تصویر بعدی"><svg class="icon" style="transform:scaleX(-1)" aria-hidden="true"><use href="#i-chevron"/></svg></button>
+    </div>
+    <button class="iconbtn lightbox__close" id="lbClose" aria-label="بستن"><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></button>
+  </div>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+  <div class="splash" id="splash"><div class="splash__ring" role="status" aria-label="در حال بارگذاری"></div></div>
+
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
