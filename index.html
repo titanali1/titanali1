@@ -416,6 +416,9 @@ html[dir=rtl] .drawer{--dx:-100%}
 .kbd{display:inline-block;background:rgba(255,255,255,.1);border:1px solid var(--line);border-radius:6px;
   padding:1px 6px;font-size:11px;direction:ltr}
 
+/* ---------- بلوکه‌سازی spanها تا ellipsis واقعاً کار کند ---------- */
+.rtitle,.rsub,.tr-title,.tr-artist,.np-title,.np-artist,.contact-label,.contact-id{display:block}
+
 /* ---------- انیمیشن ورود کارت‌ها ---------- */
 .view.active .sec,.view.active .np,.view.active .stat{animation:secIn .5s var(--ease) both}
 .view.active .sec:nth-child(2){animation-delay:.05s}
