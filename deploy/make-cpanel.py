@@ -175,12 +175,24 @@ def main():
     # ۲) بسته‌بندی از روی ریشه
     for f in PUBLIC:
         if (ROOT / f).exists(): shutil.copyfile(ROOT / f, DIST / f)
+    # فایل chkecksum داخل زیپ نمی‌نشیند (وگرنه نسخهٔ قبلی‌اش در بسته می‌ماند)
+    for junk in list(DIST.glob('*.sha256')) + list(ROOT.glob('titanali-cpanel.zip.sha256')):
+        junk.unlink()
     z = ROOT / 'dist' / 'titanali-cpanel.zip'
     with zipfile.ZipFile(z, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
         for p in sorted(DIST.iterdir()):
             if p.is_file(): zf.write(p, p.name)
-    n = len([x for x in DIST.iterdir() if x.is_file()])
-    print('\n✔ %s  (%.1f KB، %d فایل)' % (z, z.stat().st_size / 1024, n))
+    # یک نسخه در ریشهٔ مخزن، تا لینک دانلود مستقیم داشته باشد (+/checksum)
+    import hashlib, shutil as _sh
+    root_zip = ROOT / 'titanali-cpanel.zip'
+    _sh.copyfile(z, root_zip)
+    digest = hashlib.sha256(z.read_bytes()).hexdigest()
+    (ROOT / 'titanali-cpanel.zip.sha256').write_text(digest + '  titanali-cpanel.zip\n', encoding='utf-8')
+    (DIST / 'titanali-cpanel.zip.sha256').write_text(digest + '  titanali-cpanel.zip\n', encoding='utf-8')
+    print('sha256: ' + digest)
+    with zipfile.ZipFile(z) as zf:
+        n = len([x for x in zf.namelist() if not x.endswith('/')])
+    print('\n✔ %s  (%.1f KB، %d فایل داخل بسته)' % (z, z.stat().st_size / 1024, n))
     print('  در سی‌پنل: File Manager → public_html → Upload این zip → Extract (با «Overwrite»).')
     print('  یا فقط محتویات dist/titanali-cpanel/ را در public_html کپی کنید.')
     api = ROOT / 'api.php'

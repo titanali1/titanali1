@@ -147,6 +147,19 @@ deploy/make-cpanel.py  ← سازندهٔ بسته و تصاویر (python3 depl
 
 > فایل‌های متنی ریشه با هر بار اجرای اسکریپت از `deploy/files/` کپی می‌شوند؛ پس تغییر دائمی را همان‌جا بدهید (نه فقط در ریشه).
 
+### دانلود مستقیم بسته
+| چیست | لینک |
+|---|---|
+| زیپ آماده (۱۵ فایل، کنار همان `index.html` در مخزن) | https://github.com/titanali1/titanali1/raw/arena/874bf68b-titanali1/titanali-cpanel.zip |
+| آخرین ریلیز (همیشه تازه) | https://github.com/titanali1/titanali1/releases/latest/download/titanali-cpanel.zip |
+| بررسی سلامت فایل | `titanali-cpanel.zip.sha256` کنار همان فایل (یا `sha256sum -c titanali-cpanel.zip.sha256`) |
+
+```bash
+curl -LJ -o titanali-cpanel.zip https://github.com/titanali1/titanali1/releases/latest/download/titanali-cpanel.zip
+sha256sum -c <(curl -L https://github.com/titanali1/titanali1/releases/latest/download/titanali-cpanel.zip.sha256)
+```
+> اگر زیپ را داخل `public_html` استخراج می‌کنید، بعد از استخراج همان زیپ (و پوشهٔ `deploy/`) را پاک کنید؛ در `.htaccess` با `FilesMatch` رد می‌شوند، ولی تمیزتر است.
+
 ### روش ۱ — زیپ (سریع‌ترین)
 ```bash
 python3 deploy/make-cpanel.py      # dist/titanali-cpanel.zip
