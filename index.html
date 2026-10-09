@@ -930,7 +930,7 @@ var DEFAULTS={
   ig:{user:'titanali1',url:'',sub:'طراحی و دوخت · پست و استوری روزانه',perLine:8,autoStories:1,stories:[],commenter:'مهمان'},
   quick:['قیمت پلیواری چقدر است؟','برای طرح سفارشی چقدر زمان لازم است؟','سایز و رنگ دلخواه را می‌دوزید؟'],
   messages:[],
-  settings:{lang:'fa',bg:'',grid:'3',theme:'#050409'}
+  settings:{lang:'fa',bg:'',grid:'3',theme:'#050409',api:'api.php'}
 };
 function clone(o){return JSON.parse(JSON.stringify(o))}
 function merge(base,over){var o=clone(base);for(var k in over){if(over[k]!=null)o[k]=(k==='profile'||k==='settings')?Object.assign({},base[k],over[k]):over[k]}return o}
@@ -938,6 +938,120 @@ function load(){try{var raw=localStorage.getItem(KEY);return raw?merge(DEFAULTS,
 var D=load();
 function save(){try{localStorage.setItem(KEY,JSON.stringify(D));return true}
   catch(e){toast('حافظه‌ی مرورگر پر شد — عکس‌ها را کوچک‌تر کنید یا تعدادشان را کم کنید');return false}}
+/* ================= بک‌اند اختیاری روی سرور (api.php) =================
+   اگر api.php کنار index.html باشد: محتوا، لایک/دانلود/کامنت، صندوق پیام‌ها و
+   ورود ادمین روی سرور مشترک می‌شود. اگر نباشد، همه‌چیز مثل قبل محلی است. */
+var API={on:false,setup:false,rev:-1,updated:0,writable:true,php:'',tok:'',
+  social:{likes:{},dl:{},comments:{}},threads:null,serverAdmins:null,timer:null,pushState:'idle',conflict:false,lastErr:''};
+try{API.tok=localStorage.getItem('titanali.tok')||''}catch(e){}
+function apiPath(){return (D.settings&&D.settings.api)||'api.php'}
+function taCall(action,body,method){
+  return new Promise(function(res,rej){
+    try{
+      if(typeof fetch!=='function'){rej(new Error('no-fetch'));return}
+      var h={'Accept':'application/json'};
+      if(API.tok)h['X-TA-Token']=API.tok;
+      var o={method:method||(body!=null?'POST':'GET'),cache:'no-store',headers:h};
+      if(body!=null){h['Content-Type']='application/json';o.body=JSON.stringify(body)}
+      fetch(apiPath()+'?action='+action,o).then(function(r){
+        var ct='';try{ct=(r.headers.get('content-type')||'')}catch(e){}
+        if(ct.indexOf('json')<0){var er=new Error('not-json');er.status=r.status;throw er}
+        return r.json().then(function(j){j=j||{};j.__status=r.status;res(j)})
+      }).catch(rej);
+    }catch(e){rej(e)}
+  });
+}
+function apiTok(t){API.tok=t||'';try{if(t)localStorage.setItem('titanali.tok',t);else localStorage.removeItem('titanali.tok')}catch(e){}}
+function apiSocial(s){if(!s)return;API.social={likes:s.likes||{},dl:s.dl||{},comments:s.comments||{}}}
+function ovN(b,i){var m=API.social&&API.social[b];if(!m)return 0;return Number(m[String(i)])||0}
+function likeCount(i){var g=D.gallery[i]||{};return (Number(g.likes)||0)+(API.on?ovN('likes',i):0)}
+function dlCount(i){var g=D.gallery[i]||{};return (Number(g.dl)||0)+(API.on?ovN('dl',i):0)}
+function cmtList(i){
+  var g=D.gallery[i]||{},a=(g.comments||[]).slice();
+  var s=API.on&&API.social.comments?API.social.comments[String(i)]:null;
+  if(s&&s.length)a=a.concat(s);
+  return a.sort(function(x,y){return (x.ts||0)-(y.ts||0)});
+}
+function apiMetric(i,k,d){
+  if(!API.on)return false;
+  var b=k==='like'?'likes':'dl';
+  API.social[b]=API.social[b]||{};
+  API.social[b][String(i)]=Math.max(0,(Number(API.social[b][String(i)])||0)+d);
+  taCall('metric',{i:i,k:k,d:d}).then(function(j){
+    if(j&&j.ok&&j.social)apiSocial(j.social);
+    renderIG();if($('#lightbox').classList.contains('open'))syncLB();
+  }).catch(function(){API.lastErr='metric'});
+  return true;
+}
+function apiAdopt(data){
+  if(!data||typeof data!=='object')return false;
+  D=merge(DEFAULTS,data);ensure();save();renderAll();
+  if(W){W=clone(D);renderAdmin()}
+  return true;
+}
+function apiRefresh(cb){
+  taCall('content').then(function(j){
+    if(!j||!j.ok){if(cb)cb(j);return}
+    API.rev=Number(j.rev)||0;API.updated=Number(j.updated)||0;apiSocial(j.social);
+    if(j.data&&JSON.stringify(j.data)!==JSON.stringify(D))apiAdopt(j.data);
+    if(cb)cb(j);
+  }).catch(function(e){API.on=false;API.lastErr='content';if(cb)cb({ok:false,error:'net'})});
+}
+function apiProbe(cb){
+  if(location.protocol==='file:'){if(cb)cb();return}
+  taCall('health').then(function(j){
+    if(!j||j.app!=='titanali'){API.on=false;if(cb)cb();return}
+    API.on=true;API.setup=!!j.needSetup;API.writable=j.writable!==false;API.php=j.php||'';API.rev=Number(j.rev)||0;
+    apiRefresh(function(){ logTipUpdate(); if(isAuth())apiThreads(); if(cb)cb(); });
+  }).catch(function(){API.on=false;if(cb)cb()});
+}
+var pushT=null;
+function apiQueuePush(){if(!API.on||!isAuth())return;clearTimeout(pushT);pushT=setTimeout(function(){apiPush(false,null,true)},1500)}
+function apiPush(force,cb,bg){
+  if(!API.on){toast(isFa()?'بک‌اند سرور فعال نیست — ذخیره فقط در این مرورگر ماند':'No server backend — saved locally');if(cb)cb({ok:false});return}
+  API.pushState='busy';
+  var body={data:D};
+  if(!force&&API.rev>=0)body.baseRev=API.rev;
+  taCall('content',body).then(function(j){
+    API.pushState='idle';
+    if(j&&j.ok){API.rev=Number(j.rev)||API.rev;API.conflict=false;toast(isFa()?'روی سرور هم ذخیره شد ✓ (rev '+num(API.rev)+')':'Synced to server ✓')}
+    else if(j&&(j.conflict||j.__status===409)){
+      API.rev=Number(j.rev)||API.rev;
+      if(bg){API.conflict=true;toast(isFa()?'روی سرور نسخهٔ تازه‌تری است — برای تصمیم به تب همگام‌سازی سرور بروید (محتوای شما محلی محفوظ است)':'Server has a newer revision — decide in the Sync tab');
+        if(W)renderAdmin();if(cb)cb(j);return}
+      var m=isFa()?'نسخهٔ سرور تازه‌تر است (rev '+num(API.rev)+').\n\n«تأیید» = برداشتن نسخهٔ سرور (تغییرات شما می‌رود)\n«لغو» = فرستادن نسخهٔ شما و بازنویسی سرور'
+                   :'The server has a newer revision (rev '+num(API.rev)+'). OK = take the server version, Cancel = overwrite it.';
+      var take=true;try{take=window.confirm(m)}catch(e){}
+      if(take){if(j.data)apiAdopt(j.data);toast(isFa()?'نسخهٔ سرور بارگذاری شد ✓':'Server version loaded ✓')}
+      else apiPush(true);
+    } else toast((j&&j.error)||isFa()?'خطای سرور':'Server error');
+    if(cb)cb(j);
+  }).catch(function(e){API.pushState='idle';API.lastErr='push';toast(isFa()?'ارتباط با سرور برقرار نشد ❌':'Server unreachable')});
+}
+function apiSend(text,file){
+  var body={sid:D.sid,text:text||'',to:(D.profile&&D.profile.name)||'titanali'};
+  if(file)body.file={id:file.id||'',name:file.name,type:file.type,size:file.size};
+  return taCall('send',body).catch(function(){return {ok:false,error:'net'}});
+}
+function apiPollThread(silent){
+  if(!API.on||!D.sid)return;
+  taCall('thread&sid='+encodeURIComponent(D.sid)).then(function(j){
+    if(!j||!j.ok)return;
+    var have={};D.messages.forEach(function(m){if(m.mid)have[m.mid]=1});
+    var add=(j.messages||[]).filter(function(m){return m.mid?!have[m.mid]:true});
+    if(!add.length)return;
+    add.forEach(function(m){D.messages.push({me:false,text:m.text,ts:m.ts,mid:m.mid,name:m.name,them:true})});
+    save();renderChatFull();
+    if(!silent)toast(isFa()?'پاسخ کارگاه رسید ✉':'Reply from the atelier ✉');
+  }).catch(function(){});
+}
+function apiWatch(){if(API.timer)return;API.timer=setInterval(function(){if(CUR==='chat'||!document.hidden)apiPollThread(true)},45000)}
+function apiUpload(name,type,dataUrl,w,h,cb){
+  if(!API.on){cb(null);return}
+  taCall('upload',{name:name,type:type,data:String(dataUrl||'').split(',').pop()||''}).then(function(j){
+    cb(j&&j.ok?j:null)
+  }).catch(function(){cb(null)})
+}
 function gImg(g,i){return g.img||art((i==null?0:i)+7,'ta')}
 
 /* ---------- زبان ---------- */
@@ -1081,9 +1195,23 @@ function renderChat(){renderChatFull()}
 function sendChat(){
   var ta=$('#chatText'),v=ta.value.trim();
   if(!v&&!PFILE){toast(isFa()?'متن یا فایل را بفرستید':'Write a text or attach a file');return}
-  D.messages.push({me:true,text:v,ts:Date.now(),file:PFILE||undefined,sid:D.sid});
+  var fl=PFILE;
+  D.messages.push({me:true,text:v,ts:Date.now(),file:fl||undefined,sid:D.sid});
   PFILE=null;renderPending();ta.value='';ta.style.height='auto';
   save();renderChatFull();
+  if(API.on){
+    var mine=D.messages[D.messages.length-1];
+    apiSend(v,fl).then(function(j){
+      if(j&&j.ok){
+        if(j.mid)mine.mid=j.mid;
+        if(j.sid&&j.sid!==D.sid){D.sid=j.sid;try{localStorage.setItem('titanali.sid',D.sid)}catch(e){}}
+        save();
+        toast(isFa()?'پیام به کارگاه رسید ✓ پاسخ در همین گفتگو می‌آید':'Sent ✓ the reply will appear here');
+      } else toast((j&&j.error&&j.error!=='net')?j.error:isFa()?'سرور پاسخ نداد — پیام محلی ماند':'Server unreachable — kept locally');
+      setTimeout(function(){apiPollThread(true)},1200);
+    });
+    return;
+  }
   setTimeout(function(){
     D.messages.push({me:false,text:isFa()
       ?'پیامت ثبت شد ✓ برای ارسال واقعی، دکمهٔ تلگرام یا واتساپ را بزن.'
@@ -1219,21 +1347,35 @@ function ensure(){
 function toggleLike(i,force){
   var g=D.gallery[i]; if(!g)return;
   var st=lsGet(LS_LIKE),k=String(i),on=(force==null?!st[k]:!!force);
-  if(on){st[k]=1;g.likes=(g.likes||0)+1}else{delete st[k];g.likes=Math.max(0,(g.likes||0)-1)}
-  lsSet(LS_LIKE,st); save(); renderIG(); if($('#lightbox').classList.contains('open'))syncLB();
+  if(on){st[k]=1}else{delete st[k]}
+  lsSet(LS_LIKE,st);
+  if(!apiMetric(i,'like',on?1:-1))g.likes=Math.max(0,(g.likes||0)+(on?1:-1));
+  save(); renderIG(); if($('#lightbox').classList.contains('open'))syncLB();
 }
 function burst(i){var el=$('#media-'+i);if(!el)return;el.classList.add('burst');setTimeout(function(){el.classList.remove('burst')},780)}
 function addComment(i,txt){
   var g=D.gallery[i]; if(!g||!txt)return;
-  g.comments=g.comments||[]; g.comments.push({n:(D.ig&&D.ig.commenter)||'مهمان',ts:Date.now(),txt:txt});
+  var who=(D.ig&&D.ig.commenter)||'مهمان';
+  if(API.on){
+    taCall('comment',{i:i,txt:txt,n:who,company:''}).then(function(j){
+      if(j&&j.ok){
+        API.social.comments=API.social.comments||{};
+        API.social.comments[String(i)]=j.comments||API.social.comments[String(i)]||[];
+        save();renderIG();if($('#lightbox').classList.contains('open'))syncLB();
+        toast(isFa()?'کامنت روی سرور ثبت شد ✓':'Comment saved ✓');
+      } else toast((j&&j.error)||'کامنت ثبت نشد ❌');
+    }).catch(function(){toast(isFa()?'سرور پاسخ نداد — کامنت فقط محلی ماند':'Server offline — local only');
+      g.comments=g.comments||[];g.comments.push({n:who,ts:Date.now(),txt:txt});save();renderIG()});
+    return;
+  }
+  g.comments=g.comments||[]; g.comments.push({n:who,ts:Date.now(),txt:txt});
   save(); renderIG(); if($('#lightbox').classList.contains('open'))syncLB(); toast('کامنت ثبت شد ✓')
 }
 function doDownload(i,k){
   var g=D.gallery[i]; if(!g)return;
   var url=postImgs(g,i)[k||0];
   var name=((g.t||'titanali')+'-'+((k||0)+1)).replace(/[\\/:*?"<>|\s]+/g,'-').slice(0,60)+'.jpg';
-  g.dl=(g.dl||0)+1;
-  function done(){save();renderIG();if($('#lightbox').classList.contains('open'))syncLB();toast('دانلود شد ↓')}
+  function done(){if(!apiMetric(i,'dl',1))g.dl=(g.dl||0)+1;save();renderIG();if($('#lightbox').classList.contains('open'))syncLB();toast('دانلود شد ↓')}
   if(/^data:/.test(url)){var a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();
     setTimeout(function(){a.remove()},250);done();return}
   try{
@@ -1250,20 +1392,20 @@ function sharePost(i){
   else copy(txt+'\n'+url,'متن پست کپی شد');
 }
 function actionsHTML(i,g){
-  var st=lsGet(LS_LIKE),liked=!!st[String(i)],lc=(g.comments||[]).length;
+  var st=lsGet(LS_LIKE),liked=!!st[String(i)],lc=cmtList(i).length;
   return '<button class="like'+(liked?' on':'')+'" data-like="'+i+'" aria-label="'+(liked?'برداشتن لایک':'پسندیدن')+'" title="'+(liked?'برداشتن لایک':'پسندیدن')+'">'+ic(liked?'heartF':'heart')+'</button>'+
-    '<span class="cnt">'+num(g.likes||0)+'</span>'+
+    '<span class="cnt">'+num(likeCount(i))+'</span>'+
     '<button data-cmt="'+i+'" aria-label="کامنت‌ها" title="کامنت">'+ic('chat')+'</button><span class="cnt">'+num(lc)+'</span>'+
-    '<button data-dl="'+i+'" aria-label="دانلود تصویر" title="دانلود">'+ic('dl')+'</button><span class="cnt">'+num(g.dl||0)+'</span>'+
+    '<button data-dl="'+i+'" aria-label="دانلود تصویر" title="دانلود">'+ic('dl')+'</button><span class="cnt">'+num(dlCount(i))+'</span>'+
     '<button class="sp" data-sharepost="'+i+'" aria-label="اشتراک" title="همین پست را بفرستید">'+ic('send')+'</button>';
 }
 function commentsHTML(i,g,open){
-  var list=g.comments||[];
+  var list=cmtList(i);
   return '<div class="pcom" id="cmts-'+i+'"'+(open?'':' hidden')+'>'+
     (list.length?list.slice(-12).map(function(c){
       return '<div class="cmt"><span class="ca">'+esc(String(c.n||'م').slice(0,2))+'</span>'+
         '<span class="cb"><b>'+esc(c.n||'مهمان')+'</b> '+esc(c.txt||'')+
-        '<span class="cw">'+esc(timeAgo(c.ts))+'</span></span></div>'}).join('')
+        '<span class="cw">'+esc(timeAgo(c.ts))+'</span>'+(c.id&&isAuth()?'<button class="cx" type="button" data-cdel="'+i+'" data-cid="'+escAttr(c.id)+'" aria-label="حذف کامنت">✕</button>':'')+'</span></div>'}).join('')
       :'<div class="hint" style="font-size:12px">هنوز کامنتی نیست — اولین نفر باشید.</div>')+
     '<form class="cmt-form" data-cmtform="'+i+'"><input placeholder="کامنت بگذارید…" aria-label="کامنت" maxlength="300" dir="auto">'+
     '<button type="submit">ارسال</button></form></div>';
@@ -1306,7 +1448,7 @@ function renderIG(){
         '<div class="heart-burst">'+ic('heartF',84)+'</div></div>'+
       '<div class="pact">'+actionsHTML(i,g)+'</div>'+
       ((g.t||g.desc)?'<div class="pcap"><b>'+esc(D.profile.name)+'</b>'+esc(g.t||'')+(g.desc?'\n'+esc(g.desc):'')+'</div>':'')+
-      '<div class="pstat">'+num(g.likes||0)+' پسند · '+num(g.dl||0)+' دانلود'+(ims.length>1?' · '+num(ims.length)+' تصویر':'')+'</div>'+
+      '<div class="pstat">'+num(likeCount(i))+' پسند · '+num(dlCount(i))+' دانلود'+(ims.length>1?' · '+num(ims.length)+' تصویر':'')+'</div>'+
       commentsHTML(i,g,cmtOpen(i))+
       '<div class="ig-pager"><button class="pg" data-post="-1" aria-label="پست قبلی">❮</button>'+
         '<span class="pgc">'+num(IG_AT+1)+' <i>'+t('of')+'</i> '+num(total)+'</span>'+
@@ -1412,6 +1554,7 @@ try{SESS=JSON.parse(sessionStorage.getItem('titanali.sess'))||null}catch(e){SESS
 function isAuth(){return !!(SESS&&SESS.u)}
 function loginSheet(open){
   $('#loginWrap').classList.toggle('open',open);
+  if(open)logTipUpdate();
   if(open){$('#logUser').value='';$('#logPass').value='';$('#logErr').textContent='';setTimeout(function(){$('#logUser').focus()},120)}
   document.body.style.overflow=open?'hidden':'';
 }
@@ -1422,7 +1565,12 @@ function tryLogin(u,p){
   try{sessionStorage.setItem('titanali.sess',JSON.stringify(SESS))}catch(e){}
   a.last=Date.now();save();return true;
 }
-function logout(){SESS=null;try{sessionStorage.removeItem('titanali.sess')}catch(e){}adm(false);toast('از حساب ادمین خارج شدید')}
+function logout(){
+  if(API.on&&API.tok)taCall('logout',{t:API.tok}).catch(function(){});
+  API.tok&&apiTok('');API.threads=null;SESS=null;
+  try{sessionStorage.removeItem('titanali.sess')}catch(e){}
+  adm(false);toast(isFa()?'از حساب ادمین خارج شدید':'Signed out')
+}
 function adminOnly(){if(isAuth()){adm(true);return true}loginSheet(true);return false}
 function adminsTable(){
   return (AW().admins||[]).map(function(a,i){
@@ -1450,8 +1598,15 @@ function kb(b){b=Number(b)||0;return b<1024?b+' B':(b/1024).toFixed(0)+' KB'}
 function onPickFile(f){
   if(!f)return;
   if(/^image\//.test(f.type||'')){
-    shrink(f,function(url,w,h,bytes){PFILE={name:f.name.replace(/\.\w+$/,'')+'.jpg',type:'image/jpeg',size:bytes,url:url,w:w,h:h};renderPending();
-      toast('تصویر '+w+'×'+h+' آماده شد — توضیح بنویسید و ↑ بزنید')});
+    shrink(f,function(url,w,h,bytes){
+      var nm=f.name.replace(/\.\w+$/,'')+'.jpg';
+      PFILE={name:nm,type:'image/jpeg',size:bytes,url:url,w:w,h:h};renderPending();
+      toast('تصویر '+w+'×'+h+' آماده شد — توضیح بنویسید و ↑ بزنید');
+      apiUpload(nm,'image/jpeg',url,w,h,function(j){
+        if(j&&PFILE&&PFILE.url===url){PFILE.url=j.url;PFILE.id=j.id;PFILE.size=j.size;renderPending();
+          toast(isFa()?'تصویر روی سرور هم بارگذاری شد ✓':'Uploaded to server ✓')}
+      });
+    });
     return;
   }
   if(f.size>1200*1024){toast('فایل بیشتر از ۱٫۲ مگابایت است؛ برای تصاویر، همان دکمهٔ فشرده‌سازی کار می‌کند');return}
@@ -1483,7 +1638,10 @@ function renderChatFull(){
 function AW(){return W||D}
 function inboxTable(){
   var M=AW(),list=(M.messages||[]).filter(function(m){return m.me});
-  if(!list.length)return '<div class="empty">هنوز پیامی نرسیده است. پیام‌های دریافتی کاربران همین‌جا می‌آید و می‌توانید مستقیم پاسخ دهید.</div>';
+  if(API.on&&API.threads&&API.threads.length)return serverThreads()+
+    (list.length?'<p class="hint">پیام‌های این مرورگر (محلی):</p>':'');
+  if(!list.length)return (API.on?'<div class="empty">صندوق سرور خالی است — برای گرفتن نسخهٔ محلی، از تب همگام‌سازی «صندوق از سرور» را بزنید.</div>'
+    :'<div class="empty">هنوز پیامی نرسیده است. پیام‌های دریافتی کاربران همین‌جا می‌آید و می‌توانید مستقیم پاسخ دهید.</div>');
   return '<p class="hint">پیام‌های دریافتی از پایین‌ترین؛ با «پاسخ» یک حباب از طرف کارگاه برای کاربر ثبت می‌شود و در گفتگوی همان مرورگر نمایش داده می‌شود.</p>'+
   list.map(function(m){
     var gi=M.messages.indexOf(m),answered=M.messages.some(function(x){return !x.me&&x.to===gi});
@@ -1530,6 +1688,144 @@ function igForm(){
     '<p class="hint">اینستاگرام اجازهٔ خواندن استوری/پست از مرورگر (بدون سرور و توکن) نمی‌دهد؛ بنابراین <b>تلاش برای خواندن</b> معمولاً با خطای CORS تمام می‌شود. راه‌های کارکرد: ۱) پاسخ Graph API را در کادر بالا Paste کنید ۲) استوری‌ها را دستی/خودکار از طرح‌ها بسازید ۳) یک پروکسی کوچک سمت سرور بگذارید (endpoint را در همین تابع عوض می‌کنید).</p>';
 }
 
+/* ================= پنل: همگام‌سازی با سرور ================= */
+function srvBadge(){
+  if(!API.on)return '<span class="pill no">محلی</span>';
+  return API.setup?'<span class="pill no">نیازمند نصب</span>':(API.writable?'<span class="pill ok">متصل به سرور</span>':'<span class="pill no">پوشهٔ سرور نوشتنی نیست</span>');
+}
+function serverThreads(){
+  var T=API.threads||[];
+  if(!T.length)return '<div class="empty">صندوق مشترک سرور خالی است.</div>';
+  var tot=0;T.forEach(function(t){tot+=t.unreadForAdmin||0});
+  return '<p class="hint">📬 صندوق مشترک: '+num(T.length)+' گفتگو · '+num(tot)+' بی‌خوانده. پاسخ فقط روی سرور می‌نشیند و در گفتگوی همان بازدیدکننده ظاهر می‌شود.</p>'+
+    T.map(function(t){
+      var items=(t.items||[]).slice().reverse();
+      return '<div class="inbox-item"><span class="ii"><div class="meta"><span>#'+esc(t.sid)+'</span><span>'+num(t.n)+' پیام</span><span>'+esc(timeAgo(t.last))+'</span>'+
+        (t.unreadForAdmin?'<span class="pill no">'+num(t.unreadForAdmin)+' تازه</span>':'<span class="pill ok">خوانده</span>')+'</div>'+
+        items.map(function(m){return '<div class="txt">'+(m.from==='admin'?'<b>کارگاه: </b>':'')+esc(m.text||'')+
+          (m.file?' <a href="'+escAttr(m.file.id?('api.php?action=file&f='+m.file.id):'#')+'" target="_blank" rel="noopener">📎 '+esc(m.file.name||'فایل')+'</a>':'')+'</div>'}).join('')+
+        '<div class="rep-form" data-srep="'+escAttr(t.sid)+'"><textarea placeholder="پاسخ کارگاه…" dir="auto"></textarea><div class="form-actions">'+
+        '<button class="pbtn primary" type="button" data-ssend="'+escAttr(t.sid)+'">ارسال پاسخ</button>'+
+        '<button class="pbtn" type="button" data-sread="'+escAttr(t.sid)+'">خوانده شد</button>'+
+        '<button class="pbtn" type="button" data-sdel="'+escAttr(t.sid)+'">حذف گفتگو</button></div></div></span></div>'}).join('');
+}
+function apiThreads(cb){
+  if(!API.on||!isAuth()){if(cb)cb();return}
+  taCall('inbox').then(function(j){
+    if(j&&j.ok){API.threads=j.threads||[];API.unread=Number(j.unread)||0;
+      var b=$('#chatBadge');if(b){/* نشانگر ادمین در خود پنل دیده می‌شود */}
+      if(admTab==='inbox'||admTab==='sync')renderAdmin();
+    } else if(j&&j.__status===401)toast(isFa()?'نشست سرور تمام شده — دوباره وارد شوید':'Server session expired');
+    if(cb)cb();
+  }).catch(function(){if(cb)cb()});
+}
+function syncPane(){
+  var h='<div class="row-card"><div class="row-head"><span class="n">◈</span><span class="size-note">وضعیت بک‌اند</span>'+srvBadge()+'</div>'+
+    '<p style="font-size:13px;line-height:2.05">آدرس: <code>'+esc(apiPath())+'</code><br>'+
+    'نسخهٔ سرور: '+(API.rev>=0?'rev '+num(API.rev):'—')+(API.updated?' · آخرین تغییر '+esc(timeAgo(API.updated*1000)):'')+'<br>'+
+    'PHP سرور: '+esc(API.php||'—')+' · پوشهٔ داده: '+(API.writable?'قابل نوشتن ✓':'✗ (مجوز ۷۷ لازم است)')+'<br>'+
+    (API.pushState==='busy'?'در حال ارسال…':'ذخیرهٔ محلی: همیشه کار می‌کند؛'+(API.on?' همگام‌سازی خودکار پس از «ذخیره» فعال است.':' همگام‌سازی خاموش.'))+
+    (API.conflict?'<br><b>⚠ تعارض نسخه:</b> سرور یک ویرایش تازه‌تر دارد. «⬆ فرستادن محتوا» نسخهٔ شما را بازنویسی می‌کند، «⬇ گرفتن از سرور» نسخهٔ سرور را می‌آورد.':'')+'</p>'+
+    '<div class="form-actions"><button class="pbtn" type="button" data-apibtn="test">↻ تست اتصال</button>'+
+    '<button class="pbtn primary" type="button" data-apibtn="push">⬆ فرستادن محتوا به سرور</button>'+
+    '<button class="pbtn" type="button" data-apibtn="pull">⬇ گرفتن از سرور</button>'+
+    '<button class="pbtn" type="button" data-apibtn="inbox">📥 صندوق از سرور</button>'+
+    '<button class="pbtn" type="button" data-apibtn="export">🧾 خروجی کامل (با پیام‌ها)</button>'+
+    '<button class="pbtn" type="button" data-apibtn="pushpw">🔑 رمز ادمین‌ها روی سرور</button>'+
+    '<button class="pbtn" type="button" data-apibtn="logout">خروج از نشست سرور</button></div></div>';
+  if(API.setup){
+    h+='<div class="row-card"><div class="row-head"><span class="n">۱</span><span class="size-note">نصب روی سرور (یک بار)</span></div>'+
+      '<p class="hint">هنوز هیچ ادمینی روی این سرور ساخته نشده. با فرم زیر، رمز ادمین سمت سرور (bcrypt) ساخته می‌شود و از این پس ورود با همان رمز است — محتوای فعلی هم به سرور فرستاده می‌شود.</p>'+
+      '<div class="row2"><label class="field"><span>نام کاربری</span><input id="suUser" value="admin" autocomplete="username"></label>'+
+      '<label class="field"><span>رمز (حداقل ۸ کاراکتر)</span><input id="suPass" type="password" autocomplete="new-password" placeholder="••••••••"></label></div>'+
+      '<label class="field"><span>نام نمایشی</span><input id="suName" value="ادمین اصلی"></label>'+
+      '<div class="form-actions"><button class="pbtn primary" type="button" data-apibtn="install">ساخت ادمین سرور و فرستادن محتوا</button></div></div>';
+  }
+  h+='<p class="hint">⚠ ورود ادمین روی سرور امن است (هش + توکن ۱۲ ساعته)، اما تا وقتی نصب نکنید، رمز پیش‌فرض در خودِ <code>DEFAULTS.admins</code> نوشته شده و در سورس دیده می‌شود. پوشهٔ <code>titanali-data/</code> با .htaccess بسته می‌شود؛ اگر AllowOverride روی هاست خاموش باشد، همین پوشه را بیرون از public_html بسازید و در <code>titanali-config.php</code> آدرسش را بدهید.</p>';
+  if(API.on&&API.threads)h+='<div class="row-card"><div class="row-head"><span class="n">📬</span><span class="size-note">صندوق مشترک</span></div>'+serverThreads()+'</div>';
+  return h;
+}
+function apiInstall(){
+  var u=$('#suUser'),pp=$('#suPass'),nm=$('#suName');
+  if(!u||!pp)return;
+  var uu=String(u.value).trim(),pw=String(pp.value);
+  if(uu.length<3){toast(isFa()?'نام کاربری حداقل ۳ حرف ❌':'Too short');return}
+  if(pw.length<8){toast(isFa()?'رمز سرور حداقل ۸ کاراکتر ❌':'Password too short');return}
+  taCall('install',{u:uu,p:pw,name:nm?String(nm.value).trim():'',data:D}).then(function(j){
+    if(j&&j.ok&&j.token){apiTok(j.token);SESS={u:j.user,name:j.name,server:true};
+      try{sessionStorage.setItem('titanali.sess',JSON.stringify(SESS))}catch(e){}
+      API.setup=false;API.conflict=false;API.rev=Number(j.rev)||0;
+      $('#admWho').textContent='👤 '+(j.name||j.user);toast(j.msg||'نصب شد ✓');renderAdmin();
+    } else toast((j&&j.error)||isFa()?'نصب نشد ❌':'Install failed');
+  }).catch(function(){toast(isFa()?'سرور پاسخ نداد ❌':'Server unreachable')});
+}
+function apiAdminPush(setPw){
+  if(!API.on||!isAuth()){toast(isFa()?'ابتدا روی سرور نصب و وارد شوید':'Install and sign in first');return}
+  var err='';
+  taCall('admins').then(function(j){
+    var cur=(j&&j.ok&&j.admins)||[],map={};cur.forEach(function(a){map[a.u]=a});
+    API.serverAdmins=cur;
+    var list=((W&&W.admins)||D.admins||[]).filter(function(a){return a&&a.u});
+    var chain=Promise.resolve(),n=0;
+    function push(o){chain=chain.then(function(){return taCall('admins',o).then(function(r){
+      if(r&&r.ok)n++; else err=(r&&r.error)||'خطای سرور';return r})})}
+    list.forEach(function(a){
+      if(!map[a.u])push({op:'add',u:a.u,p:a.p||'',name:a.name||a.u});
+      else if(setPw&&a.p)push({op:'pw',u:a.u,p:a.p});
+    });
+    cur.forEach(function(a){ if(!list.some(function(x){return x.u===a.u}))push({op:'remove',u:a.u}) });
+    return chain;
+  }).then(function(){
+    if(n||err)toast(err?('آخرین خطا: '+err):('ادمین‌ها روی سرور به‌روز شد ✓ ('+num(n)+' تغییر)'));
+    else toast(isFa()?'ادمین‌ها هم‌سان است ✓':'In sync');
+    if(W){W=clone(D);renderAdmin()}
+  }).catch(function(){toast(isFa()?'همگام‌سازی ادمین‌ها نشد ❌':'Failed')});
+}
+function apiBtn(k){
+  if(k==='test'){
+    toast(isFa()?'در حال بررسی…':'Checking…');
+    taCall('health').then(function(j){
+      if(j&&j.app==='titanali'){API.on=true;API.setup=!!j.needSetup;API.writable=j.writable!==false;API.php=j.php||'';API.rev=Number(j.rev)||0;
+        toast(isFa()?'اتصال برقرار ✓ (rev '+num(API.rev)+')':'Connected ✓');
+        apiRefresh(function(){logTipUpdate();if(W){W=clone(D);renderAdmin()}});
+      } else toast(isFa()?'api.php پاسخ JSON نداد — PHP روی هاست فعال است؟':'api.php did not return JSON — is PHP enabled?');
+    }).catch(function(){API.on=false;toast(isFa()?'سرور پیدا نشد ❌':'Server not found');if(W)renderAdmin()});
+    return;
+  }
+  if(k==='pull'){
+    taCall('content').then(function(j){
+      if(j&&j.ok&&j.data){apiSocial(j.social);API.rev=Number(j.rev)||API.rev;API.updated=Number(j.updated)||0;
+        apiAdopt(j.data);W=clone(D);renderAdmin();toast(isFa()?'نسخهٔ سرور بارگذاری شد ✓ (rev '+num(API.rev)+')':'Pulled ✓');
+      } else toast(isFa()?'محتوایی روی سرور نیست':'No content on the server');
+    }).catch(function(){toast(isFa()?'سرور پاسخ نداد ❌':'Server unreachable')});
+    return;
+  }
+  if(k==='push'){apiPush(true);return}
+  if(k==='inbox'){apiThreads(function(){toast(API.threads?(num(API.threads.length)+' گفتگو از سرور گرفته شد ✓'):'سرور پاسخ نداد ❌');if(W)renderAdmin()});return}
+  if(k==='export'){
+    taCall('export').then(function(j){
+      if(!j||!j.ok){toast((j&&j.error)||isFa()?'خطا':'Error');return}
+      try{
+        var blob=new Blob([JSON.stringify(j,null,2)],{type:'application/json'});
+        var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='titanali-server.json';
+        document.body.appendChild(a);a.click();
+        setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},300);
+        toast(isFa()?'خروجی کامل دانلود شد ✓':'Export downloaded');
+      }catch(e){toast(isFa()?'دانلود نشد ❌':'Download failed')}
+    }).catch(function(){toast(isFa()?'سرور پاسخ نداد ❌':'Server unreachable')});
+    return;
+  }
+  if(k==='logout'){taCall('logout',{t:API.tok});apiTok('');toast(isFa()?'نشست سرور بسته شد':'Server session closed');if(W)renderAdmin();return}
+  if(k==='install'){apiInstall();return}
+  if(k==='pushpw'){apiAdminPush(true);return}
+}
+function logTipUpdate(){
+  var tp=$('#logTip');if(!tp)return;
+  tp.innerHTML=API.on
+    ?(API.setup?'سرور شناسایی شد (<code>'+esc(apiPath())+'</code>) اما ادمینی ندارد — با رمز محلی وارد شوید و از تب «همگام‌سازی سرور» نصب کنید.'
+             :'ورود با نام کاربری و رمزی که روی <b>سرور</b> ساختید بررسی می‌شود (اگر سرور در دسترس نباشد، فهرست محلی <code>DEFAULTS.admins</code> امتحان می‌شود).')
+    :'رمز پیش‌فرض در همین فایل نوشته شده: <code>DEFAULTS.admins</code> (کاربر <code>admin</code>). برای امنیت واقعی، <code>api.php</code> را روی هاست بگذارید و از تب همگام‌سازی نصب کنید.';
+}
 var ADM_TABS=[
   {k:'gallery',lab:'طرح‌ها (عکس، توضیح، پست)'},
   {k:'cats',lab:'دسته‌ها'},
@@ -1537,6 +1833,7 @@ var ADM_TABS=[
   {k:'instagram',lab:'اینستاگرام'},
   {k:'profile',lab:'کارگاه'},
   {k:'admins',lab:'🔐 ادمین‌ها'},
+  {k:'sync',lab:'🔄 همگام‌سازی سرور'},
   {k:'stats',lab:'آمار'},
   {k:'hobbies',lab:'برچسب‌ها'},
   {k:'contacts',lab:'تماس‌ها'},
@@ -1579,7 +1876,8 @@ function renderAdmin(){
   $('#admTabs').innerHTML=ADM_TABS.map(function(x){
     return '<button class="adm-tab'+(admTab===x.k?' on':'')+'" data-adm-tab="'+x.k+'">'+x.lab+'</button>'}).join('');
   var pane='';
-  if(admTab==='inbox'){pane=inboxTable()}
+  if(admTab==='sync'){pane=syncPane()}
+  else if(admTab==='inbox'){pane=inboxTable()}
   else if(admTab==='admins'){pane=adminsTable()}
   else if(admTab==='instagram'){pane=igForm()}
   else if(admTab==='gallery'){
@@ -1604,6 +1902,7 @@ function renderAdmin(){
       '<option value="3"'+(gridMode()==='3'?' selected':'')+'>سه ستون</option>'+
       '<option value="2"'+(gridMode()==='2'?' selected':'')+'>دو ستون (بزرگ‌تر)</option></select></label>'+
       '<label class="field"><span>آدرس تصویر پس‌زمینه (خالی = گرادیان)</span><input id="admBg" value="'+escAttr(D.settings.bg||'')+'" placeholder="https://…/bg.jpg"></label>'+
+      '<label class="field"><span>آدرس بک‌اند (خالی = بدون سرور)</span><input id="admApi" value="'+escAttr(D.settings.api==null?'api.php':D.settings.api)+'" placeholder="api.php"></label>'+
       '<label class="field"><span>رنگ تم</span><input id="admTheme" value="'+esc(D.settings.theme||'#050409')+'"></label>'+
       '<label class="field"><span>متن فوتر (خالی = پیش‌فرض)</span><input id="admFoot" value="'+escAttr(D.settings.foot||'')+'"></label>'+
       '<p class="hint">همه‌ی تغییرات فقط در همین مرورگر (localStorage) ذخیره می‌شود و به جایی ارسال نمی‌شود. برای انتقال به سایت، «خروجی JSON» را بگیرید.</p>';
@@ -1670,6 +1969,7 @@ function admSave(){
     W.settings.lang=$('#admLang').value;W.settings.bg=$('#admBg').value.trim();
     W.settings.theme=$('#admTheme').value.trim();W.settings.grid=$('#admGrid').value;
     var f=$('#admFoot').value.trim();if(f)W.settings.foot=f;else delete W.settings.foot;
+    var ap=$('#admApi');if(ap){var av=ap.value.trim();if(av)W.settings.api=av;else delete W.settings.api;}
   }else if(admTab==='stats'||admTab==='hobbies'||admTab==='contacts'){
     var j=$('#admJson');
     try{W[admTab]=JSON.parse(j.value)}catch(e){toast('JSON نامعتبر است ❌');return}
@@ -1679,7 +1979,7 @@ function admSave(){
   if(galFilter!=='all'&&!W.cats.some(function(c){return c.t===galFilter}))galFilter='all';
   if(admTab==='admins'&&SESS)SESS.u=(W.admins.filter(function(x){return x.name===SESS.name})[0]||W.admins[0]).u;
   D=W;
-  if(save()){renderAll();toast(t('saved'));if($('#adminPanel').classList.contains('open'))renderAdmin()}
+  if(save()){renderAll();toast(t('saved'));if($('#adminPanel').classList.contains('open'))renderAdmin();apiQueuePush()}
 }
 function admExport(){
   try{
@@ -1798,11 +2098,38 @@ document.addEventListener('click',function(e){
   if(near('#admExport')){admExport();return}
   if(near('#admImport')){$('#admFile').click();return}
   if(near('#admReset')){admReset();return}
+  var ab=near('[data-apibtn]'); if(ab){apiBtn(ab.dataset.apibtn);return}
+  var ss=near('[data-ssend]');
+  if(ss){var rf=ss.closest&&ss.closest('[data-srep]'),tx=rf&&rf.querySelector('textarea');
+    var rv=tx?String(tx.value).trim():'';
+    if(!rv){toast(isFa()?'متن پاسخ را بنویسید':'Write a reply');return}
+    taCall('reply',{sid:ss.dataset.ssend,text:rv}).then(function(j){
+      if(j&&j.ok){toast(isFa()?'پاسخ فرستاده شد ✓ پاسخ در گفتگوی همان کاربر می‌نشیند':'Reply sent ✓');apiThreads()}
+      else toast((j&&j.error)||isFa()?'فرستاده نشد ❌':'Failed');
+    }).catch(function(){toast(isFa()?'سرور پاسخ نداد ❌':'Server unreachable')});return}
+  var sr=near('[data-sread]');
+  if(sr){taCall('read',{sid:sr.dataset.sread}).then(function(){apiThreads()});return}
+  var sd=near('[data-sdel]');
+  if(sd){var okc=true;try{okc=window.confirm(isFa()?'همهٔ پیام‌های این گفتگو حذف شود؟':'Delete this whole thread?')}catch(e){}
+    if(okc)taCall('thread_del',{sid:sd.dataset.sdel}).then(function(){apiThreads()});return}
+  var cd=near('[data-cdel]');
+  if(cd){var ci=Number(cd.dataset.cdel),cid=cd.dataset.cid;
+    taCall('comment_del',{i:ci,id:cid}).then(function(j){
+      if(j&&j.ok){var a=(API.social.comments||{})[String(ci)]||[];
+        API.social.comments[String(ci)]=a.filter(function(x){return x.id!==cid});
+        save();renderIG();if($('#lightbox').classList.contains('open'))syncLB();toast(isFa()?'کامنت حذف شد ✓':'Comment deleted')}
+      else toast((j&&j.error)||isFa()?'حذف نشد ❌':'Failed');
+    }).catch(function(){toast(isFa()?'سرور پاسخ نداد ❌':'Server unreachable')});return}
   var up=near('[data-up]');
   if(up){upTarget=Number(up.dataset.up);$('#admImg').click();
     $('#admImg').onchange=function(){if(this.files&&this.files[0]&&upTarget!=null){
-      var idx=upTarget;shrink(this.files[0],function(url,w,h,bytes){setDesignImg(idx,url);
-        toast('عکس '+w+'×'+h+' · '+kb(bytes)+' فشرده شد')});this.value=''}this.onchange=null};
+      var idx=upTarget,fl=this.files[0];shrink(fl,function(url,w,h,bytes){setDesignImg(idx,url);
+        toast('عکس '+w+'×'+h+' · '+kb(bytes)+' فشرده شد');
+        if(API.on&&isAuth()){apiUpload(fl.name.replace(/\.\w+$/,'')+'.jpg','image/jpeg',url,w,h,function(j){
+          if(j&&j.ok!==false&&W&&W.gallery[idx]){W.gallery[idx].img=j.url;setDesignImg(idx,j.url);renderAdmin();
+            toast(isFa()?'عکس روی سرور بارگذاری شد ✓ آدرسش جای دادهٔ محلی را گرفت (سبک‌تر و قابل‌مشاهده در همهٔ دستگاه‌ها)':'Uploaded to the server ✓')}
+        })}
+      });this.value=''}this.onchange=null};
     return}
   var clr=near('[data-clear]');if(clr){var gi2=Number(clr.dataset.clear);
     W.gallery[gi2].img='';W.gallery[gi2].imgs=[];renderAdmin();return}
@@ -1890,15 +2217,35 @@ $('#lightbox').addEventListener('touchend',function(e){
 /* ---------- شروع ---------- */
 function renderAll(){ensure();renderHome();renderGallery();renderChatFull();renderSocial();renderDrawer();applySettings()}
 try{var _sid=localStorage.getItem('titanali.sid');if(_sid)D.sid=_sid}catch(e){}
-ensure();renderAll();
+ensure();renderAll();logTipUpdate();apiWatch();apiProbe();
 if(isAuth())$('#admWho').textContent='👤 '+(SESS.name||SESS.u);
 $('#fileInp').addEventListener('change',function(){onPickFile(this.files&&this.files[0]);this.value=''});
+function apiLogin(u,pp,done){
+  taCall('login',{u:u,p:pp}).then(function(j){
+    if(j&&j.ok&&j.token){apiTok(j.token);SESS={u:j.user,name:j.name,server:true};
+      try{sessionStorage.setItem('titanali.sess',JSON.stringify(SESS))}catch(e){}
+      done('ok');
+    } else if(j&&j.__status===423)done('setup');
+    else done('bad',(j&&j.error)||'')
+  }).catch(function(){done('net')});
+}
 $('#logForm').addEventListener('submit',function(e){
   e.preventDefault();
   var u=$('#logUser').value.trim(),pp=$('#logPass').value;
-  if(tryLogin(u,pp)){loginSheet(false);adm(true);toast((isFa()?'خوش آمدید، ':'Welcome, ')+(SESS.name||SESS.u))}
-  else{$('#logErr').textContent=isFa()?'نام کاربری یا رمز درست نیست':'Wrong username or password';
+  function fail(msg){$('#logErr').textContent=msg||(isFa()?'نام کاربری یا رمز درست نیست':'Wrong username or password');
     if(navigator.vibrate)navigator.vibrate(90)}
+  if(API.on&&!API.setup){
+    $('#logErr').textContent=isFa()?'در حال بررسی روی سرور…':'Checking on the server…';
+    apiLogin(u,pp,function(st,msg){
+      if(st==='ok'){loginSheet(false);adm(true);toast((isFa()?'خوش آمدید، ':'Welcome, ')+(SESS.name||SESS.u));apiThreads();return}
+      if(st==='setup'){$('#logErr').textContent=isFa()?'نصب روی سرور لازم است — از تب همگام‌سازی':'Install on the server first';adm(true);return}
+      if(st==='bad'){fail(msg);return}
+      if(tryLogin(u,pp)){loginSheet(false);adm(true);toast(isFa()?'ورود محلی (سرور در دسترس نبود)':'Local login (server offline)')}else fail('');
+    });
+    return;
+  }
+  if(tryLogin(u,pp)){loginSheet(false);adm(true);toast((isFa()?'خوش آمدید، ':'Welcome, ')+(SESS.name||SESS.u))}
+  else fail('');
 });
 $('#logUser').addEventListener('input',function(){$('#logErr').textContent=''});
 $('#logPass').addEventListener('input',function(){$('#logErr').textContent=''});
@@ -1906,6 +2253,14 @@ $('#logTip').innerHTML=(isFa()
   ?'رمز پیش‌فرض در همین فایل نوشته شده: <code>DEFAULTS.admins</code> (کاربر <code>admin</code>). پس از ورود، از تب «ادمین‌ها» عوضش کنید.'
   :'The default password lives in this file under <code>DEFAULTS.admins</code> (user <code>admin</code>). Change it from the Admins tab after login.');
 clock();setInterval(clock,15000);
+/* ---------- قلاب عیب‌یابی (کنسول مرورگر و تست‌ها) ----------
+   فقط خواندنی است و برایعیب‌یابی سریع روی هاست مفید است: titanali.D ،titanali.API … */
+window.titanali={ver:'1.0.0',
+  get D(){return D},get API(){return API},get SESS(){return SESS},get W(){return W},
+  isAuth:isAuth,likeCount:likeCount,dlCount:dlCount,cmtList:cmtList,
+  like:toggleLike,download:doDownload,comment:addComment,renderAll:renderAll,go:go,
+  apiPush:apiPush,apiRefresh:apiRefresh,apiPollThread:apiPollThread,apiThreads:apiThreads,apiBtn:apiBtn,
+  logout:logout,adm:adm,save:save,export:admExport};
 var h=(location.hash||'').replace('#','');
 if(h&&$('#view-'+h))go(h);
 $('#chatForm').addEventListener('submit',function(e){e.preventDefault();sendChat()});
