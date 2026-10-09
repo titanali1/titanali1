@@ -9,6 +9,13 @@
 <!-- آیکون سایت (SVG درون‌خطی — بدون فایل اضافه) -->
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234da6ff'/%3E%3Cstop offset='1' stop-color='%230a84ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Ctext x='32' y='44' font-family='-apple-system,Segoe UI,Arial,sans-serif' font-size='30' font-weight='800' fill='%23fff' text-anchor='middle'ta/text%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<!-- نصب‌شدن به‌عنوان اپ + رندر تمام‌صفحه در iOS -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="titanali">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="mask-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234da6ff'/%3E%3Cstop offset='1' stop-color='%230a84ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='15' fill='url(%23g)'/%3E%3Ctext x='32' y='44' font-family='-apple-system,Segoe UI,Arial,sans-serif' font-size='30' font-weight='800' fill='%23fff' text-anchor='middle'ta/text%3E%3C/svg%3E" color="#0a84ff">
 
 <!-- SEO -->
@@ -550,6 +557,30 @@ html[dir=rtl] .drawer{--dx:-100%}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .sect-h{font-size:12px;font-weight:800;color:rgba(255,255,255,.8);margin-top:4px}
 
+/* ---------- پیمایش قاب تک‌پستی + آیکون‌ها ---------- */
+.ig-pager{display:flex;align-items:center;justify-content:center;gap:14px;padding:10px 0 2px}
+.ig-pager .pg{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:rgba(255,255,255,.07);
+  color:#fff;display:grid;place-items:center;font-size:13px;padding:0;transition:.18s var(--ease)}
+.ig-pager .pg:hover{background:rgba(255,255,255,.16)}
+.ig-pager .pg:active{transform:scale(.9)}
+.ig-pager .pgc{font-size:11.5px;color:var(--mut);direction:ltr;display:flex;align-items:center;gap:6px}
+.ig-pager .pgc i{font-style:normal;direction:rtl}
+.ig-hint{display:flex;align-items:center;justify-content:center;gap:6px;font-size:11px;color:var(--faint);
+  padding:9px 0 2px;border-top:1px solid rgba(255,255,255,.07);margin-top:10px}
+.pact{gap:11px}
+.pact button{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:rgba(255,255,255,.92);
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);transition:.18s var(--ease)}
+.pact button:hover{background:rgba(255,255,255,.14);transform:translateY(-1px)}
+.pact button:active{transform:scale(.9)}
+.pact .cnt{margin-inline-start:2px;color:var(--mut);font-size:12px;font-weight:800}
+.pact .like.on{color:#ff5f57;background:rgba(255,69,58,.16);border-color:rgba(255,69,58,.42);
+  box-shadow:0 6px 18px rgba(255,69,58,.28)}
+.pact .like.on svg{transform:scale(1.1)}
+.pact .like svg,.pact button svg{transition:transform .2s var(--ease)}
+.pact [data-dl]:hover{color:var(--blue2);border-color:rgba(10,132,255,.4)}
+.lb-btn{position:relative}
+#lbActions button{width:40px;height:40px;border-radius:13px}
+
 /* ---------- انیمیشن ورود کارت‌ها ---------- */
 .view.active .sec,.view.active .stat{animation:secIn .5s var(--ease) both}
 .view.active .sec:nth-child(2){animation-delay:.05s}
@@ -615,7 +646,7 @@ html[data-lang=en] .ios-brand-name{letter-spacing:-.02em}
       <section class="view active" id="view-home">
         <header class="ios-topbar">
           <div>
-            <div class="ios-brand-name" id="brandName">titanali</div>
+            <div class="ios-brand-name" id="brandName" role="button" tabindex="0" aria-label="ورود ادمین" title="ورود به پنل مدیریت">titanali</div>
             <div class="ios-tagline" id="brandTag"></div>
           </div>
           <button class="ios-menu" id="btnMenu" aria-label="باز کردن منو" aria-expanded="false">
@@ -802,6 +833,16 @@ html[data-lang=en] .ios-brand-name{letter-spacing:-.02em}
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
+/* سرویس‌ورکر: سایت آفلاین باز می‌شود و آپدیت‌ها سریع می‌آیند.
+   فقط روی https فعال است (هاست سی‌پنل با AutoSSL/Let's Encrypt). */
+if('serviceWorker' in navigator && location.protocol==='https:'){
+  window.addEventListener('load',function(){
+    navigator.serviceWorker.register('./sw.js').catch(function(){/* هاست بدون sw.js: بی‌صدا رد می‌شویم */});
+  });
+}
+</script>
+
+<script>
 /* =====================================================================
    titanali — منطق اپ (بدون وابستگی، بدون بیلد، آفلاین‌پسند)
    بخش‌ها: خانه · طرح‌ها (گالری دسته‌بندی‌شده) · گفتگو · ارتباط
@@ -819,6 +860,20 @@ var KEY='titanali.site.v1';
 var escAttr=function(s){return esc(s).replace(/\n/g,'&#10;')};
 
 /* تصویر پیش‌فرضِ درون‌خطی (SVG) تا هیچ طرحی بدون عکس نماند */
+/* آیکون‌های خطیِ هم‌خانواده (۲۴px، stroke ۱٫۸) — به‌جای ایموجی */
+function ic(n,sz){
+  var P={
+   heart:'<path d="M12 20.1S4.1 15.5 4.1 10.2A4.3 4.3 0 0 1 12 7.7a4.3 4.3 0 0 1 7.9 2.5c0 5.3-7.9 9.9-7.9 9.9Z"/>',
+   heartF:'<path fill="currentColor" stroke="none" d="M12 20.1S4.1 15.5 4.1 10.2A4.3 4.3 0 0 1 12 7.7a4.3 4.3 0 0 1 7.9 2.5c0 5.3-7.9 9.9-7.9 9.9Z"/>',
+   chat:'<path d="M20.4 11.3a7.8 7.8 0 0 1-7.9 7.9 8.5 8.5 0 0 1-3.7-.9l-4.3 1.4 1.5-4.3a7.7 7.7 0 0 1-1.1-4.1 7.8 7.8 0 0 1 7.9-7.9 7.8 7.8 0 0 1 7.6 7.9Z"/>',
+   dl:'<path d="M12 3.7v10.4m0 0 3.8-3.8M12 14.1 8.2 10.3M4.6 17.2v1.3a1.7 1.7 0 0 0 1.7 1.7h11.4a1.7 1.7 0 0 0 1.7-1.7v-1.3"/>',
+   send:'<path d="M20.9 3.3 3.8 10.1l6.6 2.5 2.5 6.6 8-15.9Z"/><path d="M10.4 12.6 20.9 3.3"/>',
+   eye:'<path d="M2.6 12S6 5.8 12 5.8 21.4 12 21.4 12 18 18.2 12 18.2 2.6 12 2.6 12Z"/><circle cx="12" cy="12" r="2.9"/>',
+   layers:'<path d="m12 2.9 9 4.9-9 4.9-9-4.9 9-4.9Z"/><path d="m3 14.2 9 4.9 9-4.9"/>'
+  };
+  return '<svg width="'+(sz||21)+'" height="'+(sz||21)+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" '+
+    'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(P[n]||'')+'</svg>';
+}
 function art(seed,label,w,h){
   w=w||600;h=h||600;
   var a=(seed*53)%360,b=(a+95)%360,c=(a+220)%360;
@@ -872,7 +927,7 @@ var DEFAULTS={
   ],
   /* ⚠️ نام کاربری و رمز پیش‌فرض ادمین — از همین‌جا عوضش کنید (و بسازید) */
   admins:[{u:'admin',p:'titanali1384',name:'ادمین اصلی'}],
-  ig:{user:'titanali1',url:'',sub:'طراحی و دوخت · پست و استوری روزانه',perLine:4,autoStories:1,stories:[],commenter:'مهمان'},
+  ig:{user:'titanali1',url:'',sub:'طراحی و دوخت · پست و استوری روزانه',perLine:8,autoStories:1,stories:[],commenter:'مهمان'},
   quick:['قیمت پلیواری چقدر است؟','برای طرح سفارشی چقدر زمان لازم است؟','سایز و رنگ دلخواه را می‌دوزید؟'],
   messages:[],
   settings:{lang:'fa',bg:'',grid:'3',theme:'#050409'}
@@ -1059,9 +1114,9 @@ function renderDrawer(){
   h+='<div class="hr"></div><button class="d-item" data-go="chat"><span class="d-ic">💬</span><span class="d-lab">'+t('nav.chat')+'</span></button>'+
     '<button class="d-item" data-go="social"><span class="d-ic">☎</span><span class="d-lab">'+t('drawer.contact')+'</span></button>'+
     '<button class="d-item" data-act="lang"><span class="d-ic">🌐</span><span class="d-lab">'+t('drawer.lang')+'</span><span class="chip b">'+t('lang.other')+'</span></button>'+
-    '<button class="d-item" data-act="bg"><span class="d-ic">🖼</span><span class="d-lab">'+t('drawer.bg')+'</span></button>'+
+
     '<button class="d-item" data-act="share"><span class="d-ic">📤</span><span class="d-lab">'+t('drawer.share')+'</span></button>'+
-    '<button class="d-item" data-act="admin"><span class="d-ic">⚙️</span><span class="d-lab">'+t('drawer.admin')+'</span></button>';
+    '';
   $('#drawerItems').innerHTML=h;
   $('#drawerFoot').innerHTML=(D.settings.foot||t('foot.txt'))+'<br>'+new Date().toLocaleDateString(loc(),{year:'numeric',month:'long',day:'numeric'});
 }
@@ -1196,11 +1251,11 @@ function sharePost(i){
 }
 function actionsHTML(i,g){
   var st=lsGet(LS_LIKE),liked=!!st[String(i)],lc=(g.comments||[]).length;
-  return '<button class="like'+(liked?' on':'')+'" data-like="'+i+'" aria-label="پسندیدن" title="پسندیدن">'+(liked?'♥':'♡')+'</button>'+
+  return '<button class="like'+(liked?' on':'')+'" data-like="'+i+'" aria-label="'+(liked?'برداشتن لایک':'پسندیدن')+'" title="'+(liked?'برداشتن لایک':'پسندیدن')+'">'+ic(liked?'heartF':'heart')+'</button>'+
     '<span class="cnt">'+num(g.likes||0)+'</span>'+
-    '<button data-cmt="'+i+'" aria-label="کامنت‌ها" title="کامنت">💬</button><span class="cnt">'+num(lc)+'</span>'+
-    '<button data-dl="'+i+'" aria-label="دانلود تصویر" title="دانلود">⤓</button><span class="cnt">'+num(g.dl||0)+'</span>'+
-    '<button class="sp" data-sharepost="'+i+'" aria-label="اشتراک" title="اشتراک">↗</button>';
+    '<button data-cmt="'+i+'" aria-label="کامنت‌ها" title="کامنت">'+ic('chat')+'</button><span class="cnt">'+num(lc)+'</span>'+
+    '<button data-dl="'+i+'" aria-label="دانلود تصویر" title="دانلود">'+ic('dl')+'</button><span class="cnt">'+num(g.dl||0)+'</span>'+
+    '<button class="sp" data-sharepost="'+i+'" aria-label="اشتراک" title="همین پست را بفرستید">'+ic('send')+'</button>';
 }
 function commentsHTML(i,g,open){
   var list=g.comments||[];
@@ -1216,7 +1271,8 @@ function commentsHTML(i,g,open){
 function storiesList(){
   var ig=D.ig||{},man=(ig.stories||[]).filter(function(s){return s.img||s.t});
   if(man.length&&!ig.autoStories)return man;
-  return D.gallery.slice().sort(function(a,b){return (b.ts||0)-(a.ts||0)}).slice(0,8).map(function(g){
+  var lim=Math.max(1,Math.min(20,Number((D.ig&&D.ig.perLine)||0)||8));
+  return D.gallery.slice().sort(function(a,b){return (b.ts||0)-(a.ts||0)}).slice(0,lim).map(function(g){
     return {t:g.t,img:(g.imgs&&g.imgs[0])||g.img,gi:D.gallery.indexOf(g),ts:g.ts}});
 }
 function renderIG(){
@@ -1234,11 +1290,12 @@ function renderIG(){
       return '<button class="story'+(seen[i]?' seen':'')+'" data-story="'+i+'" aria-label="استوری '+esc(s.t||'')+'">'+
       '<span class="ring"><span><img loading="lazy" src="'+escAttr(s.img||art(i+3,'ta'))+'" alt=""></span></span>'+
       '<em>'+esc(s.t||('طرح '+(i+1)))+'</em></button>'}).join('');
-  var per=Math.max(1,Number(ig.perLine)||4);
-  var posts=D.gallery.slice(0,IG_SHOWN||per);
-  $('#posts').innerHTML=posts.map(function(g){
-    var i=D.gallery.indexOf(g),ims=postImgs(g,i);
-    return '<article class="post">'+
+  var total=D.gallery.length;
+  if(!total){$('#posts').innerHTML='<div class="empty">هنوز پستی نیست — از پنل مدیریت افزودن کنید.</div>';
+    $('#igLive').innerHTML='';return}
+  IG_AT=((IG_AT%total)+total)%total;
+  var g=D.gallery[IG_AT],i=IG_AT,ims=postImgs(g,i);
+  $('#posts').innerHTML='<article class="post">'+
       '<div class="post-top"><div class="ig-av" style="width:30px;height:30px"><span style="font-size:10px">'+esc(D.profile.initials||'ta')+'</span></div>'+
         '<span class="u">@'+esc(igUser())+'</span>'+(g.cat?'<span class="pill">'+esc(g.cat)+'</span>':'')+
         (g.n?'<span class="pill ok">'+t('new')+'</span>':'')+'<span class="t">'+esc(timeAgo(g.ts))+'</span></div>'+
@@ -1246,19 +1303,22 @@ function renderIG(){
         '<img src="'+escAttr(ims[0])+'" alt="'+esc(g.t||'')+'">'+
         (ims.length>1?'<span class="pm-multi">1/'+ims.length+'</span><div class="dots">'+
           ims.map(function(_,k){return '<i'+(k===0?' class="on"':'')+'></i>'}).join('')+'</div>':'')+
-        '<div class="heart-burst">♥</div></div>'+
+        '<div class="heart-burst">'+ic('heartF',84)+'</div></div>'+
       '<div class="pact">'+actionsHTML(i,g)+'</div>'+
       ((g.t||g.desc)?'<div class="pcap"><b>'+esc(D.profile.name)+'</b>'+esc(g.t||'')+(g.desc?'\n'+esc(g.desc):'')+'</div>':'')+
-      '<div class="pstat">'+num(g.likes||0)+' پسند · '+num(g.dl||0)+' دانلود · '+num(ims.length)+' تصویر</div>'+
-      commentsHTML(i,g,cmtOpen(i))+'</article>'}).join('')||'<div class="empty">هنوز پستی نیست — از پنل مدیریت افزودن کنید.</div>';
-  $('#igLive').innerHTML=ig.autoStories?'<span>🔄 استوری‌ها خودکار از تازه‌ترین طرح‌ها ساخته می‌شود</span>'
-    :(ig.user?'<span>🔒 اتصال زندهٔ اینستاگرام از مرورگر ممکن نیست — لینک پیج: </span><a href="'+escAttr(igUrl())+'" target="_blank" rel="noopener">@'+esc(igUser())+'</a>':'');
-  if(D.gallery.length>posts.length)
-    $('#posts').insertAdjacentHTML('afterend','<div style="text-align:center;padding-top:10px"><button class="ios-pill" id="igMore">نمایش همهٔ '+num(D.gallery.length)+' طرح ↓</button></div>');
-  else if(IG_SHOWN) $('#posts').insertAdjacentHTML('afterend','<div style="text-align:center;padding-top:10px"><button class="ios-pill" id="igLess">بستن ↑</button></div>');
+      '<div class="pstat">'+num(g.likes||0)+' پسند · '+num(g.dl||0)+' دانلود'+(ims.length>1?' · '+num(ims.length)+' تصویر':'')+'</div>'+
+      commentsHTML(i,g,cmtOpen(i))+
+      '<div class="ig-pager"><button class="pg" data-post="-1" aria-label="پست قبلی">❮</button>'+
+        '<span class="pgc">'+num(IG_AT+1)+' <i>'+t('of')+'</i> '+num(total)+'</span>'+
+        '<button class="pg" data-post="1" aria-label="پست بعدی">❯</button></div>'+
+    '</article>';
+  $('#igLive').innerHTML=(ig.autoStories
+      ? '<span>🔄 استوری‌ها خودکار از تازه‌ترین طرح‌ها ساخته می‌شود</span>'
+      : (ig.user?'<span>🔒 اتصال زندهٔ اینستاگرام از مرورگر ممکن نیست — </span><a href="'+escAttr(igUrl())+'" target="_blank" rel="noopener">پیج @'+esc(igUser())+' ↗</a>':''))+
+    '<div class="ig-hint">'+ic('layers',13)+' '+num(total)+' پست در این قاب · بکشید یا ◂ ▸</div>';
   carouselWire();
 }
-var IG_SHOWN=0,OPEN_CMT={};
+var IG_AT=0,OPEN_CMT={};
 function cmtOpen(i){return !!OPEN_CMT[String(i)]}
 function carouselWire(){
   $$('#posts .post-media').forEach(function(box){
@@ -1336,7 +1396,7 @@ function igApply(items,T){
     function a(x){return (Number(x)||0)*1000}
     T.gallery.unshift(g);added++;
   });
-  if(added){if(W)W=clone(D);ensure();save();renderAll();toast(added+' پست افزوده شد ✓')}
+  if(added){ensure();save();renderAll();if(W)W=clone(D);renderAdmin();toast(added+' پست افزوده شد ✓')}
   else toast('چیزی برای افزودن پیدا نشد')
 }
 function igApplyJson(text){
@@ -1458,7 +1518,7 @@ function igForm(){
   return '<label class="field"><span>نام کاربری پیج اینستاگرام</span><input id="igUserInp" value="'+escAttr(ig.user||'')+'" placeholder="titanali1"></label>'+
     '<label class="field"><span>لینک پیج (اختیاری)</span><input id="igUrlInp" value="'+escAttr(ig.url||'')+'" placeholder="https://www.instagram.com/titanali1/"></label>'+
     '<label class="field"><span>زیرعنوان فید</span><input id="igSubInp" value="'+escAttr(ig.sub||'')+'"></label>'+
-    '<div class="row2"><label class="field"><span>پست در صفحه اصلی</span><input id="igPerInp" type="number" min="1" max="30" value="'+(Number(ig.perLine)||4)+'"></label>'+
+    '<div class="row2"><label class="field"><span>استوری در نوار (۱ تا ۲۰)</span><input id="igPerInp" type="number" min="1" max="20" value="'+(Number(ig.perLine)||8)+'"></label>'+
     '<label class="field"><span>نام پیش‌فرض کامنت‌گذار</span><input id="igCmtInp" value="'+escAttr(ig.commenter||'')+'" placeholder="مهمان"></label></div>'+
     '<label class="field" style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" id="igAuto"'+(ig.autoStories?' checked':'')+' style="width:20px;flex:none"><span style="font-size:12.5px">استوری‌ها خودکار از تازه‌ترین طرح‌ها ساخته شود</span></label>'+
     '<label class="field"><span>استوری‌های دستی (JSON — خالی = خودکار)</span><textarea id="igStories" rows="3">'+esc(JSON.stringify(ig.stories||[],null,1))+'</textarea></label>'+
@@ -1601,7 +1661,7 @@ function admSave(){
   else if(admTab==='instagram'){
     try{W.ig.stories=JSON.parse($('#igStories').value||'[]')}catch(e){toast('JSON استوری‌ها نامعتبر است ❌');return}
     W.ig.user=$('#igUserInp').value.trim();W.ig.url=$('#igUrlInp').value.trim();
-    W.ig.sub=$('#igSubInp').value.trim();W.ig.perLine=Math.max(1,Number($('#igPerInp').value)||4);
+    W.ig.sub=$('#igSubInp').value.trim();W.ig.perLine=Math.max(1,Math.min(20,Number($('#igPerInp').value)||8));
     W.ig.commenter=$('#igCmtInp').value.trim()||'مهمان';
     W.ig.autoStories=$('#igAuto').checked?1:0;
   }
@@ -1648,6 +1708,7 @@ function admReset(){
 /* ---------- رویدادها ---------- */
 document.addEventListener('click',function(e){
   function near(sel){return e.target&&e.target.closest?e.target.closest(sel):null}
+  if(near('#brandName')||near('#heroCard .avatar')){adminOnly();return}
   var b=near('.app-ic');if(b){go(b.dataset.view);return}
   if(near('[data-back]')){go('home');return}
   var g=near('[data-goto]');if(g){go(g.dataset.goto);return}
@@ -1664,9 +1725,7 @@ document.addEventListener('click',function(e){
   var act=near('.d-item[data-act]');
   if(act){drawer(false);var a=act.dataset.act;
     if(a==='lang'){D.settings.lang=L()==='fa'?'en':'fa';save();renderAll();toast(D.settings.lang==='fa'?'فارسی':'English')}
-    if(a==='bg'){admTab='settings';adm(true)}
     if(a==='share')share();
-    if(a==='admin')adminOnly();
     return;
   }
   var gt=near('[data-gal]');if(gt){galFilter=gt.dataset.gal;renderGallery();return}
@@ -1706,8 +1765,8 @@ document.addEventListener('click',function(e){
   if(pm){galShown=D.gallery.slice();lbK=0;openLB(Number(pm.dataset.open));return}
   var sto=near('.story[data-story]');
   if(sto){var sk=Number(sto.dataset.story);if(sk<0)window.open(igUrl(),'_blank','noopener');else openStory(sk);return}
-  if(near('#igMore')){IG_SHOWN=D.gallery.length;renderIG();return}
-  if(near('#igLess')){IG_SHOWN=0;renderIG();return}
+  var np=near('[data-post]');
+  if(np&&!$('#adminPanel').classList.contains('open')&&!$('#lightbox').classList.contains('open')){IG_AT+=Number(np.dataset.post);renderIG();return}
   /* ---- گفتگو: پیوست فایل ---- */
   if(near('#btnAttach')){$('#fileInp').click();return}
   if(near('[data-filedel]')){PFILE=null;renderPending();return}
@@ -1805,6 +1864,7 @@ $('#admImgs').addEventListener('change',function(){
 });
 function igApplyStoriesToForm(){var el=$('#igStories');if(el)el.value=JSON.stringify(W.ig.stories,null,1);var a=$('#igAuto');if(a)a.checked=false}
 document.addEventListener('keydown',function(e){
+  if((e.key==='Enter'||e.key===' ')&&document.activeElement&&document.activeElement.id==='brandName'){e.preventDefault();adminOnly()}
   if(e.key==='Escape'){
     if($('#story').classList.contains('open'))closeStory();
     else if($('#lightbox').classList.contains('open'))closeLB();
@@ -1812,6 +1872,8 @@ document.addEventListener('keydown',function(e){
     else if($('#adminPanel').classList.contains('open'))adm(false);
     else drawer(false);
   }
+  if(!$('#lightbox').classList.contains('open')&&!$('#story').classList.contains('open')&&CUR==='home'&&(e.key==='ArrowLeft'||e.key==='ArrowRight')){
+    IG_AT+=e.key==='ArrowRight'?(isFa()?-1:1):(isFa()?1:-1);renderIG();return}
   if($('#lightbox').classList.contains('open')){
     if(e.key==='ArrowLeft')stepLB(isFa()?1:-1);
     if(e.key==='ArrowRight')stepLB(isFa()?-1:1);
