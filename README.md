@@ -148,16 +148,29 @@ deploy/make-cpanel.py  ← سازندهٔ بسته و تصاویر (python3 depl
 > فایل‌های متنی ریشه با هر بار اجرای اسکریپت از `deploy/files/` کپی می‌شوند؛ پس تغییر دائمی را همان‌جا بدهید (نه فقط در ریشه).
 
 ### دانلود مستقیم بسته
-| چیست | لینک |
+| چه چیزی | لینک |
 |---|---|
-| زیپ آماده (۱۵ فایل، کنار همان `index.html` در مخزن) | https://github.com/titanali1/titanali1/raw/arena/874bf68b-titanali1/titanali-cpanel.zip |
-| آخرین ریلیز (همیشه تازه) | https://github.com/titanali1/titanali1/releases/latest/download/titanali-cpanel.zip |
-| بررسی سلامت فایل | `titanali-cpanel.zip.sha256` کنار همان فایل (یا `sha256sum -c titanali-cpanel.zip.sha256`) |
+| **زیپ آمادهٔ `public_html`** (۱۵ فایل، نسخه‌بندی‌شده در مخزن) | https://github.com/titanali1/titanali1/raw/arena/874bf68b-titanali1/titanali-cpanel.zip |
+| فایل `sha256` برای بررسی سلامت | https://github.com/titanali1/titanali1/raw/arena/874bf68b-titanali1/titanali-cpanel.zip.sha256 |
+| صفحهٔ ریلیز (لینک‌های ثابت) | https://github.com/titanali1/titanali1/releases/latest |
+| پیش‌نمایش زندهٔ همین نشست (موقتی) | https://8000-idzdl0fknv1gvvhv82wkj.e2b.app/titanali-cpanel.zip |
+| اگر GitHub Pages فعال باشد | `https://<کاربر>.github.io/titanali1/titanali-cpanel.zip` |
 
 ```bash
-curl -LJ -o titanali-cpanel.zip https://github.com/titanali1/titanali1/releases/latest/download/titanali-cpanel.zip
-sha256sum -c <(curl -L https://github.com/titanali1/titanali1/releases/latest/download/titanali-cpanel.zip.sha256)
+# دانلود + بررسی سلامت
+curl -LJ -o titanali-cpanel.zip 'https://github.com/titanali1/titanali1/raw/arena/874bf68b-titanali1/titanali-cpanel.zip'
+curl -LO 'https://github.com/titanali1/titanali1/raw/arena/874bf68b-titanali1/titanali-cpanel.zip.sha256'
+sha256sum -c titanali-cpanel.zip.sha256      # titanali-cpanel.zip: OK
+unzip -l titanali-cpanel.zip                 # ۱۵ فایل داخل public_html
 ```
+
+زیپ همان فایلِ تعهدشده در ریشهٔ مخزن است؛ با هر بار اجرای `python3 deploy/make-cpanel.py` بازسازی و در همان شاخه پوش می‌شود، پس لینک بالا همیشه به تازه‌ترین بسته می‌رسد. اگر خواستید فایل را به‌عنوان **attachment ریلیز** هم بچسبانید (این سندباکس به `uploads.github.com` دسترسی ندارد، پس روی ماشین خودتان):
+
+```bash
+gh release create v1.0.0 titanali-cpanel.zip titanali-cpanel.zip.sha256 \
+  --target arena/874bf68b-titanali1 --title "بستهٔ هاست سی‌پنل" --notes "محتوای public_html"
+```
+
 > اگر زیپ را داخل `public_html` استخراج می‌کنید، بعد از استخراج همان زیپ (و پوشهٔ `deploy/`) را پاک کنید؛ در `.htaccess` با `FilesMatch` رد می‌شوند، ولی تمیزتر است.
 
 ### روش ۱ — زیپ (سریع‌ترین)

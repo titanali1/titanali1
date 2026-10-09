@@ -175,9 +175,10 @@ def main():
     # ۲) بسته‌بندی از روی ریشه
     for f in PUBLIC:
         if (ROOT / f).exists(): shutil.copyfile(ROOT / f, DIST / f)
-    # فایل chkecksum داخل زیپ نمی‌نشیند (وگرنه نسخهٔ قبلی‌اش در بسته می‌ماند)
-    for junk in list(DIST.glob('*.sha256')) + list(ROOT.glob('titanali-cpanel.zip.sha256')):
-        junk.unlink()
+    # زیپ و checksum قبلی داخل بستهٔ تازه نمی‌نشینند (خودمصرفی و حجم بی‌مورد)
+    junk = list(DIST.glob('*.sha256')) + list(DIST.glob('*.zip')) + [ROOT / 'titanali-cpanel.zip.sha256']
+    for f in junk:
+        if f.exists(): f.unlink()
     z = ROOT / 'dist' / 'titanali-cpanel.zip'
     with zipfile.ZipFile(z, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
         for p in sorted(DIST.iterdir()):
@@ -189,6 +190,7 @@ def main():
     digest = hashlib.sha256(z.read_bytes()).hexdigest()
     (ROOT / 'titanali-cpanel.zip.sha256').write_text(digest + '  titanali-cpanel.zip\n', encoding='utf-8')
     (DIST / 'titanali-cpanel.zip.sha256').write_text(digest + '  titanali-cpanel.zip\n', encoding='utf-8')
+    shutil.copyfile(z, DIST / 'titanali-cpanel.zip')   # تا GitHub Pages هم همان لینک را بدهد
     print('sha256: ' + digest)
     with zipfile.ZipFile(z) as zf:
         n = len([x for x in zf.namelist() if not x.endswith('/')])
