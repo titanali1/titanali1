@@ -98,7 +98,7 @@ ErrorDocument 403 /404.html
 <FilesMatch "^\.">
   Require all denied
 </FilesMatch>
-<FilesMatch "(^#.*\.md$|\.(ini|log|sh|py|php.bak|bak|sql|zip|gz|tar)$|README\.md$)">
+<FilesMatch "(^#|\.(ini|log|sh|py|php\.bak|bak|sql|zip|gz|tar|md|markdown|lock|tmp)$)">
   Require all denied
 </FilesMatch>
 RedirectMatch 404 ^/deploy(/|$)
