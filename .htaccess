@@ -56,6 +56,22 @@ AddType application/javascript .js
   Header unset X-Powered-By
 </IfModule>
 
+# ---------- کش LiteSpeed / سرور ----------
+# روی بیشتر هاست‌های سی‌پنل LiteSpeed فعال است و اگر اجازه دهیم api.php را
+# کش کند، پاسخ صندوق/محتوا برای همه منجمد می‌شود. پس:
+<IfModule LiteSpeed>
+  CacheLookup off
+  <Files "api.php">
+    CacheLookup off
+  </Files>
+</IfModule>
+<IfModule mod_expires.c>
+  <Files "api.php">
+    ExpiresActive Off
+    Header set Cache-Control "no-store, max-age=0, must-revalidate"
+  </Files>
+</IfModule>
+
 # ---------- بسته‌های خطا ----------
 ErrorDocument 404 /404.html
 ErrorDocument 403 /404.html
