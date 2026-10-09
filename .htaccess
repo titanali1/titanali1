@@ -60,6 +60,24 @@ AddType application/javascript .js
 ErrorDocument 404 /404.html
 ErrorDocument 403 /404.html
 
+# ---------- بک‌اند PHP (اختیاری) ----------
+# api.php باید از وب قابل اجرا باشد؛ دیتای آن در titanali-data/ است و آن پوشه بسته می‌شود.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^titanali-data/ - [F,L]
+  RewriteRule ^dist/ - [F,L]
+</IfModule>
+<FilesMatch "^titanali-config\.php$">
+  Require all denied
+</FilesMatch>
+# اگر PHP روی هاست خاموش بود، سایت بدون بک‌اند کار می‌کند (فقط محلی).
+# برای بستن اجرای PHP در پوشهٔ آپلود (اگر data بیرون از public_html نیست):
+# <Directory "titanali-data/uploads">
+#   <FilesMatch "\.(php|phtml)$">
+#     Require all denied
+#   </FilesMatch>
+# </Directory>
+
 # ---------- جلوگیری از دسترسی به فایل‌های سرویس و توسعه ----------
 <FilesMatch "^\.">
   Require all denied

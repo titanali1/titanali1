@@ -23,6 +23,7 @@ self.addEventListener('fetch', (e) => {
   if (r.method !== 'GET') return;
   const url = new URL(r.url);
   if (url.origin !== self.location.origin) return;            // اینستاگرام و CDN ها دست‌نخورده
+  if (/\.php(\?|$)/.test(url.pathname + url.search)) return;  // api.php هرگز کش نمی‌شود
   if (url.pathname.includes('/api/') || url.search) return;
 
   // صفحه: شبکه اول، کش به‌عنوان پشتیبان (تا آپدیت‌ها سریع دیده شوند)
