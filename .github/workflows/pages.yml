@@ -15,10 +15,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: ابزارهای تولید تصویر (Pillow برای og.png و آیکون‌ها)
+        run: python3 -m pip install --quiet --upgrade pillow arabic-reshaper python-bidi
+      - name: Build the static package
+        run: |
+          python3 deploy/make-cpanel.py
+          ls -la dist/titanali-cpanel
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: dist/titanali-cpanel
   deploy:
     needs: build
     runs-on: ubuntu-latest
