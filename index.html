@@ -409,6 +409,147 @@ html[dir=rtl] .drawer{--dx:-100%}
   background:rgba(255,255,255,.04);font-size:13.5px;font-weight:700;color:var(--blue2)}
 .size-note{font-size:11px;color:var(--mut);direction:ltr}
 
+/* ================= فید اینستاگرام (قاب تزیینی) ================= */
+.ig-frame{padding:0;border-radius:20px;background:#0b0a12;
+  border:16px solid transparent;
+  border-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Crect width='48' height='48' fill='%23f2e6cf'/%3E%3Cpath d='M24 2 46 24 24 46 2 24Z' fill='%23a01f1f'/%3E%3Cpath d='M24 10 38 24 24 38 10 24Z' fill='%23f2e6cf'/%3E%3Cpath d='M24 17 31 24 24 31 17 24Z' fill='%23241f2e'/%3E%3Cpath d='M0 24 8 16 8 32Z' fill='%23241f2e'/%3E%3Cpath d='M48 24 40 16 40 32Z' fill='%23241f2e'/%3E%3Cpath d='M24 0 16 8 32 8Z' fill='%23241f2e'/%3E%3Cpath d='M24 48 16 40 32 40Z' fill='%23241f2e'/%3E%3C/svg%3E") 16 round;
+  box-shadow:0 18px 44px rgba(0,0,0,.5)}
+.ig-inner{padding:12px 12px 14px}
+.ig-head{display:flex;align-items:center;gap:10px;padding:2px 2px 10px}
+.ig-av{width:44px;height:44px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:800;font-size:15px;
+  background:conic-gradient(from 200deg,#f9ce34,#ee2a7b,#6228d7,#f9ce34);padding:2px}
+.ig-av>span{width:100%;height:100%;border-radius:50%;display:grid;place-items:center;background:#0b0a12;overflow:hidden}
+.ig-av img{width:100%;height:100%;object-fit:cover}
+.ig-meta{flex:1;min-width:0}
+.ig-meta b{display:block;font-size:14px;font-weight:800;line-height:1.5}
+.ig-meta span{display:block;font-size:11.5px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ig-btn{flex:none;border:1px solid rgba(10,132,255,.45);background:rgba(10,132,255,.16);color:var(--blue2);
+  border-radius:12px;padding:7px 13px;font-size:12.5px;font-weight:800}
+.ig-live{display:flex;align-items:center;gap:5px;font-size:10.5px;color:var(--red);font-weight:700}
+
+/* استوری‌ها */
+.stories{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 12px;scrollbar-width:none;border-bottom:1px solid rgba(255,255,255,.08)}
+.stories::-webkit-scrollbar{display:none}
+.story{flex:none;width:64px;background:none;border:0;padding:0;display:flex;flex-direction:column;align-items:center;gap:5px;color:#fff}
+.story .ring{width:60px;height:60px;border-radius:50%;padding:2.5px;background:conic-gradient(from 160deg,#f9ce34,#ee2a7b,#8a3ab9,#4c5fd7,#f9ce34)}
+.story.seen .ring{background:rgba(255,255,255,.22)}
+.story .ring>span{display:block;width:100%;height:100%;border-radius:50%;border:2px solid #0b0a12;overflow:hidden;background:#15131f}
+.story img{width:100%;height:100%;object-fit:cover;display:block}
+.story em{font-style:normal;font-size:10.5px;color:rgba(255,255,255,.8);max-width:64px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* پست‌ها */
+.post{padding:12px 0 4px;border-bottom:1px solid rgba(255,255,255,.08)}
+.post:last-child{border-bottom:0}
+.post-top{display:flex;align-items:center;gap:9px;padding-bottom:10px}
+.post-top .u{font-size:13px;font-weight:800}
+.post-top .t{font-size:11px;color:var(--mut);margin-inline-start:auto;direction:ltr}
+.post-media{position:relative;border-radius:14px;overflow:hidden;background:#000;aspect-ratio:1;cursor:pointer}
+.post-media img{width:100%;height:100%;object-fit:cover;display:block}
+.pm-multi{position:absolute;top:9px;inset-inline-end:9px;background:rgba(0,0,0,.6);border-radius:8px;
+  font-size:10.5px;padding:3px 8px;direction:ltr;backdrop-filter:blur(8px)}
+.dots{position:absolute;bottom:9px;inset-inline:0;display:flex;justify-content:center;gap:4px;pointer-events:none}
+.dots i{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.45)}
+.dots i.on{background:#fff;transform:scale(1.25)}
+.heart-burst{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;opacity:0;font-size:74px;color:#fff;
+  filter:drop-shadow(0 6px 18px rgba(0,0,0,.55))}
+.post-media.burst .heart-burst{animation:burst .8s var(--ease)}
+@keyframes burst{0%{opacity:0;transform:scale(.4)}25%{opacity:.95;transform:scale(1.1)}60%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.15)}}
+.pact{display:flex;align-items:center;gap:16px;padding:10px 2px 2px;font-size:20px}
+.pact button{background:none;border:0;color:#fff;font-size:20px;line-height:1;padding:2px;transition:.15s}
+.pact button:active{transform:scale(.86)}
+.pact .cnt{font-size:12px;font-weight:800;margin-inline-start:6px}
+.pact .like.on{color:var(--red)}
+.pact .sp{margin-inline-start:auto}
+.pcap{font-size:13px;line-height:1.95;color:rgba(255,255,255,.84);padding:4px 2px 0;white-space:pre-line}
+.pcap b{color:#fff;font-weight:800;margin-inline-end:6px}
+.pmore{background:none;border:0;color:var(--mut);font-size:12px;padding:2px}
+.pstat{font-size:12px;color:rgba(255,255,255,.72);padding:8px 2px 2px;font-weight:700}
+.pcom{display:flex;flex-direction:column;gap:7px;padding:6px 2px 2px}
+.cmt{display:flex;gap:8px;font-size:12.5px;line-height:1.75}
+.cmt .ca{width:26px;height:26px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:11px;font-weight:800;
+  background:linear-gradient(135deg,rgba(10,132,255,.4),rgba(168,85,247,.4))}
+.cmt .cb{flex:1;min-width:0}
+.cmt .cb b{font-weight:800;font-size:12px}
+.cmt .cw{font-size:10.5px;color:var(--mut);margin-inline-start:6px}
+.cmt-form{display:flex;gap:7px;align-items:center;padding:8px 0 2px}
+.cmt-form input{flex:1;min-width:0;background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:999px;
+  padding:9px 14px;color:#fff;font-size:12.5px;outline:none;font-family:inherit}
+.cmt-form input:focus{border-color:var(--blue)}
+.cmt-form button{flex:none;background:none;border:0;color:var(--blue);font-size:12.5px;font-weight:800}
+
+/* ================= استوری‌نمایش ================= */
+.slayer{position:fixed;inset:0;z-index:260;background:#000;display:none;place-items:center}
+.slayer.open{display:grid}
+.slayer-inner{width:100%;max-width:430px;height:100%;max-height:100vh;position:relative;display:flex;flex-direction:column;
+  background:linear-gradient(180deg,rgba(0,0,0,.55),transparent 22%,transparent 70%,rgba(0,0,0,.7))}
+.sbars{display:flex;gap:4px;padding:12px 12px 0}
+.sbars i{flex:1;height:2.5px;border-radius:2px;background:rgba(255,255,255,.3);overflow:hidden}
+.sbars i b{display:block;height:100%;width:0;background:#fff}
+.sbars i.done b{width:100%}
+.sbars i.run b{animation:srun 5s linear forwards}
+@keyframes srun{to{width:100%}}
+.shead{display:flex;align-items:center;gap:9px;padding:10px 12px}
+.shead .n{font-size:13px;font-weight:800}
+.shead .x{margin-inline-start:auto;width:34px;height:34px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;font-size:14px}
+.simg{flex:1;min-height:0;display:grid;place-items:center;overflow:hidden}
+.simg img{width:100%;height:100%;object-fit:contain}
+.scap{padding:12px 16px calc(18px + env(safe-area-inset-bottom));font-size:13px;color:rgba(255,255,255,.9);line-height:1.9}
+.szone{position:absolute;inset:0;display:flex}
+.szone span{flex:1}
+
+/* ================= گفتگو: فایل ================= */
+.attach{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.07);border:1px dashed var(--line);
+  border-radius:16px;padding:9px 11px}
+.attach img{width:46px;height:46px;border-radius:11px;object-fit:cover;flex:none}
+.attach .an{flex:1;min-width:0;font-size:12.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.attach .as{font-size:11px;color:var(--mut);direction:ltr}
+.attach .ax{width:30px;height:30px;flex:none;border-radius:50%;border:0;background:rgba(255,255,255,.12);color:#fff;font-size:12px}
+.msg-file{display:flex;gap:9px;align-items:center;margin-top:8px;background:rgba(0,0,0,.22);border-radius:13px;padding:8px}
+.msg-file img{width:52px;height:52px;border-radius:10px;object-fit:cover;flex:none}
+.msg-file .fchip{width:42px;height:42px;border-radius:11px;flex:none;display:grid;place-items:center;background:rgba(255,255,255,.14);font-size:17px}
+.msg-file .fn{font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:190px}
+.msg-file .fs{font-size:10.5px;opacity:.75;direction:ltr}
+.msg-file a{color:#fff;flex:none;font-size:15px;margin-inline-start:auto}
+.c-attach{width:46px;height:46px;flex:none;border-radius:50%;border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.08);color:#fff;display:grid;place-items:center;font-size:17px;padding:0}
+.reply-tag{font-size:10.5px;color:var(--green);font-weight:800}
+
+/* ================= ورود ادمین ================= */
+.log-sheet{position:absolute;inset-inline:0;bottom:0;max-width:430px;margin:0 auto;background:rgba(16,14,24,.97);
+  backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);border:1px solid var(--line);border-bottom:0;
+  border-radius:26px 26px 0 0;padding:16px 18px calc(20px + env(safe-area-inset-bottom));transform:translateY(101%);
+  transition:transform .3s var(--ease);display:flex;flex-direction:column;gap:10px}
+.log-wrap.open .log-sheet{transform:none}
+.log-sheet h3{font-size:17px;font-weight:800}
+.log-sheet input{background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:12px;padding:12px 14px;
+  color:#fff;font-size:14px;outline:none;font-family:inherit;width:100%}
+.log-sheet input:focus{border-color:var(--blue)}
+.log-err{font-size:12px;color:var(--red);min-height:16px}
+.log-tip{font-size:11.5px;color:var(--mut);line-height:1.9;background:rgba(255,255,255,.05);border-radius:12px;padding:9px 11px}
+.log-tip code{direction:ltr;display:inline-block;background:rgba(255,255,255,.1);border-radius:5px;padding:1px 6px;font-size:11px}
+.who{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--mut)}
+.who b{color:#fff;font-size:12.5px}
+.adm-out{border:1px solid rgba(255,69,58,.4);background:rgba(255,69,58,.14);color:#ffb3ae;border-radius:11px;
+  padding:6px 11px;font-size:12px;font-weight:700}
+
+/* ================= صندوق و ادمین‌ها ================= */
+.inbox-item{display:flex;gap:10px;align-items:flex-start;background:rgba(255,255,255,.05);border:1px solid var(--line);
+  border-radius:16px;padding:11px}
+.inbox-item .ii{flex:1;min-width:0}
+.inbox-item .meta{font-size:11px;color:var(--mut);display:flex;gap:8px;flex-wrap:wrap;direction:ltr}
+.inbox-item .txt{font-size:12.5px;line-height:1.85;margin-top:5px;white-space:pre-line}
+.inbox-item img{max-width:120px;border-radius:10px;margin-top:7px;display:block}
+.pill{font-size:10.5px;font-weight:800;border-radius:999px;padding:2px 9px;border:1px solid var(--line);background:rgba(255,255,255,.08)}
+.pill.ok{border-color:rgba(48,209,88,.4);background:rgba(48,209,88,.14);color:var(--green)}
+.pill.no{border-color:rgba(255,159,10,.4);background:rgba(255,159,10,.14);color:var(--yellow)}
+.rep-form{display:flex;flex-direction:column;gap:7px;margin-top:8px}
+.rep-form textarea{background:rgba(255,255,255,.07);border:1px solid var(--line);border-radius:11px;padding:9px 11px;
+  color:#fff;font-size:12.5px;font-family:inherit;min-height:64px;resize:vertical;outline:none}
+.rep-form textarea:focus{border-color:var(--blue)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sect-h{font-size:12px;font-weight:800;color:rgba(255,255,255,.8);margin-top:4px}
+
 /* ---------- انیمیشن ورود کارت‌ها ---------- */
 .view.active .sec,.view.active .stat{animation:secIn .5s var(--ease) both}
 .view.active .sec:nth-child(2){animation-delay:.05s}
@@ -470,7 +611,7 @@ html[data-lang=en] .ios-brand-name{letter-spacing:-.02em}
 
     <main class="shell-body">
 
-      <!-- ============ خانه ============ -->
+      <!-- ============ خانه: پروفایل + فید اینستاگرام ============ -->
       <section class="view active" id="view-home">
         <header class="ios-topbar">
           <div>
@@ -484,13 +625,20 @@ html[data-lang=en] .ios-brand-name{letter-spacing:-.02em}
 
         <div class="ios-main">
           <div class="ios-card hero" id="heroCard"></div>
-          <div class="stat-grid" id="statGrid"></div>
-          <section class="sec" id="sec-about"></section>
-          <section class="sec" id="sec-cats"></section>
-          <section class="sec" id="sec-hobbies"></section>
-          <div class="ios-cta" id="homeCta"></div>
-          <section class="sec" id="sec-featured"></section>
-          <section class="sec" id="sec-contact"></section>
+
+          <!-- قاب تزیینی: فید اینستاگرام -->
+          <section class="ig-frame" id="sec-ig" aria-label="فید اینستاگرام">
+            <div class="ig-inner">
+              <div class="ig-head">
+                <div class="ig-av" id="igAv"><span id="igAvIn">ta</span></div>
+                <div class="ig-meta"><b id="igUser">@titanali1</b><span id="igSub"></span></div>
+                <button class="ig-btn" id="igOpen">پیج ↗</button>
+              </div>
+              <div class="stories" id="stories"></div>
+              <div class="posts" id="posts"></div>
+              <div class="ig-live" id="igLive"></div>
+            </div>
+          </section>
         </div>
       </section>
 
@@ -524,19 +672,22 @@ html[data-lang=en] .ios-brand-name{letter-spacing:-.02em}
         <div class="chat-log" id="chatLog"></div>
         <div class="q-replies" id="quickReplies"></div>
         <form class="msg-form" id="chatForm">
+          <div id="pendingFile"></div>
           <div class="c-row">
+            <button class="c-attach" type="button" id="btnAttach" aria-label="پیوست فایل">📎</button>
             <textarea id="chatText" rows="1" aria-label="متن پیام"></textarea>
             <button class="c-send" type="submit" aria-label="ارسال">↑</button>
           </div>
           <div class="form-actions">
-            <button class="pbtn" type="button" data-share="telegram">✈ ارسال در تلگرام</button>
+            <button class="pbtn" type="button" data-share="telegram">✈ تلگرام</button>
             <button class="pbtn" type="button" data-share="whatsapp">✆ واتساپ</button>
             <button class="pbtn" type="button" data-share="email">✉ ایمیل</button>
           </div>
+          <input type="file" id="fileInp" hidden>
         </form>
       </section>
 
-      <!-- ============ اجتماعی / تماس‌ها ============ -->
+      <!-- ============ ارتباط ============ -->
       <section class="view" id="view-social">
         <header class="ios-appbar">
           <button class="ios-back" data-back aria-label="بازگشت">❮</button>
@@ -573,20 +724,56 @@ html[data-lang=en] .ios-brand-name{letter-spacing:-.02em}
   </aside>
 </div>
 
-<!-- لایت‌باکس طرح -->
+<!-- لایت‌باکس / پست تمام‌صفحه با لایک، کامنت و دانلود -->
 <div class="lb" id="lightbox" role="dialog" aria-modal="true" aria-label="نمایش طرح">
-  <div class="lb-stage">
-    <div style="display:grid;gap:10px;justify-items:center;min-height:0;width:100%">
-      <img class="lb-img" id="lbImg" alt="">
-      <div style="width:100%"><div class="lb-cap" id="lbCap" style="text-align:center"></div><div class="lb-desc" id="lbDesc"></div></div>
+  <div class="lb-stage" style="align-content:start;overflow:auto">
+    <div style="width:100%;max-width:430px;display:grid;gap:8px;justify-items:center">
+      <div class="post-media" id="lbMedia" style="width:100%;border-radius:16px">
+        <img id="lbImg" alt="">
+        <div class="dots" id="lbDots"></div>
+        <span class="pm-multi" id="lbMulti" hidden>1/1</span>
+      </div>
+      <div style="width:100%;padding:0 16px">
+        <div class="pact" id="lbActions"></div>
+        <div class="lb-cap" id="lbCap"></div>
+        <div class="lb-desc" id="lbDesc"></div>
+        <div class="pcom" id="lbComments"></div>
+      </div>
     </div>
   </div>
   <div class="lb-bar">
     <button class="lb-btn" id="lbPrev" aria-label="قبلی">❮</button>
-    <div style="flex:1;min-width:0"><div class="lb-cap" id="lbCap2"></div><div class="lb-idx" id="lbIdx" style="text-align:center"></div></div>
+    <div style="flex:1;min-width:0"><div class="lb-idx" id="lbIdx" style="text-align:center"></div></div>
     <button class="lb-btn" id="lbNext" aria-label="بعدی">❯</button>
     <button class="lb-btn" id="lbOrder" aria-label="سفارش این طرح">💬</button>
   </div>
+</div>
+
+<!-- نمایش استوری -->
+<div class="slayer" id="story" role="dialog" aria-modal="true" aria-label="استوری">
+  <div class="slayer-inner">
+    <div class="sbars" id="sBars"></div>
+    <div class="shead"><div class="ig-av" style="width:32px;height:32px"><span id="sAv" style="font-size:11px">ta</span></div>
+      <div class="n" id="sUser">@titanali1</div>
+      <button class="x" id="sClose" aria-label="بستن">✕</button></div>
+    <div class="simg"><img id="sImg" alt=""></div>
+    <div class="scap" id="sCap"></div>
+    <div class="szone"><span id="sPrev" role="button" aria-label="قبلی"></span><span id="sNext" role="button" aria-label="بعدی"></span></div>
+  </div>
+</div>
+
+<!-- ورود ادمین -->
+<div class="drawer-wrap log-wrap" id="loginWrap" role="dialog" aria-modal="true" aria-label="ورود ادمین">
+  <div class="backdrop" data-log-close></div>
+  <form class="log-sheet" id="logForm">
+    <div class="adm-grab" style="margin-top:0"></div>
+    <h3>🔐 ورود ادمین</h3>
+    <label class="field"><span>نام کاربری</span><input id="logUser" autocomplete="username" autocapitalize="none" spellcheck="false"></label>
+    <label class="field"><span>رمز عبور</span><input id="logPass" type="password" autocomplete="current-password"></label>
+    <div class="log-err" id="logErr"></div>
+    <button class="pbtn primary" type="submit" style="justify-content:center">ورود به پنل مدیریت</button>
+    <div class="log-tip" id="logTip"></div>
+  </form>
 </div>
 
 <!-- پنل مدیریت -->
@@ -594,7 +781,8 @@ html[data-lang=en] .ios-brand-name{letter-spacing:-.02em}
   <div class="backdrop" data-adm-close></div>
   <div class="adm">
     <div class="adm-grab"></div>
-    <div class="adm-head"><b>⚙️ پنل مدیریت</b><span class="hint" style="margin-inline-start:auto">ذخیره در همین مرورگر</span>
+    <div class="adm-head"><b>⚙️ پنل مدیریت</b>
+      <span class="who" id="admWho"></span>
       <button class="adm-x" data-adm-close aria-label="بستن">✕</button></div>
     <div class="adm-tabs" id="admTabs"></div>
     <div class="adm-body" id="admBody"></div>
@@ -603,14 +791,15 @@ html[data-lang=en] .ios-brand-name{letter-spacing:-.02em}
       <button class="pbtn" id="admExport">⬇ خروجی JSON</button>
       <button class="pbtn" id="admImport">⬆ ورودی JSON</button>
       <button class="pbtn" id="admReset">♻ بازنشانی</button>
+      <button class="pbtn" id="admLogout" style="color:#ffb3ae;border-color:rgba(255,69,58,.4)">خروج</button>
       <input type="file" id="admFile" accept="application/json" hidden>
       <input type="file" id="admImg" accept="image/*" hidden>
+      <input type="file" id="admImgs" accept="image/*" multiple hidden>
     </div>
   </div>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
 
 <script>
 /* =====================================================================
@@ -681,6 +870,9 @@ var DEFAULTS={
     {label:'وب‌سایت',kind:'website',id:'titanali.ir',c:'#0a84ff'},
     {label:'گیت‌هاب',kind:'github',id:'github.com/titanali',c:'#8b949e'}
   ],
+  /* ⚠️ نام کاربری و رمز پیش‌فرض ادمین — از همین‌جا عوضش کنید (و بسازید) */
+  admins:[{u:'admin',p:'titanali1384',name:'ادمین اصلی'}],
+  ig:{user:'titanali1',url:'',sub:'طراحی و دوخت · پست و استوری روزانه',perLine:4,autoStories:1,stories:[],commenter:'مهمان'},
   quick:['قیمت پلیواری چقدر است؟','برای طرح سفارشی چقدر زمان لازم است؟','سایز و رنگ دلخواه را می‌دوزید؟'],
   messages:[],
   settings:{lang:'fa',bg:'',grid:'3',theme:'#050409'}
@@ -717,6 +909,10 @@ var I18N={
    'foot.txt':'Made with ♥ · titanali','copied':'Copied','saved':'Saved','shared':'Link copied',
    'ph.msg':'Describe the design, size and colour…','open':'Open','more':'View all','of':'of','views':'designs','new':'NEW'}
 };
+Object.assign(I18N.fa,{'ig.follow':'دنبال کردن','ig.page':'پیج ↗','ig.likes':'پسند','ig.dl':'دانلود','ig.cmt':'کامنت',
+ 'ig.more':'نمایش همهٔ ','ig.reply':'ارسال پاسخ','chat.file':'پیوست فایل','chat.needTextOrFile':'متن یا فایل را بفرستید'});
+Object.assign(I18N.en,{'ig.follow':'Follow','ig.page':'Page ↗','ig.likes':'likes','ig.dl':'downloads','ig.cmt':'comments',
+ 'ig.more':'Show all ','ig.reply':'Send reply','chat.file':'Attach file','chat.needTextOrFile':'Write a text or attach a file'});
 function L(){return D.settings.lang==='en'?'en':'fa'}
 function t(k){var l=L();return (I18N[l]&&I18N[l][k])||I18N.fa[k]||k}
 function loc(){return L()==='fa'?'fa-IR':'en-US'}
@@ -741,36 +937,7 @@ function renderHome(){
     '<div class="hero-loves"><span class="i">♥</span><span>'+esc(p.loves)+'</span></div>'+
     '<div class="chips" style="justify-content:center;margin-top:12px">'+
       '<span class="chip b">📍 '+esc(p.location)+'</span><span class="chip">🟢 '+esc(p.availability)+'</span></div>';
-  $('#statGrid').innerHTML=(D.stats||[]).map(function(s){
-    return '<div class="stat"><b>'+esc(num(s.v))+'</b><span>'+esc(s.k)+'</span></div>'}).join('');
-  $('#sec-about').innerHTML='<div class="sec-title">'+t('sec.about')+'</div><p class="prose">'+esc(p.bio)+'</p>';
-
-  $('#sec-cats').innerHTML='<div class="sec-title">'+t('sec.cats')+'</div><div class="ios-list">'+
-    (D.cats||[]).map(function(c,i){
-      var n=(D.gallery||[]).filter(function(g){return g.cat===c.t}).length;
-      return '<button class="ios-row" data-cat="'+escAttr(c.t)+'"><span class="ric" style="background:'+
-        'linear-gradient(135deg,hsl('+((i*57+200)%360)+',70%,55%),hsl('+((i*57+250)%360)+',65%,40%))">'
-        +(i===0?'✦':'❖')+'</span><span class="rmeta"><span class="rtitle">'+esc(c.t)+'</span>'+
-        '<span class="rsub">'+esc(c.desc||'')+'</span></span><span class="rchev">'+num(n)+'</span></button>'}).join('')+'</div>';
-
-  $('#sec-hobbies').innerHTML='<div class="sec-title">'+t('sec.hobbies')+'</div><div class="hobby-grid">'+
-    (D.hobbies||[]).map(function(h){return '<span class="hobby">'+esc(h.ic)+' '+esc(h.t)+'</span>'}).join('')+'</div>';
-
-  $('#homeCta').innerHTML='<button class="ios-pill" data-goto="chat">💬 '+t('cta.msg')+'</button>';
-
-  var sel=(D.gallery||[]).slice(0,3);
-  $('#sec-featured').innerHTML='<div class="sec-title">'+t('sec.featured')+'</div><div class="proj-grid">'+
-    sel.map(function(g,i){
-      return '<article class="proj"><img class="proj-img" src="'+escAttr(gImg(g,i))+'" alt="'+esc(g.t)+'" data-fi="'+i+'">'+
-        '<div class="proj-body"><div class="proj-title">'+esc(g.t||'')+'</div>'+
-        (g.desc?'<div class="proj-desc">'+esc(g.desc)+'</div>':'')+
-        '<div class="pf-meta"><span class="pf-year">'+esc(g.cat||'')+'</span>'+
-        (g.n?'<span class="pf-year" style="background:rgba(48,209,88,.16);border-color:rgba(48,209,88,.4);color:var(--green)">'+t('new')+'</span>':'')+
-        '</div></div></article>'}).join('')+
-    '</div><div class="gallery-cta"><button class="ios-pill" data-goto="gallery">'+t('more')+' →</button></div>';
-
-  $('#sec-contact').innerHTML='<div class="sec-title">'+t('sec.contact')+'</div><div class="contact-grid">'+
-    D.contacts.slice(0,4).map(contactRow).join('')+'</div>';
+  renderIG();
   applyI18n();
 }
 
@@ -825,32 +992,49 @@ function renderGallery(){
     return '<figure class="gitem'+(gridMode()==='3'&&i===0&&galFilter==='all'?' wide':'')+'" data-lb="'+galShown.indexOf(g)+'" role="button" tabindex="0" aria-label="'+esc(g.t)+'">'+
       '<img loading="lazy" src="'+escAttr(gImg(g,i))+'" alt="'+esc(g.t||'')+'">'+
       (g.n?'<span class="gnew">'+t('new')+'</span>':'')+
+      ((g.imgs&&g.imgs.length>1)?'<span class="pm-multi">1/'+g.imgs.length+'</span>':'')+
       (g.t?'<figcaption class="gcap">'+esc(g.t)+'</figcaption>':'')+'</figure>'}).join('')||'<div class="empty">—</div>';
 }
-var lbI=0;
-function openLB(i){if(!galShown.length)return;lbI=i;syncLB();$('#lightbox').classList.add('open');document.body.style.overflow='hidden'}
+var lbI=0,lbK=0,lbC=false;
+function openLB(i){if(!galShown.length)return;lbI=i;lbK=0;syncLB();$('#lightbox').classList.add('open');document.body.style.overflow='hidden'}
+function lbImgs(){var g=galShown[lbI];return postImgs(g,D.gallery.indexOf(g))}
 function syncLB(){
   var g=galShown[lbI];if(!g)return;
-  var src=gImg(g,D.gallery.indexOf(g));
-  $('#lbImg').src=src;$('#lbImg').alt=g.t||'';
-  $('#lbCap').textContent=g.t||'';$('#lbCap2').textContent=g.t||'';
-  $('#lbDesc').textContent=g.desc||'';
-  $('#lbIdx').textContent=(lbI+1)+' '+t('of')+' '+galShown.length;
+  var ims=lbImgs(),i=D.gallery.indexOf(g);
+  lbK=Math.max(0,Math.min(lbK,ims.length-1));
+  $('#lbImg').src=ims[lbK];$('#lbImg').alt=g.t||'';
+  $('#lbCap').textContent=g.t||'';$('#lbDesc').textContent=g.desc||'';
+  $('#lbIdx').textContent=num(lbI+1)+' '+t('of')+' '+num(galShown.length)+(ims.length>1?' · '+num(lbK+1)+'/'+num(ims.length):'');
+  $('#lbActions').innerHTML=actionsHTML(i,g);
+  $('#lbComments').innerHTML=commentsHTML(i,g,true);$('#lbComments').hidden=!lbC;
+  OPEN_CMT[String(i)]=lbC?1:OPEN_CMT[String(i)];
+  $('#lbMedia').setAttribute('data-open',i);
+  $('#lbMulti').hidden=ims.length<2;$('#lbMulti').textContent=(lbK+1)+'/'+ims.length;
+  $('#lbDots').innerHTML=ims.map(function(_,k){return '<i'+(k===lbK?' class="on"':'')+'></i>'}).join('');
 }
-function closeLB(){$('#lightbox').classList.remove('open');document.body.style.overflow=''}
-function stepLB(d){lbI=(lbI+d+galShown.length)%galShown.length;syncLB()}
+function closeLB(){$('#lightbox').classList.remove('open');document.body.style.overflow='';lbC=false;renderIG()}
+function stepLB(d){
+  var ims=lbImgs();
+  if(ims.length>1&&Math.abs(d)===1&&d>0&&lbK<ims.length-1){lbK++;syncLB();return}
+  if(d<0&&lbK>0){lbK--;syncLB();return}
+  lbI=(lbI+d+galShown.length)%galShown.length;lbK=d>0?0:Math.max(0,lbImgs().length-1);syncLB();
+}
+function lbBurst(){var g=galShown[lbI];if(!g)return;burst(D.gallery.indexOf(g))}
 
 /* ---------- گفتگو ---------- */
-function renderChat(){
-  $('#chatTitle').textContent=D.profile.name;$('#chatHeroName').textContent=D.profile.name;
-  var box=$('#chatLog');
-  box.innerHTML=D.messages.length?D.messages.map(function(m){
-    var when='';try{when=new Date(m.ts).toLocaleString(loc(),{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'})}catch(e){}
-    return '<div class="bubble '+(m.me?'me':'them')+'">'+esc(m.text)+'<span class="b-when">'+esc(when)+'</span></div>'}).join(''):
-    '<div class="chat-empty">'+t('chat.empty')+'</div>';
-  $('#quickReplies').innerHTML=(D.quick||[]).map(function(q){return '<button class="chip" data-q="'+escAttr(q)+'">'+esc(q)+'</button>'}).join('');
-  var b=$('#chatBadge');if(D.messages.length){b.hidden=false;b.textContent=num(D.messages.length)}else b.hidden=true;
-  box.scrollTop=box.scrollHeight;
+function renderChat(){renderChatFull()}
+function sendChat(){
+  var ta=$('#chatText'),v=ta.value.trim();
+  if(!v&&!PFILE){toast(isFa()?'متن یا فایل را بفرستید':'Write a text or attach a file');return}
+  D.messages.push({me:true,text:v,ts:Date.now(),file:PFILE||undefined,sid:D.sid});
+  PFILE=null;renderPending();ta.value='';ta.style.height='auto';
+  save();renderChatFull();
+  setTimeout(function(){
+    D.messages.push({me:false,text:isFa()
+      ?'پیامت ثبت شد ✓ برای ارسال واقعی، دکمهٔ تلگرام یا واتساپ را بزن.'
+      :'Saved locally ✓ Tap Telegram or WhatsApp to actually send it.',ts:Date.now(),sid:D.sid});
+    save();renderChatFull();
+  },900);
 }
 function sendVia(kind){
   var txt=$('#chatText').value.trim()||(isFa()?'سلام! برای ':'Hi! ');
@@ -862,7 +1046,6 @@ function sendVia(kind){
   if(kind==='email')url='mailto:'+c.id+'?subject='+encodeURIComponent((isFa()?'سفارش طرح — ':'Design request — ')+D.profile.name)+'&body='+encodeURIComponent(txt);
   if(url)window.open(url,'_blank','noopener');
 }
-
 /* ---------- دراور ---------- */
 function renderDrawer(){
   var p=D.profile;
@@ -951,20 +1134,359 @@ function go(v,opts){
 /* =====================================================================
    پنل مدیریت — فرم‌محور: عکس + توضیحات برای هر طرح و هر دسته
    ===================================================================== */
+/* ---------- فید اینستاگرام: استوری + پست (لایک / کامنت / دانلود / چندتصویری) ---------- */
+var LS_LIKE='titanali.likes', LS_SEEN='titanali.seen';
+function lsGet(k){try{return JSON.parse(localStorage.getItem(k))||{}}catch(e){return{}}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function igUser(){return (D.ig&&D.ig.user)||'titanali1'}
+function igUrl(){return (D.ig&&D.ig.url)||('https://www.instagram.com/'+igUser()+'/')}
+function postImgs(g,i){var a=(g&&g.imgs||[]).filter(Boolean);if(!a.length)a=[(g&&g.img)||art((i==null?0:i)+7,'ta')];return a}
+function timeAgo(ts){
+  if(!ts)return 'تازه';
+  var s=Math.max(1,Math.floor((Date.now()-ts)/1000)),v=0,u='second';
+  if(s<60){v=s}else if(s<3600){v=Math.floor(s/60);u='minute'}
+  else if(s<86400){v=Math.floor(s/3600);u='hour'}
+  else if(s<2592000){v=Math.floor(s/86400);u='day'}
+  else {v=Math.floor(s/2592000);u='month'}
+  try{return new Intl.RelativeTimeFormat(loc(),{numeric:'auto'}).format(-v,u)}catch(e){return v+' '+u}
+}
+function ensure(){
+  D.gallery=D.gallery||[];
+  D.gallery.forEach(function(g){
+    if(!g.comments)g.comments=[]; if(g.likes==null)g.likes=0; if(g.dl==null)g.dl=0;
+    if(!g.imgs)g.imgs=[]; if(!g.ts)g.ts=Date.now();
+  });
+  if(!D.ig)D.ig=clone(DEFAULTS.ig);
+  if(!D.admins||!D.admins.length)D.admins=clone(DEFAULTS.admins);
+  D.messages=D.messages||[];
+  if(!D.sid){D.sid=Math.random().toString(36).slice(2,7);try{localStorage.setItem('titanali.sid',D.sid)}catch(e){}}
+}
+function toggleLike(i,force){
+  var g=D.gallery[i]; if(!g)return;
+  var st=lsGet(LS_LIKE),k=String(i),on=(force==null?!st[k]:!!force);
+  if(on){st[k]=1;g.likes=(g.likes||0)+1}else{delete st[k];g.likes=Math.max(0,(g.likes||0)-1)}
+  lsSet(LS_LIKE,st); save(); renderIG(); if($('#lightbox').classList.contains('open'))syncLB();
+}
+function burst(i){var el=$('#media-'+i);if(!el)return;el.classList.add('burst');setTimeout(function(){el.classList.remove('burst')},780)}
+function addComment(i,txt){
+  var g=D.gallery[i]; if(!g||!txt)return;
+  g.comments=g.comments||[]; g.comments.push({n:(D.ig&&D.ig.commenter)||'مهمان',ts:Date.now(),txt:txt});
+  save(); renderIG(); if($('#lightbox').classList.contains('open'))syncLB(); toast('کامنت ثبت شد ✓')
+}
+function doDownload(i,k){
+  var g=D.gallery[i]; if(!g)return;
+  var url=postImgs(g,i)[k||0];
+  var name=((g.t||'titanali')+'-'+((k||0)+1)).replace(/[\\/:*?"<>|\s]+/g,'-').slice(0,60)+'.jpg';
+  g.dl=(g.dl||0)+1;
+  function done(){save();renderIG();if($('#lightbox').classList.contains('open'))syncLB();toast('دانلود شد ↓')}
+  if(/^data:/.test(url)){var a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();
+    setTimeout(function(){a.remove()},250);done();return}
+  try{
+    fetch(url).then(function(r){return r.blob()}).then(function(b){
+      var u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name;
+      document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(u);a.remove()},450);done();
+    }).catch(function(){window.open(url,'_blank','noopener');toast('سرور اجازهٔ دانلود مستقیم نداد (CORS) — در تب جدید باز شد')});
+  }catch(e){window.open(url,'_blank','noopener')}
+}
+function sharePost(i){
+  var g=D.gallery[i],txt=(g.t||'طرح تیتانلی')+'\n'+(g.desc||'');
+  var url=igUrl()+' '+location.href.split('#')[0];
+  if(navigator.share)navigator.share({title:D.profile.name,text:txt,url:url}).catch(function(){});
+  else copy(txt+'\n'+url,'متن پست کپی شد');
+}
+function actionsHTML(i,g){
+  var st=lsGet(LS_LIKE),liked=!!st[String(i)],lc=(g.comments||[]).length;
+  return '<button class="like'+(liked?' on':'')+'" data-like="'+i+'" aria-label="پسندیدن" title="پسندیدن">'+(liked?'♥':'♡')+'</button>'+
+    '<span class="cnt">'+num(g.likes||0)+'</span>'+
+    '<button data-cmt="'+i+'" aria-label="کامنت‌ها" title="کامنت">💬</button><span class="cnt">'+num(lc)+'</span>'+
+    '<button data-dl="'+i+'" aria-label="دانلود تصویر" title="دانلود">⤓</button><span class="cnt">'+num(g.dl||0)+'</span>'+
+    '<button class="sp" data-sharepost="'+i+'" aria-label="اشتراک" title="اشتراک">↗</button>';
+}
+function commentsHTML(i,g,open){
+  var list=g.comments||[];
+  return '<div class="pcom" id="cmts-'+i+'"'+(open?'':' hidden')+'>'+
+    (list.length?list.slice(-12).map(function(c){
+      return '<div class="cmt"><span class="ca">'+esc(String(c.n||'م').slice(0,2))+'</span>'+
+        '<span class="cb"><b>'+esc(c.n||'مهمان')+'</b> '+esc(c.txt||'')+
+        '<span class="cw">'+esc(timeAgo(c.ts))+'</span></span></div>'}).join('')
+      :'<div class="hint" style="font-size:12px">هنوز کامنتی نیست — اولین نفر باشید.</div>')+
+    '<form class="cmt-form" data-cmtform="'+i+'"><input placeholder="کامنت بگذارید…" aria-label="کامنت" maxlength="300" dir="auto">'+
+    '<button type="submit">ارسال</button></form></div>';
+}
+function storiesList(){
+  var ig=D.ig||{},man=(ig.stories||[]).filter(function(s){return s.img||s.t});
+  if(man.length&&!ig.autoStories)return man;
+  return D.gallery.slice().sort(function(a,b){return (b.ts||0)-(a.ts||0)}).slice(0,8).map(function(g){
+    return {t:g.t,img:(g.imgs&&g.imgs[0])||g.img,gi:D.gallery.indexOf(g),ts:g.ts}});
+}
+function renderIG(){
+  var ig=D.ig||{};
+  $('#igUser').textContent='@'+igUser();
+  $('#igSub').textContent=ig.sub||D.profile.tagline;
+  $('#sUser').textContent='@'+igUser();
+  var avIn=$('#igAvIn');
+  if(D.profile.avatar){avIn.innerHTML='<img src="'+escAttr(D.profile.avatar)+'" alt="">'}else{avIn.textContent=D.profile.initials||'ta'}
+  if(D.profile.avatar){$('#sAv').innerHTML='<img src="'+escAttr(D.profile.avatar)+'" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">'}
+  var sts=storiesList(),seen=lsGet(LS_SEEN);
+  $('#stories').innerHTML='<button class="story" data-story="-1" aria-label="باز کردن پیج اینستاگرام">'+
+      '<span class="ring"><span style="display:grid;place-items:center;font-size:19px">＋</span></span><em>پیج</em></button>'+
+    sts.map(function(s,i){
+      return '<button class="story'+(seen[i]?' seen':'')+'" data-story="'+i+'" aria-label="استوری '+esc(s.t||'')+'">'+
+      '<span class="ring"><span><img loading="lazy" src="'+escAttr(s.img||art(i+3,'ta'))+'" alt=""></span></span>'+
+      '<em>'+esc(s.t||('طرح '+(i+1)))+'</em></button>'}).join('');
+  var per=Math.max(1,Number(ig.perLine)||4);
+  var posts=D.gallery.slice(0,IG_SHOWN||per);
+  $('#posts').innerHTML=posts.map(function(g){
+    var i=D.gallery.indexOf(g),ims=postImgs(g,i);
+    return '<article class="post">'+
+      '<div class="post-top"><div class="ig-av" style="width:30px;height:30px"><span style="font-size:10px">'+esc(D.profile.initials||'ta')+'</span></div>'+
+        '<span class="u">@'+esc(igUser())+'</span>'+(g.cat?'<span class="pill">'+esc(g.cat)+'</span>':'')+
+        (g.n?'<span class="pill ok">'+t('new')+'</span>':'')+'<span class="t">'+esc(timeAgo(g.ts))+'</span></div>'+
+      '<div class="post-media" id="media-'+i+'" data-open="'+i+'" role="button" tabindex="0" aria-label="باز کردن پست">'+
+        '<img src="'+escAttr(ims[0])+'" alt="'+esc(g.t||'')+'">'+
+        (ims.length>1?'<span class="pm-multi">1/'+ims.length+'</span><div class="dots">'+
+          ims.map(function(_,k){return '<i'+(k===0?' class="on"':'')+'></i>'}).join('')+'</div>':'')+
+        '<div class="heart-burst">♥</div></div>'+
+      '<div class="pact">'+actionsHTML(i,g)+'</div>'+
+      ((g.t||g.desc)?'<div class="pcap"><b>'+esc(D.profile.name)+'</b>'+esc(g.t||'')+(g.desc?'\n'+esc(g.desc):'')+'</div>':'')+
+      '<div class="pstat">'+num(g.likes||0)+' پسند · '+num(g.dl||0)+' دانلود · '+num(ims.length)+' تصویر</div>'+
+      commentsHTML(i,g,cmtOpen(i))+'</article>'}).join('')||'<div class="empty">هنوز پستی نیست — از پنل مدیریت افزودن کنید.</div>';
+  $('#igLive').innerHTML=ig.autoStories?'<span>🔄 استوری‌ها خودکار از تازه‌ترین طرح‌ها ساخته می‌شود</span>'
+    :(ig.user?'<span>🔒 اتصال زندهٔ اینستاگرام از مرورگر ممکن نیست — لینک پیج: </span><a href="'+escAttr(igUrl())+'" target="_blank" rel="noopener">@'+esc(igUser())+'</a>':'');
+  if(D.gallery.length>posts.length)
+    $('#posts').insertAdjacentHTML('afterend','<div style="text-align:center;padding-top:10px"><button class="ios-pill" id="igMore">نمایش همهٔ '+num(D.gallery.length)+' طرح ↓</button></div>');
+  else if(IG_SHOWN) $('#posts').insertAdjacentHTML('afterend','<div style="text-align:center;padding-top:10px"><button class="ios-pill" id="igLess">بستن ↑</button></div>');
+  carouselWire();
+}
+var IG_SHOWN=0,OPEN_CMT={};
+function cmtOpen(i){return !!OPEN_CMT[String(i)]}
+function carouselWire(){
+  $$('#posts .post-media').forEach(function(box){
+    if(box.dataset.wired)return; box.dataset.wired='1';
+    var i=Number(box.dataset.open),g=D.gallery[i],ims=postImgs(g,i),cur=0;
+    function show(k){
+      cur=(k+ims.length)%ims.length;
+      var im=box.querySelector('img'); if(im)im.src=ims[cur];
+      box.querySelectorAll('.dots i').forEach(function(n,j){n.classList.toggle('on',j===cur)});
+      var m=box.querySelector('.pm-multi'); if(m)m.textContent=(cur+1)+'/'+ims.length;
+    }
+    box.step=function(d){show(cur+d)};
+    var x0=null;
+    box.addEventListener('touchstart',function(e){x0=e.touches[0].clientX},{passive:true});
+    box.addEventListener('touchend',function(e){if(x0==null)return;var dx=e.changedTouches[0].clientX-x0;x0=null;
+      if(Math.abs(dx)>36)show(cur+(dx<0?1:-1))},{passive:true});
+    box.addEventListener('dblclick',function(){toggleLike(i,true);burst(i)});
+  });
+}
+/* ---------- نمایش استوری ---------- */
+var ST={list:[],i:0,timer:null};
+function openStory(k){
+  ST.list=storiesList(); if(!ST.list.length){toast('استوری‌ای وجود ندارد');return}
+  ST.i=Math.max(0,Math.min(ST.list.length-1,k));
+  $('#story').classList.add('open');document.body.style.overflow='hidden';stShow();
+}
+function stShow(){
+  var s=ST.list[ST.i]||{},seen=lsGet(LS_SEEN);seen[ST.i]=1;lsSet(LS_SEEN,seen);
+  $('#sImg').src=s.img||art(ST.i+3,'ta'); $('#sImg').alt=s.t||'';
+  $('#sCap').textContent=s.t||'';
+  $('#sBars').innerHTML=ST.list.map(function(_,j){return '<i class="'+(j<ST.i?'done':(j===ST.i?'run':''))+'"><b></b></i>'}).join('');
+  clearTimeout(ST.timer);
+  ST.timer=setTimeout(function(){stStep(1)},5000);
+  $$('#stories .story').forEach(function(b,n){if(n-1===ST.i)b.classList.add('seen')});
+}
+function stStep(d){
+  var n=ST.i+d;
+  if(n<0)return; if(n>=ST.list.length){closeStory();return}
+  ST.i=n;stShow();
+}
+function closeStory(){$('#story').classList.remove('open');document.body.style.overflow='';clearTimeout(ST.timer);renderIG()}
+$('#story').addEventListener('click',function(e){if(e.target.id==='sClose'||e.target===this)closeStory()});
+$('#sPrev').addEventListener('click',function(e){e.stopPropagation();stStep(-1)});
+$('#sNext').addEventListener('click',function(e){e.stopPropagation();stStep(1)});
+$('#story').addEventListener('dblclick',function(e){if(e.target.id!=='sClose')closeStory()});
+/* ---------- همگام‌سازی / ورودی داده از اینستاگرام ---------- */
+function igSync(){
+  var u=igUser();
+  $('#igLive').innerHTML='<span>⏳ تلاش برای خواندن '+esc(u)+' …</span>';
+  var tried=0;
+  function fail(msg){
+    $('#igLive').innerHTML='<span>⚠️ '+esc(msg)+'</span>';
+    toast('اتصال مستقیم ممکن نشد — اینستاگرام از مرورگر اجازهٔ خواندن نمی‌دهد (CORS/توکن). از «وارد کردن JSON» استفاده کنید.');
+  }
+  ['https://i.instagram.com/api/v1/feed/user/?username='+encodeURIComponent(u),
+   'https://www.instagram.com/'+encodeURIComponent(u)+'/?__a=1&__d=dis'].forEach(function(url){
+    tried++;
+    fetch(url,{mode:'cors'}).then(function(r){return r.json()}).then(function(j){
+      if(j&&j.items)igApply({items:j.items});else if(j&&j.data&&j.data.user&&j.data.user.media)igApply({items:j.data.user.media.nodes});
+      else throw 0;
+    }).catch(function(){if(--tried===0)fail('خواندن از مرورگر مسدود است')});
+  });
+  setTimeout(function(){if(tried>0)fail('خواندن از مرورگر مسدود است')},6000);
+}
+function igApply(items,T){
+  T=T||D;
+  var list=(items&&items.items)||items||[];
+  var added=0;
+  list.slice(0,12).forEach(function(m){
+    var src=m.image_versions2&&m.image_versions2.candidates&&m.image_versions2.candidates[0].url||m.media_url||m.thumbnail_src||m.mediaurl;
+    if(!src)return;
+    var cap=typeof m.caption==='string'?m.caption:((m.caption&&m.caption.text)||(m.caption_text)||m.title||'');
+    var g={t:(cap.split('\n')[0]||('پست '+(D.gallery.length+1))).slice(0,60),cat:'',desc:cap.slice(0,400),img:src,imgs:[],
+      comments:[],likes:m.like_count||m.num_likes||0,dl:0,n:0,ts:(m.taken_at?a(m.taken_at):Date.now())};
+    function a(x){return (Number(x)||0)*1000}
+    T.gallery.unshift(g);added++;
+  });
+  if(added){if(W)W=clone(D);ensure();save();renderAll();toast(added+' پست افزوده شد ✓')}
+  else toast('چیزی برای افزودن پیدا نشد')
+}
+function igApplyJson(text){
+  var o;try{o=JSON.parse(text)}catch(e){toast('JSON نامعتبر است ❌');return false}
+  var arr=Array.isArray(o)?o:(o.items||o.data&&o.data.user&&o.data.user.media&&o.data.user.media.nodes||o.graphql&&o.graphql.user&&o.graphql.user.edges||[]);
+  if(!arr.length){toast('ساختار پشتیبانی نمی‌شود — آرایه‌ای از {media_url,caption,timestamp,taken_at} بدهید');return false}
+  igApply({items:arr.map(function(x){return x.node||x})});return true;
+}
+
+/* ---------- ورود ادمین و مدیریت ادمین‌ها ---------- */
+var SESS=null;
+try{SESS=JSON.parse(sessionStorage.getItem('titanali.sess'))||null}catch(e){SESS=null}
+function isAuth(){return !!(SESS&&SESS.u)}
+function loginSheet(open){
+  $('#loginWrap').classList.toggle('open',open);
+  if(open){$('#logUser').value='';$('#logPass').value='';$('#logErr').textContent='';setTimeout(function(){$('#logUser').focus()},120)}
+  document.body.style.overflow=open?'hidden':'';
+}
+function tryLogin(u,p){
+  var a=(D.admins||[]).filter(function(x){return String(x.u)===String(u)&&String(x.p)===String(p)})[0];
+  if(!a)return false;
+  SESS={u:a.u,name:a.name||a.u,at:Date.now()};
+  try{sessionStorage.setItem('titanali.sess',JSON.stringify(SESS))}catch(e){}
+  a.last=Date.now();save();return true;
+}
+function logout(){SESS=null;try{sessionStorage.removeItem('titanali.sess')}catch(e){}adm(false);toast('از حساب ادمین خارج شدید')}
+function adminOnly(){if(isAuth()){adm(true);return true}loginSheet(true);return false}
+function adminsTable(){
+  return (AW().admins||[]).map(function(a,i){
+    return '<div class="row-card"><div class="row-head"><span class="n">'+num(i+1)+'</span>'+
+      '<span class="size-note">'+esc(a.u)+(SESS&&SESS.u===a.u?' · شما':'')+'</span>'+
+      '<button class="row-del" data-adel="'+i+'" aria-label="حذف ادمین">✕</button></div>'+
+      '<div class="row2"><label class="field"><span>نام کاربری</span><input data-af="u" data-i="'+i+'" value="'+escAttr(a.u||'')+'"></label>'+
+      '<label class="field"><span>رمز عبور</span><input data-af="p" data-i="'+i+'" value="'+escAttr(a.p||'')+'"></label></div>'+
+      '<label class="field"><span>نام نمایشی در پنل</span><input data-af="name" data-i="'+i+'" value="'+escAttr(a.name||'')+'"></label></div>'}).join('')+
+    '<button class="add-row" data-aadd>＋ افزودن ادمین تازه</button>'+
+    '<p class="hint">⚠️ این احراز هویت سمت کلاینت است: چون فایل HTML عمومی است، هر کسی با دیدن کد می‌تواند نام کاربری/رمز را ببیند. برای محافظت واقعی، رمز را سمت سرور (Pages + Basic Auth یا بک‌اند) بررسی کنید.</p>';
+}
+
+/* ---------- پیوست فایل در گفتگو (توضیح قبل از ارسال) ---------- */
+var PFILE=null;
+function renderPending(){
+  var box=$('#pendingFile');
+  if(!PFILE){box.innerHTML='';return}
+  box.innerHTML='<div style="padding:0 14px 8px"><div class="attach">'+
+    (PFILE.type&&/^image\//.test(PFILE.type)?'<img src="'+escAttr(PFILE.url)+'" alt="">':'<span class="file-chip">📄</span>')+
+    '<span class="an">'+esc(PFILE.name)+'<span class="as">'+kb(PFILE.size)+' · توضیح را در کادر بنویسید</span></span>'+
+    '<button class="ax" type="button" data-filedel aria-label="حذف فایل">✕</button></div></div>';
+}
+function kb(b){b=Number(b)||0;return b<1024?b+' B':(b/1024).toFixed(0)+' KB'}
+function onPickFile(f){
+  if(!f)return;
+  if(/^image\//.test(f.type||'')){
+    shrink(f,function(url,w,h,bytes){PFILE={name:f.name.replace(/\.\w+$/,'')+'.jpg',type:'image/jpeg',size:bytes,url:url,w:w,h:h};renderPending();
+      toast('تصویر '+w+'×'+h+' آماده شد — توضیح بنویسید و ↑ بزنید')});
+    return;
+  }
+  if(f.size>1200*1024){toast('فایل بیشتر از ۱٫۲ مگابایت است؛ برای تصاویر، همان دکمهٔ فشرده‌سازی کار می‌کند');return}
+  var r=new FileReader();
+  r.onload=function(){PFILE={name:f.name,type:f.type||'application/octet-stream',size:f.size,url:r.result};renderPending();toast('فایل آماده است — توضیح بنویسید و ↑ بزنید')};
+  r.onerror=function(){toast('خواندن فایل ممکن نشد ❌')};
+  r.readAsDataURL(f);
+}
+function renderChatFull(){
+  $('#chatTitle').textContent=D.profile.name;$('#chatHeroName').textContent=D.profile.name;
+  var box=$('#chatLog');
+  box.innerHTML=D.messages.length?D.messages.map(function(m,j){
+    var when='';try{when=new Date(m.ts).toLocaleString(loc(),{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'})}catch(e){}
+    var f=m.file?'<div class="msg-file">'+
+      (/^image\//.test(f0(m.file.type))?'<img src="'+escAttr(m.file.url)+'" alt="">':'<span class="fchip">📄</span>')+
+      '<span style="flex:1;min-width:0"><span class="fn">'+esc(m.file.name)+'</span><span class="fs">'+kb(m.file.size)+'</span></span>'+
+      '<a href="'+escAttr(m.file.url)+'" download="'+escAttr(m.file.name)+'" aria-label="دانلود فایل">⤓</a></div>':'';
+    function f0(x){return x||''}
+    return '<div class="bubble '+(m.me?'me':'them')+'">'+(m.text?esc(m.text):'')+f+
+      '<span class="b-when">'+esc(when)+(m.me?' · ارسال‌شده':' · پاسخ کارگاه')+'</span></div>'}).join(''):
+    '<div class="chat-empty">'+t('chat.empty')+'</div>';
+  $('#quickReplies').innerHTML=(D.quick||[]).map(function(q){return '<button class="chip" data-q="'+escAttr(q)+'">'+esc(q)+'</button>'}).join('');
+  var b=$('#chatBadge'),un=D.messages.filter(function(m){return !m.me&&!m.read}).length;
+  if(un){b.hidden=false;b.textContent=num(un)}else if(D.messages.length){b.hidden=false;b.textContent=num(D.messages.length)}else b.hidden=true;
+  box.scrollTop=box.scrollHeight;
+}
+
+/* ---------- صندوق پیام‌ها + پاسخ مستقیم ---------- */
+function AW(){return W||D}
+function inboxTable(){
+  var M=AW(),list=(M.messages||[]).filter(function(m){return m.me});
+  if(!list.length)return '<div class="empty">هنوز پیامی نرسیده است. پیام‌های دریافتی کاربران همین‌جا می‌آید و می‌توانید مستقیم پاسخ دهید.</div>';
+  return '<p class="hint">پیام‌های دریافتی از پایین‌ترین؛ با «پاسخ» یک حباب از طرف کارگاه برای کاربر ثبت می‌شود و در گفتگوی همان مرورگر نمایش داده می‌شود.</p>'+
+  list.map(function(m){
+    var gi=M.messages.indexOf(m),answered=M.messages.some(function(x){return !x.me&&x.to===gi});
+    return '<div class="inbox-item"><span class="ii">'+
+      '<div class="meta"><span>#'+esc(m.sid||D.sid||'')+'</span><span>'+esc(new Date(m.ts).toLocaleString(loc()))+'</span>'+
+      '<span class="pill '+(answered?'ok':'no')+'">'+(answered?'پاسخ داده شد':'بی‌پاسخ')+'</span></div>'+
+      (m.text?'<div class="txt">'+esc(m.text)+'</div>':'')+
+      (m.file?'<div class="txt">📎 '+esc(m.file.name)+' ('+kb(m.file.size)+')</div><img src="'+escAttr(m.file.url)+'" alt="">':'')+
+      '<div class="rep-form" data-rep="'+gi+'"'+(answered?' hidden':'')+'><textarea placeholder="پاسخ کارگاه…" dir="auto"></textarea>'+
+      '<div class="form-actions"><button class="pbtn primary" type="button" data-sendrep="'+gi+'">ارسال پاسخ</button>'+
+      '<button class="pbtn" type="button" data-delpend="'+gi+'">حذف پیام</button></div></div>'+
+      '</span></div>'}).join('');
+}
+function sendReply(gi,txt){
+  if(!txt)return;
+  D.messages.push({me:false,text:txt,ts:Date.now(),to:gi,sid:(D.messages[gi]||{}).sid||D.sid});
+  if(W)W=D;
+  save();renderChatFull();renderAdmin();toast('پاسخ برای کاربر ثبت شد ✓')
+}
+/* ---------- ویرایشگر طرح: چندتصویری + شمارنده‌ها ---------- */
+function designRowFull(g,i){
+  return designRow(g,i)+
+    '<label class="field"><span>تصویرهای اضافهٔ همین پست (هر خط یک آدرس)</span>'+
+    '<textarea data-gf="imgsTxt" data-i="'+i+'" rows="3" placeholder="https://…/2.jpg&#10;https://…/3.jpg">'+esc((g.imgs||[]).join('\n'))+'</textarea></label>'+
+    '<div class="form-actions"><button class="pbtn" type="button" data-upm="'+i+'">🖼 افزودن چند عکس (انتخاب از گالری)</button></div>'+
+    '<div class="row2"><label class="field"><span>پسند (شمارنده)</span><input data-gf="likes" data-i="'+i+'" type="number" min="0" value="'+(Number(g.likes)||0)+'"></label>'+
+    '<label class="field"><span>دانلود (شمارنده)</span><input data-gf="dl" data-i="'+i+'" type="number" min="0" value="'+(Number(g.dl)||0)+'"></label></div>';
+}
+/* ---------- تنظیمات اینستاگرام ---------- */
+function igForm(){
+  var ig=D.ig||{};
+  return '<label class="field"><span>نام کاربری پیج اینستاگرام</span><input id="igUserInp" value="'+escAttr(ig.user||'')+'" placeholder="titanali1"></label>'+
+    '<label class="field"><span>لینک پیج (اختیاری)</span><input id="igUrlInp" value="'+escAttr(ig.url||'')+'" placeholder="https://www.instagram.com/titanali1/"></label>'+
+    '<label class="field"><span>زیرعنوان فید</span><input id="igSubInp" value="'+escAttr(ig.sub||'')+'"></label>'+
+    '<div class="row2"><label class="field"><span>پست در صفحه اصلی</span><input id="igPerInp" type="number" min="1" max="30" value="'+(Number(ig.perLine)||4)+'"></label>'+
+    '<label class="field"><span>نام پیش‌فرض کامنت‌گذار</span><input id="igCmtInp" value="'+escAttr(ig.commenter||'')+'" placeholder="مهمان"></label></div>'+
+    '<label class="field" style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" id="igAuto"'+(ig.autoStories?' checked':'')+' style="width:20px;flex:none"><span style="font-size:12.5px">استوری‌ها خودکار از تازه‌ترین طرح‌ها ساخته شود</span></label>'+
+    '<label class="field"><span>استوری‌های دستی (JSON — خالی = خودکار)</span><textarea id="igStories" rows="3">'+esc(JSON.stringify(ig.stories||[],null,1))+'</textarea></label>'+
+    '<div class="form-actions"><button class="pbtn primary" type="button" id="igSyncBtn">🔄 تلاش برای خواندن از اینستاگرام</button>'+
+    '<button class="pbtn" type="button" id="igFromGallery">✨ ساخت استوری از طرح‌های تازه</button></div>'+
+    '<label class="field"><span>وارد کردن JSON پاسخ اینستاگرام / Graph API</span>'+
+    '<textarea id="igJson" rows="4" placeholder=\'[{"media_url":"https://…","caption":"…","timestamp":"2026-10-01T10:00:00+0000"}]\'></textarea></label>'+
+    '<div class="form-actions"><button class="pbtn" type="button" id="igJsonBtn">⇪ افزودن به پست‌ها</button></div>'+
+    '<p class="hint">اینستاگرام اجازهٔ خواندن استوری/پست از مرورگر (بدون سرور و توکن) نمی‌دهد؛ بنابراین <b>تلاش برای خواندن</b> معمولاً با خطای CORS تمام می‌شود. راه‌های کارکرد: ۱) پاسخ Graph API را در کادر بالا Paste کنید ۲) استوری‌ها را دستی/خودکار از طرح‌ها بسازید ۳) یک پروکسی کوچک سمت سرور بگذارید (endpoint را در همین تابع عوض می‌کنید).</p>';
+}
+
 var ADM_TABS=[
-  {k:'gallery',lab:'طرح‌ها (عکس و توضیحات)',json:false},
-  {k:'cats',lab:'دسته‌ها',json:false},
-  {k:'profile',lab:'کارگاه',json:false},
-  {k:'stats',lab:'آمار',json:true},
-  {k:'hobbies',lab:'برچسب‌ها',json:true},
-  {k:'contacts',lab:'تماس‌ها',json:true},
-  {k:'settings',lab:'تنظیمات',json:false}
+  {k:'gallery',lab:'طرح‌ها (عکس، توضیح، پست)'},
+  {k:'cats',lab:'دسته‌ها'},
+  {k:'inbox',lab:'📥 صندوق پیام‌ها'},
+  {k:'instagram',lab:'اینستاگرام'},
+  {k:'profile',lab:'کارگاه'},
+  {k:'admins',lab:'🔐 ادمین‌ها'},
+  {k:'stats',lab:'آمار'},
+  {k:'hobbies',lab:'برچسب‌ها'},
+  {k:'contacts',lab:'تماس‌ها'},
+  {k:'settings',lab:'تنظیمات'}
 ];
 var PF=[['name','نام نمایشی','text'],['initials','حروف آواتار','text'],['role','عنوان','text'],
   ['tagline','زیرعنوان نوار بالا','text'],['loves','خط دوم هیرو','text'],['location','موقعیت','text'],
   ['availability','وضعیت','text'],['avatar','آدرس تصویر آواتار','text'],['bio','متن درباره‌ی کارگاه','area']];
 var GF=[['t','عنوان طرح','text'],['cat','دسته','select'],['desc','توضیحات (نمایش در کارت و لایت‌باکس)','area'],['img','آدرس تصویر (یا بارگذاری)','text'],['n','برچسب «جدید»','flag']];
-var W=null,upTarget=null,admTab='gallery';
+var W=null,upTarget=null,upMulti=null,admTab='gallery';
 function optsCats(sel){
   return '<option value="">— بدون دسته —</option>'+(W.cats||[]).map(function(c){
     return '<option value="'+escAttr(c.t)+'"'+(c.t===sel?' selected':'')+'>'+esc(c.t)+'</option>'}).join('');
@@ -993,11 +1515,15 @@ function catRow(c,i){
     '</div>';
 }
 function renderAdmin(){
+  $('#admWho').innerHTML='👤 <b>'+esc((SESS&&(SESS.name||SESS.u))||'ناشناس')+'</b>';
   $('#admTabs').innerHTML=ADM_TABS.map(function(x){
     return '<button class="adm-tab'+(admTab===x.k?' on':'')+'" data-adm-tab="'+x.k+'">'+x.lab+'</button>'}).join('');
   var pane='';
-  if(admTab==='gallery'){
-    pane=(W.gallery||[]).map(designRow).join('')+
+  if(admTab==='inbox'){pane=inboxTable()}
+  else if(admTab==='admins'){pane=adminsTable()}
+  else if(admTab==='instagram'){pane=igForm()}
+  else if(admTab==='gallery'){
+    pane=(W.gallery||[]).map(designRowFull).join('')+
       '<button class="add-row" data-gadd>＋ افزودن طرح تازه</button>'+
       '<p class="hint">عکس را از گالریِ گوشی انتخاب کنید؛ قبل از ذخیره به حداکثر ۱۱۰۰ پیکسل کوچک و فشرده می‌شود تا حافظه‌ی مرورگر پر نشود.</p>';
   }else if(admTab==='cats'){
@@ -1029,7 +1555,8 @@ function renderAdmin(){
   $('#admBody').innerHTML='<div class="adm-pane on">'+pane+'</div>';
 }
 function adm(open){
-  if(open){W=clone(D);renderAdmin()}
+  if(open&&!isAuth()){loginSheet(true);return}
+  if(open){W=clone(D);ensure();renderAdmin()}
   $('#adminPanel').classList.toggle('open',open);
   document.body.style.overflow=open?'hidden':'';
   if(!open)W=null;
@@ -1045,7 +1572,7 @@ function shrink(file,cb){
       var c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.width*sc));c.height=Math.max(1,Math.round(im.height*sc));
       c.getContext('2d').drawImage(im,0,0,c.width,c.height);
       var url=c.toDataURL('image/jpeg',0.85);
-      cb(url,c.width,c.height,Math.round(url.length*0.75/1024));
+      cb(url,c.width,c.height,Math.round(url.length*0.75));
     };
     im.onerror=function(){toast('این فایل خوانده نشد ❌')};
     im.src=r.result;
@@ -1060,7 +1587,25 @@ function setDesignImg(i,url){
 }
 function admSave(){
   if(!W)return;
-  if(admTab==='profile'){$$('[data-pf]').forEach(function(n){W.profile[n.dataset.pf]=n.value})}
+  if(!isAuth()){W=null;adm(false);loginSheet(true);return}
+  if(admTab==='admins'){
+    var ok=(W.admins||[]).filter(function(a){return a.u&&a.p});
+    if(!ok.length){toast('حداقل یک ادمین با نام کاربری و رمز لازم است ❌');return}
+    var seenU={};
+    for(var k=0;k<W.admins.length;k++){var a=W.admins[k];
+      if(!a.u||!a.p){toast('برای همهٔ ادمین‌ها نام کاربری و رمز پر کنید ❌');return}
+      if(String(a.p).length<4){toast('رمز باید حداقل ۴ نویسه باشد ❌');return}
+      if(seenU[a.u]){toast('نام کاربری تکراری است ❌');return} seenU[a.u]=1}
+    if(!W.admins.some(function(x){return x.u===SESS.u})){toast('نام کاربری خودتان را حذف/عوض نکنید ❌');return}
+  }
+  else if(admTab==='instagram'){
+    try{W.ig.stories=JSON.parse($('#igStories').value||'[]')}catch(e){toast('JSON استوری‌ها نامعتبر است ❌');return}
+    W.ig.user=$('#igUserInp').value.trim();W.ig.url=$('#igUrlInp').value.trim();
+    W.ig.sub=$('#igSubInp').value.trim();W.ig.perLine=Math.max(1,Number($('#igPerInp').value)||4);
+    W.ig.commenter=$('#igCmtInp').value.trim()||'مهمان';
+    W.ig.autoStories=$('#igAuto').checked?1:0;
+  }
+  else if(admTab==='profile'){$$('[data-pf]').forEach(function(n){W.profile[n.dataset.pf]=n.value})}
   else if(admTab==='settings'){
     W.settings.lang=$('#admLang').value;W.settings.bg=$('#admBg').value.trim();
     W.settings.theme=$('#admTheme').value.trim();W.settings.grid=$('#admGrid').value;
@@ -1072,8 +1617,9 @@ function admSave(){
   W.gallery=(W.gallery||[]).filter(function(g){return g&&(g.t||g.img||g.desc)});
   W.cats=(W.cats||[]).filter(function(c){return c&&c.t});
   if(galFilter!=='all'&&!W.cats.some(function(c){return c.t===galFilter}))galFilter='all';
+  if(admTab==='admins'&&SESS)SESS.u=(W.admins.filter(function(x){return x.name===SESS.name})[0]||W.admins[0]).u;
   D=W;
-  if(save()){renderAll();toast(t('saved'))}
+  if(save()){renderAll();toast(t('saved'));if($('#adminPanel').classList.contains('open'))renderAdmin()}
 }
 function admExport(){
   try{
@@ -1120,7 +1666,7 @@ document.addEventListener('click',function(e){
     if(a==='lang'){D.settings.lang=L()==='fa'?'en':'fa';save();renderAll();toast(D.settings.lang==='fa'?'فارسی':'English')}
     if(a==='bg'){admTab='settings';adm(true)}
     if(a==='share')share();
-    if(a==='admin')adm(true);
+    if(a==='admin')adminOnly();
     return;
   }
   var gt=near('[data-gal]');if(gt){galFilter=gt.dataset.gal;renderGallery();return}
@@ -1142,6 +1688,51 @@ document.addEventListener('click',function(e){
     if(m)copy(m.id);else toast('ایمیلی ثبت نشده');return}
   var cp=near('[data-copy]');if(cp){e.preventDefault();copy(cp.dataset.copy);return}
 
+  /* ---- پست‌ها و استوری ---- */
+  if($('#lightbox').classList.contains('open')&&near('#lbMedia')){
+    var im=lbImgs();
+    if(im.length>1){lbK=(lbK+1)%im.length;syncLB()}else closeLB();
+    return}
+  var lk=near('[data-like]');
+  if(lk){var li=Number(lk.dataset.like),wasOn=lk.classList.contains('on');toggleLike(li);if(!wasOn)burst(li);return}
+  var cm=near('[data-cmt]');
+  if(cm){var ci=Number(cm.dataset.cmt);OPEN_CMT[String(ci)]=!OPEN_CMT[String(ci)];
+    if($('#lightbox').classList.contains('open')){lbC=!lbC;syncLB();if(lbC){var ip=$('#lbComments input');if(ip)ip.focus()}}
+    else{var bx=$('#cmts-'+ci);if(bx){bx.hidden=!bx.hidden;if(!bx.hidden){var i2=bx.querySelector('input');if(i2)i2.focus()}}}
+    return}
+  var dl=near('[data-dl]'); if(dl){doDownload(Number(dl.dataset.dl),0);return}
+  var sp=near('[data-sharepost]'); if(sp){sharePost(Number(sp.dataset.sharepost));return}
+  var pm=near('.post-media[data-open]');
+  if(pm){galShown=D.gallery.slice();lbK=0;openLB(Number(pm.dataset.open));return}
+  var sto=near('.story[data-story]');
+  if(sto){var sk=Number(sto.dataset.story);if(sk<0)window.open(igUrl(),'_blank','noopener');else openStory(sk);return}
+  if(near('#igMore')){IG_SHOWN=D.gallery.length;renderIG();return}
+  if(near('#igLess')){IG_SHOWN=0;renderIG();return}
+  /* ---- گفتگو: پیوست فایل ---- */
+  if(near('#btnAttach')){$('#fileInp').click();return}
+  if(near('[data-filedel]')){PFILE=null;renderPending();return}
+  /* ---- ادمین: تازه‌ها ---- */
+  if(near('#admLogout')){logout();return}
+  if(near('[data-aadd]')){W.admins.push({u:'',p:'',name:isFa()?'ادمین جدید':'New admin'});renderAdmin();
+    var rows=$$('#admBody .row-card');if(rows.length)rows[rows.length-1].scrollIntoView({block:'nearest'});return}
+  var ad=near('[data-adel]');
+  if(ad){var ai=Number(ad.dataset.adel);
+    if(W.admins.length<=1){toast('آخرین ادمین حذف نمی‌شود ❌');return}
+    if(SESS&&W.admins[ai]&&W.admins[ai].u===SESS.u){toast('حساب خودتان را حذف نمی‌کنید ❌');return}
+    W.admins.splice(ai,1);renderAdmin();toast('ادمین حذف شد');return}
+  var upm=near('[data-upm]'); if(upm){upMulti=Number(upm.dataset.upm);$('#admImgs').click();return}
+  if(near('#igSyncBtn')){igSync();return}
+  if(near('#igFromGallery')){W.ig.stories=D.gallery.slice().sort(function(a,b){return (b.ts||0)-(a.ts||0)}).slice(0,8)
+      .map(function(g){return {t:g.t,img:(g.imgs&&g.imgs[0])||g.img}});
+    W.ig.autoStories=0;igApplyStoriesToForm();toast('استوری از '+W.ig.stories.length+' طرح تازه ساخته شد ✓');return}
+  if(near('#igJsonBtn')){if(igApplyJson($('#igJson').value))renderAdmin();return}
+  var sr=near('[data-sendrep]');
+  if(sr){var rf=sr.closest('.rep-form'),rt=rf.querySelector('textarea');
+    if(!rt.value.trim()){toast('متن پاسخ را بنویسید');return}
+    sendReply(Number(sr.dataset.sendrep),rt.value.trim());return}
+  var dp=near('[data-delpend]');
+  if(dp){D.messages.splice(Number(dp.dataset.delpend),1);save();renderChatFull();renderAdmin();toast('پیام حذف شد');return}
+
   /* ---- ادمین ---- */
   var at=near('[data-adm-tab]');if(at){admTab=at.dataset.admTab;renderAdmin();return}
   if(near('#admSave')){admSave();return}
@@ -1151,10 +1742,11 @@ document.addEventListener('click',function(e){
   var up=near('[data-up]');
   if(up){upTarget=Number(up.dataset.up);$('#admImg').click();
     $('#admImg').onchange=function(){if(this.files&&this.files[0]&&upTarget!=null){
-      var idx=upTarget;shrink(this.files[0],function(url,w,h,kb){setDesignImg(idx,url);
-        toast('عکس '+w+'×'+h+' · '+kb+'KB فشرده شد')});this.value=''}this.onchange=null};
+      var idx=upTarget;shrink(this.files[0],function(url,w,h,bytes){setDesignImg(idx,url);
+        toast('عکس '+w+'×'+h+' · '+kb(bytes)+' فشرده شد')});this.value=''}this.onchange=null};
     return}
-  var clr=near('[data-clear]');if(clr){setDesignImg(Number(clr.dataset.clear),'');return}
+  var clr=near('[data-clear]');if(clr){var gi2=Number(clr.dataset.clear);
+    W.gallery[gi2].img='';W.gallery[gi2].imgs=[];renderAdmin();return}
   if(near('[data-gadd]')){W.gallery.push({t:'',cat:galFilter==='all'?'':galFilter,desc:'',img:''});renderAdmin();
     $('#admBody').scrollTop=$('#admBody').scrollHeight;return}
   if(near('[data-gdel]')){W.gallery.splice(Number(near('[data-gdel]').dataset.gdel),1);renderAdmin();return}
@@ -1176,15 +1768,47 @@ document.addEventListener('input',function(e){
     var ci=Number(n.dataset.i),cf=n.dataset.cf;
     if(W.cats[ci])W.cats[ci][cf]=n.value;
   }
+  if(n.dataset&&n.dataset.af&&W){var ai2=Number(n.dataset.i);if(W.admins[ai2])W.admins[ai2][n.dataset.af]=n.value}
+  if(n.dataset&&n.dataset.gf&&W){
+    var gi3=Number(n.dataset.i),f3=n.dataset.gf;
+    if(!W.gallery[gi3])return;
+    if(f3==='imgsTxt')W.gallery[gi3].imgs=String(n.value).split('\n').map(function(x){return x.trim()}).filter(Boolean);
+    if(f3==='likes'||f3==='dl')W.gallery[gi3][f3]=Math.max(0,Number(n.value)||0);
+  }
+});
+document.addEventListener('submit',function(e){
+  var f=e.target.closest&&e.target.closest('[data-cmtform]');
+  if(!f)return;
+  e.preventDefault();
+  var inp=f.querySelector('input'),v=inp.value.trim();
+  if(!v){toast('اول کامنت را بنویسید');return}
+  inp.value='';addComment(Number(f.dataset.cmtform),v);
 });
 document.addEventListener('change',function(e){
   var n=e.target;
   if(n.dataset&&n.dataset.gf==='cat'&&W){var i=Number(n.dataset.i);if(W.gallery[i])W.gallery[i].cat=n.value}
   if(n.dataset&&n.dataset.gf==='n'&&W){var j=Number(n.dataset.i);if(W.gallery[j])W.gallery[j].n=n.checked?1:undefined}
 });
+$('#admImgs').addEventListener('change',function(){
+  var files=Array.prototype.slice.call(this.files||[]);
+  if(upMulti==null||!W||!files.length){this.value='';return}
+  var gi=upMulti,left=files.length,got=[];
+  function fin(){
+    W.gallery[gi].imgs=(W.gallery[gi].imgs||[]).concat(got);
+    renderAdmin();toast(got.length?got.length+' تصویر افزوده شد ✓':'تصویری افزوده نشد');upMulti=null;
+  }
+  files.forEach(function(f){
+    if(!/^image\//.test(f.type||'')){if(--left===0)fin();return}
+    shrink(f,function(url,w,h,bytes){got.push(url);if(--left===0)fin()});
+  });
+  this.value='';
+});
+function igApplyStoriesToForm(){var el=$('#igStories');if(el)el.value=JSON.stringify(W.ig.stories,null,1);var a=$('#igAuto');if(a)a.checked=false}
 document.addEventListener('keydown',function(e){
   if(e.key==='Escape'){
-    if($('#lightbox').classList.contains('open'))closeLB();
+    if($('#story').classList.contains('open'))closeStory();
+    else if($('#lightbox').classList.contains('open'))closeLB();
+    else if($('#loginWrap').classList.contains('open'))loginSheet(false);
     else if($('#adminPanel').classList.contains('open'))adm(false);
     else drawer(false);
   }
@@ -1202,23 +1826,27 @@ $('#lightbox').addEventListener('touchend',function(e){
 },{passive:true});
 
 /* ---------- شروع ---------- */
-function renderAll(){renderHome();renderGallery();renderChat();renderSocial();renderDrawer();applySettings()}
-renderAll();
+function renderAll(){ensure();renderHome();renderGallery();renderChatFull();renderSocial();renderDrawer();applySettings()}
+try{var _sid=localStorage.getItem('titanali.sid');if(_sid)D.sid=_sid}catch(e){}
+ensure();renderAll();
+if(isAuth())$('#admWho').textContent='👤 '+(SESS.name||SESS.u);
+$('#fileInp').addEventListener('change',function(){onPickFile(this.files&&this.files[0]);this.value=''});
+$('#logForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  var u=$('#logUser').value.trim(),pp=$('#logPass').value;
+  if(tryLogin(u,pp)){loginSheet(false);adm(true);toast((isFa()?'خوش آمدید، ':'Welcome, ')+(SESS.name||SESS.u))}
+  else{$('#logErr').textContent=isFa()?'نام کاربری یا رمز درست نیست':'Wrong username or password';
+    if(navigator.vibrate)navigator.vibrate(90)}
+});
+$('#logUser').addEventListener('input',function(){$('#logErr').textContent=''});
+$('#logPass').addEventListener('input',function(){$('#logErr').textContent=''});
+$('#logTip').innerHTML=(isFa()
+  ?'رمز پیش‌فرض در همین فایل نوشته شده: <code>DEFAULTS.admins</code> (کاربر <code>admin</code>). پس از ورود، از تب «ادمین‌ها» عوضش کنید.'
+  :'The default password lives in this file under <code>DEFAULTS.admins</code> (user <code>admin</code>). Change it from the Admins tab after login.');
 clock();setInterval(clock,15000);
 var h=(location.hash||'').replace('#','');
 if(h&&$('#view-'+h))go(h);
-$('#chatForm').addEventListener('submit',function(e){
-  e.preventDefault();
-  var ta=$('#chatText'),v=ta.value.trim();
-  if(!v){toast(isFa()?'اول چیزی بنویسید ✍️':'Write something first');return}
-  D.messages.push({me:true,text:v,ts:Date.now()});ta.value='';ta.style.height='auto';save();renderChat();
-  setTimeout(function(){
-    D.messages.push({me:false,text:isFa()
-      ?'پیامت ثبت شد ✓ برای ارسال واقعی دکمه‌ی تلگرام یا واتساپ را بزن تا همین متن باز شود.'
-      :'Saved locally ✓ Tap Telegram or WhatsApp to actually send this text.',ts:Date.now()});
-    save();renderChat();
-  },900);
-});
+$('#chatForm').addEventListener('submit',function(e){e.preventDefault();sendChat()});
 $('#chatText').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(140,this.scrollHeight)+'px'});
 $('#admFile').addEventListener('change',function(){if(this.files&&this.files[0])admImport(this.files[0]);this.value=''});
 window.addEventListener('hashchange',function(){var v=(location.hash||'').replace('#','');if(v&&v!==CUR)go(v)});
