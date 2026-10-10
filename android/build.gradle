@@ -1,0 +1,8 @@
+// ریشهٔ پروژه — نسخهٔ پلاگین از gradle.properties خوانده می‌شود
+plugins {
+    id 'com.android.application' version "$agpVersion" apply false
+}
+
+tasks.register('clean', Delete) {
+    delete rootProject.layout.buildDirectory
+}

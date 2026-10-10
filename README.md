@@ -257,6 +257,34 @@ python3 deploy/make-cpanel.py      # dist/titanali-cpanel.zip
 - پس از هر «ذخیره» در پنل (با انتشار خودکار) فایل ایستای `titanali-content.json` کنار `api.php` نوشته می‌شود؛ سایتِ بدونِ PHP هم همان را می‌خواند (§۹-ب در `CPANEL.md`).
 - اگر برای پنل مدیریت محافظت واقعی می‌خواهید: cPanel → **Directory Privacy (Password Protect)** را روی یک پوشهٔ جدا برای فایل‌های ادمین بگذارید (یادتان باشد اگر کل `public_html` را قفل کنید، سایت برای همه قفل می‌شود).
 
+## اپلیکیشن اندروید (گوگل‌پلی و مایکت) 📱
+مخزن یک پوستهٔ بومی کامل در پوشهٔ `android/` دارد: همان سایت داخل `WebView`، **آفلاین‌اول** —
+نسخهٔ بسته‌بندی‌شدهٔ `index.html` در `assets/web` می‌نشیند، پس طرح‌ها بدون اینترنت هم باز می‌شوند.
+
+| چه کاری می‌کند | کجا |
+|---|---|
+| محتوای آفلاین + نوار «اتصال نیست» + صفحهٔ آفلاین | `android/app/src/main/java/ir/titanali1/app/MainActivity.java` |
+| پیوست گفتگو با گالری و **دوربین**، دریافت تصویر/فایل، اشتراک بومی، لرزش، میان‌بُر آیکون | همان کلاس + `Bridge.java` |
+| سازگار با الزامات ۱۴۰۵: `targetSdk 36`، `compileSdk 36`، AAB، edge-to-edge، predictive back، حذف `wv` از User-Agent | `android/app/build.gradle`, `AndroidManifest.xml` |
+| CORS برای مبدأ اپ (`https://app.titanali1.ir`) تا گفتگو/صندوق در اپ کار کند | `api.php` (`ta_cors`) + `titanali-config.php` → `appOrigins` |
+| صفحهٔ حریم خصوصی آماده برای فیلد مارکت‌ها | `privacy.html` (خودکار داخل بستهٔ سی‌پنل هم می‌رود) |
+| راهنمای گام‌به‌گام build، امضا، آپلود پلی و مایکت | `android/BUILD.md`, `android/STORE-GOOGLE.md`, `android/STORE-MYKET.md`, `android/PRIVACY.md` |
+
+ساخت (روی ماشین خودتان — Android Studio + JDK 17 لازم است؛ این محیط sandbox به مخازن گوگل دسترسی ندارد):
+
+```bash
+cd android
+python3 tools/prepare-web.py && python3 tools/prepare-icons.py
+bash tools/make-keystore.sh            # یک‌بار؛ کلید را گم نکنید
+bash tools/build-release.sh            # app-release.aab (پلی) + app-release.apk (مایکت/بازار)
+```
+
+هر بار که سایت عوض شد، `python3 android/tools/prepare-web.py` پوستهٔ اپ و `versionName/versionCode`
+را با نسخهٔ سایت هم‌کالی می‌کند (فرمول `major*10000+minor*100+patch`)؛ `tests/android.py` اگر کهنه
+باشد قرمز می‌شود. تنظیمات یک‌جای اپ در `android/gradle.properties` است (شناسهٔ بسته، آدرس سایت،
+`remoteFirst` برای باز کردن مستقیم سایت زنده). برای بازبینی‌ها: مایکت از **۱ آبان ۱۴۰۵**
+`targetSdk ≥ 34` و گوگل‌پلی از **۳۱ مرداد ۱۴۰۵** `targetSdk ≥ 36` می‌خواهد — این پروژه ۳۶ است ✓
+
 ## تست گرفتن
 
 ```bash
@@ -264,12 +292,14 @@ npm i jsdom
 node tests/run.js
 node tests/sync.js
 python3 tests/php-syntax.py api.php titanali-config.sample.php
+python3 tests/android.py        # پوستهٔ اندروید (android/) — بی‌نیاز از Android SDK
 ```
 
 * `tests/run.js` سایت را در حالت استاتیک می‌سنجد: فید تک‌پستیِ بدون قاب و نوار اتصالش، لایک/کامنت/دانلود، ورود با کلیک روی عنوان، ۱۶ تب پنل و ابزار ردیف‌ها، متن‌های سایت، دکمه‌ها و جای نمایششان، پذیرش فایل منتشرشده، گالری و لایت‌باکس، گفتگو و صندوق، و صحت فایل‌های بسته.
 * نکتهٔ نسخهٔ ۱٫۰٫۷: ۱۸۶ assert در `tests/run.js` — اضافه بر موارد نسخهٔ قبل، **فرم نام و شماره تلفن در گفتگو** (جلوگیری از ارسال بی‌نام، برچسب هویت، لینک `tel:`)، **کارت کاربر در صندوق** (نام بالا، شماره پایین، باز شدن متن و تصویرهای ارسالی با کلیک روی نام، پاسخ از همان کارت) و **دو کلید جدید تنظیمات** (اجباری‌بودن نام و شماره). ۷۵ assert هم در `tests/sync.js`.
 * `tests/sync.js` همان سایت را با یک `api.php` ساختگی می‌سنجد: پذیرش محتوای سرور، شمارنده‌های روی‌هم‌نهاد، تعارض نسخه (rev)، نصب و ورود، صندوق مشترک و حذف کامنت.
 * `tests/php-syntax.py` بدون نیاز به مفسرِ PHP، توازن بلوک‌ها و سازگاری با PHP 7.0 را می‌سنجد.
+* `tests/android.py` ۷۹ بررسی: هم‌کالی `android/app/src/main/assets/web/index.html` با سایت، نسخه‌ها، مانیفست و permissionهای حداقلی، XMLهای گریدل/منابع، آیکون تطبیقی، پل JS، CORS و وجود راهنماهای مارکت‌ها.
 
 جزئیات بیشتر: `tests/README.md`. پوشهٔ `tests/` داخل بستهٔ هاست نمی‌رود.
 
@@ -297,8 +327,10 @@ https://titanali1.ir/titanali-install.php
 
 | چه چیزی | لینک مستقیم |
 |---|---|
-| بستهٔ سی‌پنل (۱۵ فایل، ~۱۱۱KB) | `https://raw.githubusercontent.com/titanali1/titanali1/latest/titanali-cpanel.zip` |
+| بستهٔ سی‌پنل (۱۷ فایل، ~۱۶۰KB — شامل `privacy.html`) | `https://raw.githubusercontent.com/titanali1/titanali1/latest/titanali-cpanel.zip` |
 | امضای آن | `https://raw.githubusercontent.com/titanali1/titanali1/latest/titanali-cpanel.zip.sha256` |
+| پروژهٔ اندروید (۵۷ فایل، ~۲۹۰KB — باز کن در Android Studio) | `https://raw.githubusercontent.com/titanali1/titanali1/latest/titanali-android.zip` |
+| امضای آن | `https://raw.githubusercontent.com/titanali1/titanali1/latest/titanali-android.zip.sha256` |
 | فقط سایت (تک‌فایل) | `https://raw.githubusercontent.com/titanali1/titanali1/latest/index.html` |
 | بک‌اند | `https://raw.githubusercontent.com/titanali1/titanali1/latest/api.php` |
 | فایل نمونهٔ تنظیمات | `https://raw.githubusercontent.com/titanali1/titanali1/latest/titanali-config.sample.php` |

@@ -1,0 +1,16 @@
+*.iml
+.gradle/
+local.properties
+.idea/
+.DS_Store
+build/
+app/build/
+captures/
+# امضا — هرگز کامیت نشود
+keystore.properties
+*.jks
+*.keystore
+# خروجی آمادهٔ آپلود (زیپ بزرگ است؛ در ریلیز گیت‌هاب بگذارید)
+*.aab
+*.apk
+output/

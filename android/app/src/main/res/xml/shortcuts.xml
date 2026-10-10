@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:shortcutId="gallery"
+        android:shortcutShortLabel="@string/shortcut_gallery"
+        android:shortcutLongLabel="@string/shortcut_gallery">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="ir.titanali1.app"
+            android:targetClass="ir.titanali1.app.MainActivity"
+            android:data="https://titanali1.ir/#gallery" />
+    </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:shortcutId="chat"
+        android:shortcutShortLabel="@string/shortcut_chat"
+        android:shortcutLongLabel="@string/shortcut_chat">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="ir.titanali1.app"
+            android:targetClass="ir.titanali1.app.MainActivity"
+            android:data="https://titanali1.ir/#chat" />
+    </shortcut>
+</shortcuts>

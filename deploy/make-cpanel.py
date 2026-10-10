@@ -16,7 +16,7 @@ SRC  = ROOT / 'index.html'
 DIST = ROOT / 'dist' / 'titanali-cpanel'
 # فایل‌های عمومی که باید در ریشه (و پس از آن در public_html) باشند
 PUBLIC = ['index.html', '.htaccess', '404.html', 'sw.js', 'api.php', 'titanali-config.sample.php', 'site.webmanifest', 'favicon.svg',
-          'robots.txt', 'sitemap.xml', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png', 'titanali-install.php',
+          'robots.txt', 'sitemap.xml', 'privacy.html', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png', 'titanali-install.php',
           'maskable-512.png', 'og.png']
 COPIES = ['.htaccess', 'sw.js', '404.html', 'robots.txt', 'sitemap.xml', 'titanali-config.sample.php', 'titanali-install.php']  # منبعشان deploy/files/ است
 SITE = 'https://titanali1.ir/'

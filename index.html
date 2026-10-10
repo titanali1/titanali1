@@ -1503,7 +1503,24 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(D));return true}
 var API={on:false,setup:false,rev:-1,updated:0,writable:true,php:'',tok:'',
   social:{likes:{},dl:{},comments:{}},threads:null,serverAdmins:null,timer:null,pushState:'idle',conflict:false,lastErr:''};
 try{API.tok=localStorage.getItem('titanali.tok')||''}catch(e){}
-function apiPath(){return (D.settings&&D.settings.api)||'api.php'}
+function apiPath(){
+  var b=(D.settings&&D.settings.api)||'api.php';
+  if(window.TITANALI_API)b=String(window.TITANALI_API);
+  if(!b)return '';
+  if(/^(https?:)?\/\//i.test(b))return b.replace(/\/+$/,'');
+  if(b.charAt(0)==='/')return location.origin+b;
+  return b}
+/* آدرس مطلق برای لینک‌های نسبیِ سرور (مثل api.php?action=file&f=…) — برای پوستهٔ اندروید */
+function apiUrl(u){
+  u=String(u==null?'':u);
+  if(!u||/^(https?:|data:|blob:)/i.test(u))return u;
+  var b=apiPath();
+  var m=String(b).match(/^(https?:)?\/\/([^\/?]+)/i);
+  if(m){var proto=/^https:/i.test(b)?'https:':(/^http:/i.test(b)?'http:':'https:');
+    return proto+'//'+m[2]+'/'+u.replace(/^\/+/,'')}
+  if(/^https?:/i.test(location.origin))return location.origin.replace(/\/+$/,'')+'/'+u.replace(/^\/+/,'');
+  return u;
+}
 function taCall(action,body,method){
   return new Promise(function(res,rej){
     try{
@@ -2392,9 +2409,9 @@ function renderChatFull(){
   box.innerHTML=D.messages.length?D.messages.map(function(m,j){
     var when='';try{when=new Date(m.ts).toLocaleString(loc(),{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'})}catch(e){}
     var f=m.file?'<div class="msg-file">'+
-      (/^image\//.test(f0(m.file.type))?'<img src="'+escAttr(m.file.url)+'" alt="">':'<span class="fchip">📄</span>')+
+      (/^image\//.test(f0(m.file.type))?'<img src="'+escAttr(apiUrl(m.file.url))+'" alt="">':'<span class="fchip">📄</span>')+
       '<span style="flex:1;min-width:0"><span class="fn">'+esc(m.file.name)+'</span><span class="fs">'+kb(m.file.size)+'</span></span>'+
-      '<a href="'+escAttr(m.file.url)+'" download="'+escAttr(m.file.name)+'" aria-label="دانلود فایل">⤓</a></div>':'';
+      '<a href="'+escAttr(apiUrl(m.file.url))+'" download="'+escAttr(m.file.name)+'" aria-label="دانلود فایل">⤓</a></div>':'';
     function f0(x){return x||''}
     return '<div class="bubble '+(m.me?'me':'them')+'">'+(m.text?esc(m.text):'')+f+
       '<span class="b-when">'+esc(when)+(m.me?' · ارسال‌شده':' · پاسخ کارگاه')+'</span></div>'}).join(''):
@@ -2419,7 +2436,7 @@ function ibxWhen(ts){
 function ibxMsgHTML(m,opt){
   opt=opt||{};
   var f=m.file||null,im=f&&/^image\//.test(String(f.type||''));
-  var u=f?(f.url||(f.id?('api.php?action=file&f='+encodeURIComponent(f.id)):'')):'';
+  var u=apiUrl(f?(f.url||(f.id?('api.php?action=file&f='+encodeURIComponent(f.id)):'')):'');
   var h='<div class="ibx-msg'+(opt.rep?' rep':'')+'">';
   var who=opt.rep?(opt.who||'کارگاه'):(m.name||opt.who||'کاربر');
   h+='<div class="ibx-mh"><b>'+esc(who)+'</b>'+ibxWhen(m.ts)+
@@ -2433,7 +2450,7 @@ function ibxImgs(files){
   if(!files.length)return '';
   return '<div class="ibx-imgs"><span class="ii-t">🖼 '+num(files.length)+' تصویر ارسالی کاربر — کلیک برای بزرگ‌کردن</span><div class="ii-row">'+
     files.map(function(f){
-      var u=f.url||(f.id?('api.php?action=file&f='+encodeURIComponent(f.id)):'');
+      var u=apiUrl(f.url||(f.id?('api.php?action=file&f='+encodeURIComponent(f.id)):''));
       return '<a class="ibx-thumb" href="'+escAttr(u||'#')+'" target="_blank" rel="noopener" data-notap><img src="'+escAttr(u||'')+'" alt="'+escAttr(f.name||'')+'"></a>';
     }).join('')+'</div></div>';
 }
@@ -3621,6 +3638,13 @@ document.addEventListener('click',function(e){
     return}
   var dl=near('[data-dl]'); if(dl){doDownload(Number(dl.dataset.dl),0);return}
   var sp=near('[data-sharepost]'); if(sp){sharePost(Number(sp.dataset.sharepost));return}
+  var ash=near('[data-appshare]');
+  if(ash){
+    var pd=($('#chatText')&&String($('#chatText').value||'').trim())||'';
+    var site=String(window.TITANALI_SITE||'').replace(/\/+$/,'')||location.href;
+    var txt=(pd?pd+'\n\n':'')+D.profile.name+(D.profile.bio?'\n'+D.profile.bio:'')+'\n'+site;
+    try{window.TitanaliApp.share(txt)}catch(e){toast(isFa()?'اشتراک‌گذاری باز نشد':'Share sheet failed')}
+    return}
   var pm=near('.post-media[data-open]');
   if(pm){galShown=D.gallery.slice();lbK=0;openLB(Number(pm.dataset.open));return}
   var sto=near('.story[data-story]');
@@ -3928,7 +3952,7 @@ $('#logPass').addEventListener('input',function(){$('#logErr').textContent=''});
 clock();setInterval(clock,15000);
 /* ---------- قلاب عیب‌یابی (کنسول مرورگر و تست‌ها) ----------
    فقط خواندنی است و برایعیب‌یابی سریع روی هاست مفید است: titanali.D ،titanali.API … */
-window.titanali={ver:'1.0.7',
+window.titanali={ver:'1.0.8',
   get D(){return D},get API(){return API},get SESS(){return SESS},get W(){return W},
   isAuth:isAuth,likeCount:likeCount,dlCount:dlCount,cmtList:cmtList,
   like:toggleLike,download:doDownload,comment:addComment,renderAll:renderAll,renderChatFull:renderChatFull,go:go,
@@ -3946,6 +3970,13 @@ $('#chatForm').addEventListener('submit',function(e){e.preventDefault();sendChat
 $('#chatText').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(140,this.scrollHeight)+'px'});
 $('#admFile').addEventListener('change',function(){if(this.files&&this.files[0])admImport(this.files[0]);this.value=''});
 window.addEventListener('hashchange',function(){var v=(location.hash||'').replace('#','');if(v&&v!==CUR)go(v)});
+/* پوستهٔ اندروید: دکمهٔ «اشتراک گوشی» در نوار اقدامات گفتگو */
+(function appShareBtn(){
+  if(!(window.TitanaliApp&&window.TitanaliApp.share))return;
+  var box=document.querySelector('.chat .form-actions');if(!box)return;
+  var b=document.createElement('button');b.type='button';b.className='pbtn';b.dataset.appshare='1';
+  b.textContent='📤 اشتراک گوشی';box.appendChild(b);
+})();
 })();
 </script>
 </body>

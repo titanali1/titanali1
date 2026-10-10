@@ -38,6 +38,7 @@ function ta_cfg()
         'maxJson'  => 6 * 1024 * 1024,   /* سقف بدنهٔ JSON */
         'maxFile'  => 6 * 1024 * 1024,   /* سقف هر پیوست */
         'origin'   => '',                /* برای CORS؛ خالی = فقط همان مبدأ */
+        'appOrigins' => array('https://app.titanali1.ir'),  /* مبدأ پوستهٔ اندروید (و PWA روی دامنهٔ دیگر) */
         'proxyTrusted' => false,         /* اگر پشت CDN هستید true کنید */
         'publishFile' => 'titanali-content.json',  /* فایل ایستای کنار index.html؛ '' = خاموش */
         'publishMax'  => 2000000,                   /* سقف اندازهٔ فایل منتشرشده (بایت) */
@@ -143,6 +144,37 @@ function ta_out($code, $arr)
     }
     echo json_encode($arr, JSON_UNESCAPED_UNICODE + JSON_UNESCAPED_SLASHES);
     exit;
+}
+
+/* CORS برای پوستهٔ اندروید / هر مبدأ دلخواهِ مجاز در config */
+function ta_origin_ok()
+{
+    $o = isset($_SERVER['HTTP_ORIGIN']) ? trim((string) $_SERVER['HTTP_ORIGIN']) : '';
+    if ($o === '') return '';
+    $c = ta_cfg();
+    if ($c['origin'] === '*') return '';                 /* حالت «همه‌چیز مجاز» را ta_out مدیریت می‌کند */
+    $list = array();
+    if ($c['origin'] !== '') $list[] = (string) $c['origin'];
+    if (!empty($c['appOrigins']) && is_array($c['appOrigins'])) $list = array_merge($list, $c['appOrigins']);
+    $o = rtrim($o, '/');
+    foreach ($list as $x) {
+        $x = rtrim(trim((string) $x), '/');
+        if ($x !== '' && strcasecmp($x, $o) === 0) return $x;
+    }
+    return '';
+}
+function ta_cors()
+{
+    if (headers_sent()) return;
+    $o = ta_origin_ok();
+    if ($o === '') return;
+    @header('Access-Control-Allow-Origin: ' . $o);
+    @header('Vary: Origin');
+    @header('Access-Control-Allow-Headers: Content-Type, X-TA-Token');
+    @header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+    @header('Access-Control-Max-Age: 600');
+    if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'OPTIONS')
+        { @http_response_code(204); exit; }
 }
 
 function ta_ip()
@@ -447,6 +479,7 @@ function ta_store_file($name, $type, $b64)
  *  مسیردهی
  * ===================================================================== */
 $ACTION = isset($_GET['action']) ? preg_replace('/[^a-z_]/', '', strtolower((string) $_GET['action'])) : 'health';
+ta_cors();
 $ME = ta_whoami();
 $AUTH = is_array($ME);
 

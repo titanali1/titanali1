@@ -14,6 +14,7 @@ if [ -z "${SKIP_TESTS:-}" ]; then
   node tests/run.js 2>&1 | tail -1
   node tests/sync.js 2>&1 | tail -1
   python3 tests/php-syntax.py api.php titanali-config.sample.php || exit 1
+  python3 tests/android.py 2>&1 | tail -1                      # سازگاری پوستهٔ اندروید با سایت
   python3 - <<'PYCHK'
 import re, pathlib, sys
 src = pathlib.Path("index.html").read_text(encoding="utf-8")
@@ -25,6 +26,10 @@ fi
 echo "── ساخت بسته ──"
 python3 deploy/make-cpanel.py 2>&1 | grep -E "PNG|sha256|✔" || exit 1
 sha256sum -c titanali-cpanel.zip.sha256 || { echo "✗ sha با بسته نمی‌خواند"; exit 1; }
+
+echo "── بستهٔ پروژهٔ اندروید ──"
+bash deploy/pack-android.sh 2>&1 | grep -E "^✓|^sha256" || { echo "✗ بستهٔ اندروید ساخته نشد"; exit 1; }
+sha256sum -c titanali-android.zip.sha256 || exit 1
 
 git add -A
 if git diff --cached --quiet; then echo "· فایل‌ها بدون تغییر"; else
@@ -39,5 +44,8 @@ echo
 echo "لینک مستقیم (همیشه بستهٔ آخر):"
 echo "  https://raw.githubusercontent.com/$SLUG/latest/titanali-cpanel.zip"
 echo "  https://raw.githubusercontent.com/$SLUG/latest/titanali-cpanel.zip.sha256"
+echo "پروژهٔ اندروید (باز کن در Android Studio):"
+echo "  https://raw.githubusercontent.com/$SLUG/latest/titanali-android.zip"
+echo "  https://raw.githubusercontent.com/$SLUG/latest/titanali-android.zip.sha256"
 VER="$(git tag -l 'v*' --sort=-v:refname | head -1)"; [ -n "$VER" ] && echo "بستهٔ همین نسخه (قفل‌شده): https://raw.githubusercontent.com/$SLUG/$VER/titanali-cpanel.zip"
 echo "sha256: $SHA"
