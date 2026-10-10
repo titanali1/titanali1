@@ -210,6 +210,21 @@ python3 deploy/make-cpanel.py      # dist/titanali-cpanel.zip
 - برای اینکه لینک‌های استوری/پست اینستاگرام به‌روز بمانند، به یک پروکسی سمت سرور نیاز است (در `.htaccess` جای `connect-src` باز است). اگر خواستید، یک اندپوینت PHP کوچک (`api/ig.php`) با کش سمت سرور اضافه می‌کنم.
 - اگر برای پنل مدیریت محافظت واقعی می‌خواهید: cPanel → **Directory Privacy (Password Protect)** را روی یک پوشهٔ جدا برای فایل‌های ادمین بگذارید (یادتان باشد اگر کل `public_html` را قفل کنید، سایت برای همه قفل می‌شود).
 
+## تست گرفتن
+
+```bash
+npm i jsdom
+node tests/run.js
+node tests/sync.js
+python3 tests/php-syntax.py api.php titanali-config.sample.php
+```
+
+* `tests/run.js` سایت را در حالت استاتیک می‌سنجد: قاب تک‌پست و پیجر، لایک/کامنت/دانلود، ورود با کلیک روی عنوان، پنل و ذخیره، گالری و لایت‌باکس، گفتگو و صندوق، و صحت فایل‌های بسته.
+* `tests/sync.js` همان سایت را با یک `api.php` ساختگی می‌سنجد: پذیرش محتوای سرور، شمارنده‌های روی‌هم‌نهاد، تعارض نسخه (rev)، نصب و ورود، صندوق مشترک و حذف کامنت.
+* `tests/php-syntax.py` بدون نیاز به مفسرِ PHP، توازن بلوک‌ها و سازگاری با PHP 7.0 را می‌سنجد.
+
+جزئیات بیشتر: `tests/README.md`. پوشهٔ `tests/` داخل بستهٔ هاست نمی‌رود.
+
 ## انتشار (گیت‌هاب پیجز)
 
 - **GitHub Pages:** [`.github/workflows/pages.yml`](.github/workflows/pages.yml) با هر پوش روی `main` ریشه‌ی مخزن را منتشر می‌کند (Settings → Pages → *GitHub Actions*).

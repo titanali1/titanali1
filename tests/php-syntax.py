@@ -95,10 +95,11 @@ def check(path):
     for pat, why in NEWER:
         for m in re.finditer(pat, clean, re.M):
             errs.append('سطر %d: %s' % (clean[:m.start()].count('\n') + 1, why))
-    names = re.findall(r'function\s+(ta_\w+)', src)
-    missing = [w for w in WANT if w not in names]
-    if missing:
-        errs.append('توابع مورد انتظار پیدا نشد: ' + ', '.join(missing))
+    if 'api' in f.name:
+        names = re.findall(r'function\s+(ta_\w+)', src)
+        missing = [w for w in WANT if w not in names]
+        if missing:
+            errs.append('توابع مورد انتظار پیدا نشد: ' + ', '.join(missing))
     if 'api' in f.name:
         if re.search(r"ini_set\(\s*['\"]display_errors['\"]\s*,\s*['\"]0", src) is None:
             errs.append('برای فایل API، `ini_set("display_errors","0")` لازم است تا خطا در JSON نشت نکند')
