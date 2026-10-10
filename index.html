@@ -599,6 +599,83 @@ html[dir=rtl] .drawer{--dx:-100%}
 .adm-wrap tr:hover td{background:rgba(255,255,255,.03)}
 .adm-wrap .hint{font-size:11.5px;color:rgba(255,255,255,.48);line-height:1.95}
 .adm-wrap .adm-dirty{margin:11px 20px 0;border-radius:16px;padding:10px 12px}
+/* ══ گفتگو: نام و شماره تلفن ══ */
+.chat .who-bar{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  border-radius:16px;padding:9px 10px 10px}
+.chat .who-t{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;margin-bottom:7px;
+  font-size:11px;font-weight:800;color:rgba(255,255,255,.78)}
+.chat .who-t small{font-weight:600;font-size:10px;color:rgba(255,255,255,.4)}
+.chat .who-fs{display:grid;grid-template-columns:1fr;gap:7px}
+.chat .who-f{display:flex;flex-direction:column;gap:4px;font-size:10.5px;font-weight:700;
+  color:rgba(255,255,255,.5)}
+.chat .who-f input{min-width:0;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);
+  border-radius:14px;padding:10px 13px;color:#fff;font-size:13.5px;outline:none;font-family:inherit}
+.chat .who-f input:focus{border-color:var(--blue);background:rgba(255,255,255,.12)}
+.chat .who-f input.bad{border-color:var(--red);animation:shake .3s}
+.chat .who-f input::placeholder{color:rgba(255,255,255,.28)}
+.chat .who-done{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(10,132,255,.2),rgba(168,85,247,.14));
+  border:1px solid rgba(120,170,255,.26)}
+.chat .who-done .wd-ic{width:30px;height:30px;flex:none;border-radius:50%;display:grid;place-items:center;
+  background:rgba(255,255,255,.12);font-size:14px}
+.chat .who-done .wd-id{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1}
+.chat .who-done .wd-id b{font-size:12.5px;font-weight:800;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chat .who-done .wd-id a{font-size:11.5px;color:var(--blue2);text-decoration:none;font-weight:700}
+.chat .wd-edit{flex:none;width:30px;height:30px;border-radius:10px;border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.07);color:#fff;font-size:13px;padding:0;display:grid;place-items:center}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(4px)}75%{transform:translateX(-4px)}}
+@media (min-width:700px){.chat .who-fs{grid-template-columns:1fr 1fr}.chat .who-bar{padding:11px 12px 12px}}
+
+/* ══ صندوق: کارت هر کاربر (نام بالا، شماره پایین، کلیک برای باز شدن) ══ */
+.adm-wrap .ibx-card{border:1px solid rgba(255,255,255,.12);border-radius:18px;overflow:hidden;
+  background:rgba(255,255,255,.04);margin-bottom:9px}
+.adm-wrap .ibx-card.open{border-color:rgba(120,170,255,.34);background:rgba(255,255,255,.055)}
+.adm-wrap .ibx-head{display:flex;align-items:center;gap:11px;padding:11px 13px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;user-select:none;outline:none}
+.adm-wrap .ibx-head:focus-visible{box-shadow:inset 0 0 0 2px var(--blue)}
+.adm-wrap .ibx-head:hover{background:rgba(255,255,255,.05)}
+.adm-wrap .ibx-av{width:38px;height:38px;flex:none;border-radius:13px;display:grid;place-items:center;
+  font-size:16px;font-weight:900;color:#fff;background:linear-gradient(135deg,var(--blue),var(--purple))}
+.adm-wrap .ibx-id{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.adm-wrap .ibx-id b{font-size:14px;font-weight:850;letter-spacing:-.15px;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.adm-wrap .ibx-ph{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,.52);font-weight:700}
+.adm-wrap .ibx-ph a{color:var(--blue2);text-decoration:none;font-variant-numeric:tabular-nums}
+.adm-wrap .ibx-ph a:hover{text-decoration:underline}
+.adm-wrap .ibx-ph em{font-style:normal;color:rgba(255,255,255,.32);font-weight:600}
+.adm-wrap .ibx-cp{width:22px;height:22px;flex:none;border-radius:7px;border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.06);color:rgba(255,255,255,.66);font-size:11px;line-height:1;padding:0;
+  display:grid;place-items:center}
+.adm-wrap .ibx-right{display:flex;align-items:center;gap:6px;flex:none;flex-wrap:wrap;justify-content:flex-end}
+.adm-wrap .ibx-n,.adm-wrap .ibx-when{font-size:10.5px;font-weight:700;color:rgba(255,255,255,.42)}
+.adm-wrap .ibx-caret{font-size:14px;color:rgba(255,255,255,.5);transition:transform .2s var(--ease);line-height:1}
+.adm-wrap .ibx-card.open .ibx-caret{transform:rotate(180deg)}
+.adm-wrap .ibx-body{padding:2px 13px 13px;border-top:1px solid rgba(255,255,255,.09)}
+.adm-wrap .ibx-imgs{margin:11px 0 2px}
+.adm-wrap .ibx-imgs .ii-t{display:block;font-size:10.5px;font-weight:800;color:rgba(255,255,255,.5);margin-bottom:6px}
+.adm-wrap .ii-row{display:flex;gap:7px;flex-wrap:wrap}
+.adm-wrap .ibx-thumb{display:block;width:74px;height:74px;border-radius:12px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.16);background:rgba(0,0,0,.25)}
+.adm-wrap .ibx-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.adm-wrap .ibx-log{display:flex;flex-direction:column;gap:7px;margin-top:11px}
+.adm-wrap .ibx-msg{border-radius:14px;padding:8px 10px;background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08)}
+.adm-wrap .ibx-msg.rep{background:rgba(10,132,255,.14);border-color:rgba(120,170,255,.3)}
+.adm-wrap .ibx-mh{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:10.5px;
+  color:rgba(255,255,255,.45);margin-bottom:3px}
+.adm-wrap .ibx-mh b{font-size:11.5px;font-weight:850;color:rgba(255,255,255,.86)}
+.adm-wrap .ibx-tx{font-size:12.5px;line-height:1.7;white-space:pre-wrap;word-break:break-word}
+.adm-wrap .ibx-fn{font-weight:700}
+.adm-wrap .ibx-file{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-size:11.5px;font-weight:700;
+  color:var(--blue2);text-decoration:none;padding:6px 10px;border-radius:12px;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.14)}
+.adm-wrap .ibx-msg .pbtn.tiny{margin-top:7px;font-size:10.5px;padding:5px 9px;border-radius:10px}
+.adm-wrap .rep-form{margin-top:11px}
+@media (max-width:560px){
+  .adm-wrap .ibx-right{width:100%;justify-content:flex-start;order:3;padding-inline-start:49px}
+  .adm-wrap .ibx-head{flex-wrap:wrap;gap:8px 10px}
+  .adm-wrap .ibx-when{margin-inline-start:auto}
+}
 /* گروه‌های تب */
 .adm-wrap .adm-grp{flex:none;align-self:center;font-size:10px;font-weight:800;color:rgba(255,255,255,.36);
   letter-spacing:.2px;padding:0 3px;white-space:nowrap}
@@ -1089,6 +1166,18 @@ html[data-lang=en] .ios-brand-name{letter-spacing:-.02em}
         <div id="chatBtns"></div>
         <form class="msg-form" id="chatForm">
           <div id="pendingFile"></div>
+          <div class="who-bar" id="whoBar">
+            <div class="who-t"><span data-t="chat.who">هویت شما</span><small id="whoNote"></small></div>
+            <div class="who-fs">
+              <label class="who-f"><span data-t="chat.name">نام و نام خانوادگی</span><input id="whoName" type="text" maxlength="60" autocomplete="name"></label>
+              <label class="who-f"><span id="whoPhoneLbl" data-t="chat.phone">شماره تلفن</span><input id="whoPhone" type="tel" inputmode="tel" dir="ltr" maxlength="20" autocomplete="tel"></label>
+            </div>
+          </div>
+          <div class="who-done" id="whoDone" hidden>
+            <span class="wd-ic">👤</span>
+            <span class="wd-id"><b id="whoDoneName"></b><a id="whoDonePhone" href="#" data-notap></a></span>
+            <button class="wd-edit" type="button" id="whoEdit" title="ویرایش نام و شماره" aria-label="ویرایش نام و شماره">✏️</button>
+          </div>
           <div class="c-row">
             <button class="c-attach" type="button" id="btnAttach" aria-label="پیوست فایل">📎</button>
             <textarea id="chatText" rows="1" aria-label="متن پیام"></textarea>
@@ -1499,7 +1588,7 @@ function apiPush(force,cb,bg){
   }).catch(function(e){API.pushState='idle';API.lastErr='push';toast(isFa()?'ارتباط با سرور برقرار نشد ❌':'Server unreachable')});
 }
 function apiSend(text,file){
-  var body={sid:D.sid,text:text||'',to:(D.profile&&D.profile.name)||'titanali'};
+  var body={sid:D.sid,text:text||'',to:(D.profile&&D.profile.name)||'titanali',name:WHO.name||'',phone:whoPhone(WHO.phone)};
   if(file)body.file={id:file.id||'',name:file.name,type:file.type,size:file.size};
   return taCall('send',body).catch(function(){return {ok:false,error:'net'}});
 }
@@ -1526,7 +1615,7 @@ function gImg(g,i){return g.img||art((i==null?0:i)+7,'ta')}
 
 /* ---------- زبان ---------- */
 var I18N={
- fa:{'nav.home':'خانه','nav.gallery':'طرح‌ها','nav.chat':'گفتگو','nav.social':'ارتباط','nav.all':'همه‌ی طرح‌ها',
+ fa:{'chat.whoReq':'برای پاسخ دادن لازم است','chat.whoOpt':'اختیاری','chat.who':'هویت شما','chat.name':'نام و نام خانوادگی','chat.phone':'شماره تلفن','chat.namePh':'مثلاً سارا محمدی','chat.phonePh':'۰۹xxxxxxxxx','chat.noName':'برای اینکه بتوانیم جواب بدهیم، اول نامتان را بنویسید','chat.noPhone':'شماره تلفن را هم بنویسید (مثلاً ۰۹۱۲…)','chat.whoEdit':'ویرایش نام و شماره','chat.whoOk':'شما را ثبت کردیم ✓','nav.home':'خانه','nav.gallery':'طرح‌ها','nav.chat':'گفتگو','nav.social':'ارتباط','nav.all':'همه‌ی طرح‌ها',
    'sec.about':'درباره‌ی کارگاه','sec.cats':'دسته‌ها','sec.hobbies':'چیزی که روی آن کار می‌کنیم','sec.featured':'طرح‌های منتخب',
    'cta.order':'سفارش طرح دلخواه','cta.msg':'گفتگو برای سفارش','chat.online':'معمولاً سریع پاسخ می‌دهد',
    'chat.hint':'اینجا گفتگوی محلی است: پیام‌هایتان فقط در همین مرورگر می‌ماند. با دکمه‌های پایین همان متن را در تلگرام، واتساپ یا ایمیل بفرستید.',
@@ -1537,7 +1626,7 @@ var I18N={
    'foot.txt':'ساخته‌شده با ♥ · titanali','copied':'کپی شد','saved':'ذخیره شد','shared':'لینک کپی شد',
    'ph.msg':'طرح، سایز و رنگ دلخواه را بنویسید…','open':'باز کردن','more':'همه','of':'از','views':'طرح',
    'new':'جدید'},
- en:{'nav.home':'Home','nav.gallery':'Designs','nav.chat':'Chat','nav.social':'Contact','nav.all':'All designs',
+ en:{'chat.whoReq':'Needed so we can answer','chat.whoOpt':'Optional','chat.who':'Your contact','chat.name':'Name','chat.phone':'Phone number','chat.namePh':'e.g. Sara Mohammadi','chat.phonePh':'09xxxxxxxxx','chat.noName':'Please write your name so we can reply','chat.noPhone':'Add your phone number too (e.g. 0912…)','chat.whoEdit':'Edit name and phone','chat.whoOk':'Saved ✓','nav.home':'Home','nav.gallery':'Designs','nav.chat':'Chat','nav.social':'Contact','nav.all':'All designs',
    'sec.about':'About the studio','sec.cats':'Categories','sec.hobbies':'What we work on','sec.featured':'Selected designs',
    'cta.order':'Order a custom design','cta.msg':'Chat to order','chat.online':'Usually replies fast',
    'chat.hint':'Local chat only: your messages stay in this browser. Use the buttons below to send the same text on Telegram, WhatsApp or email.',
@@ -1660,12 +1749,82 @@ function stepLB(d){
 function lbBurst(){var g=galShown[lbI];if(!g)return;burst(D.gallery.indexOf(g))}
 
 /* ---------- گفتگو ---------- */
+/* ---------- هویت کاربر گفتگو: نام + شماره تلفن ---------- */
+var WHOKEY='titanali.who',WHO={name:'',phone:''};
+function whoPhone(v){
+  return String(v==null?'':v)
+    .replace(/[\u06f0-\u06f9]/g,function(x){return String(x.charCodeAt(0)-0x06f0)})
+    .replace(/[\u0660-\u0669]/g,function(x){return String(x.charCodeAt(0)-0x0660)})
+    .replace(/\D/g,'').slice(0,15)}
+function whoComplete(){
+  if(needName()&&WHO.name.replace(/\s/g,'').length<2)return false;
+  if(needPhone()&&WHO.phone.length<10)return false;
+  return true}
+function telHref(p){p=String(p||'').replace(/[^\d+]/g,'');
+  if(/^0\d{9,10}$/.test(p))p='98'+p.slice(1);
+  else if(/^9\d{9}$/.test(p))p='98'+p;
+  if(/^\+980\d/.test(p))p='+'+p.slice(4);
+  return 'tel:'+(p.charAt(0)==='+'?p:'+'+p)}
+function whoDisp(v){
+  var d=whoPhone(v);
+  if(d.length===11)d=d.replace(/^(\d{4})(\d{3})(\d{4})$/,'$1 $2 $3');
+  else if(d.length===10)d=d.replace(/^(\d{4})(\d{6})$/,'$1 $2');
+  else if(d.length>11)d=d.replace(/(?=(\d{4})+(?!\d))/g,' ');
+  return d.replace(/\d/g,function(x){return '۰۱۲۳۴۵۶۷۸۹'[+x]})}
+function needPhone(){return !(D.settings&&D.settings.needPhone===0)}
+function needName(){return !(D.settings&&D.settings.needName===0)}
+function whoLoad(){
+  try{var o=JSON.parse(localStorage.getItem(WHOKEY)||'null');
+    if(o&&typeof o==='object'){WHO.name=String(o.name||'').slice(0,60);WHO.phone=String(o.phone||'').slice(0,15)}}catch(e){}
+}
+function whoSave(){try{localStorage.setItem(WHOKEY,JSON.stringify(WHO))}catch(e){}}
+function whoFill(){
+  var n=$('#whoName'),ph=$('#whoPhone');
+  if(n&&!n.value)n.value=WHO.name;
+  if(ph&&!ph.value)ph.value=WHO.phone;
+}
+function whoRead(){
+  var n=$('#whoName'),ph=$('#whoPhone');
+  if(n)n.classList.remove('bad');if(ph)ph.classList.remove('bad');
+  if(n)WHO.name=String(n.value||'').replace(/\s+/g,' ').trim().slice(0,60);
+  if(ph)WHO.phone=whoPhone(ph.value);
+  whoSave();renderWho();
+  return WHO.name!==''||WHO.phone!=='';
+}
+function renderWho(){
+  var bar=$('#whoBar'),done=$('#whoDone');if(!bar||!done)return;
+  whoFill();
+  var complete=whoComplete(),has=!!(WHO.name||WHO.phone);
+  bar.hidden=complete;done.hidden=!(complete&&has);
+  if(complete&&has){
+    $('#whoDoneName').textContent=WHO.name||'بدون نام';
+    var a=$('#whoDonePhone');
+    if(WHO.phone){a.textContent=whoDisp(WHO.phone);a.setAttribute('href',telHref(WHO.phone))}
+    else{a.textContent='شماره‌ای نداده‌اید';a.removeAttribute('href')}}
+  var nt=$('#whoNote');
+  if(nt)nt.textContent=needPhone()?t('chat.whoReq'):t('chat.whoOpt');
+  var hp=$('#whoPhoneLbl');
+  if(hp)hp.textContent=t('chat.phone')+(needPhone()?'':' ('+t('chat.whoOpt')+')')
+}
 function renderChat(){renderChatFull()}
+function sendGate(){
+  whoRead();
+  if(whoComplete()){var b1=$('#whoBar');if(b1&&!b1.hidden)b1.hidden=true;renderWho();return true}
+  if(needName()&&WHO.name.replace(/\s/g,'').length<2){
+    bar0();var el=$('#whoName');if(el){el.focus();el.classList.add('bad')}toast(t('chat.noName'));return false}
+  if(needPhone()&&WHO.phone.length<10){
+    bar0();var pe=$('#whoPhone');if(pe){pe.focus();pe.classList.add('bad')}toast(t('chat.noPhone'));return false}
+  return true;
+}
+function bar0(){var b=$('#whoBar');if(b){b.hidden=false;var d=$('#whoDone');if(d)d.hidden=true}}
 function sendChat(){
   var ta=$('#chatText'),v=ta.value.trim();
   if(!v&&!PFILE){toast(isFa()?'متن یا فایل را بفرستید':'Write a text or attach a file');return}
+  if(!sendGate())return;
   var fl=PFILE;
-  var mine={me:true,text:v,ts:Date.now(),file:fl||undefined,sid:D.sid};
+  var wtag={name:WHO.name,phone:WHO.phone};
+  D.messages.forEach(function(m){if(m.me&&!m.who)m.who=wtag});
+  var mine={me:true,text:v,ts:Date.now(),file:fl||undefined,sid:D.sid,who:wtag};
   D.messages.push(mine);
   if(W)W.messages=(W.messages||[]).concat([mine]);   /* پنلِ باز: صندوق بی‌دریغ پیام‌های تازه را ببیند */
   PFILE=null;renderPending();ta.value='';ta.style.height='auto';
@@ -1734,6 +1893,8 @@ function applyI18n(){
   document.documentElement.dataset.lang=l;
   $$('[data-t]').forEach(function(n){if(t(n.dataset.t))n.textContent=t(n.dataset.t)});
   var ta=$('#chatText');if(ta&&!ta.value)ta.setAttribute('placeholder',t('ph.msg'));
+  var wn=$('#whoName');if(wn)wn.setAttribute('placeholder',t('chat.namePh'));
+  var wp=$('#whoPhone');if(wp)wp.setAttribute('placeholder',t('chat.phonePh'));
   var title=D.profile.name+' | '+(l==='fa'?'طراحی و دوخت':'Design & Tailoring');
   var desc=l==='fa'
     ? D.profile.name+' — طراحی و دوخت: طرح‌های جدید، پلیواری، تمام کش، دانوکی و بنوک ها. سفارش و مشاوره از طریق تلگرام و واتساپ.'
@@ -2225,6 +2386,7 @@ function onPickFile(f){
   r.readAsDataURL(f);
 }
 function renderChatFull(){
+  whoLoad();renderWho();
   $('#chatTitle').textContent=D.profile.name;$('#chatHeroName').textContent=D.profile.name;
   var box=$('#chatLog');
   box.innerHTML=D.messages.length?D.messages.map(function(m,j){
@@ -2248,24 +2410,98 @@ function renderChatFull(){
 
 /* ---------- صندوق پیام‌ها + پاسخ مستقیم ---------- */
 function AW(){return W||D}
+/* ================= صندوق پیام‌ها: کارت هر کاربر (نام بالا، شماره پایین) ================= */
+var IBX_OPEN={};
+function ibxWhen(ts){
+  var w='';try{w=new Date(Number(ts)||0).toLocaleString(loc())}catch(e){}
+  return '<span class="ibx-when" title="'+escAttr(w)+'">'+esc(timeAgo(Number(ts)||0))+'</span>';
+}
+function ibxMsgHTML(m,opt){
+  opt=opt||{};
+  var f=m.file||null,im=f&&/^image\//.test(String(f.type||''));
+  var u=f?(f.url||(f.id?('api.php?action=file&f='+encodeURIComponent(f.id)):'')):'';
+  var h='<div class="ibx-msg'+(opt.rep?' rep':'')+'">';
+  var who=opt.rep?(opt.who||'کارگاه'):(m.name||opt.who||'کاربر');
+  h+='<div class="ibx-mh"><b>'+esc(who)+'</b>'+ibxWhen(m.ts)+
+    (f?'<span class="ibx-fn">📎 '+esc(f.name||'فایل')+' · '+kb(f.size)+'</span>':'')+'</div>';
+  if(m.text)h+='<div class="ibx-tx">'+esc(m.text)+'</div>';
+  if(f&&!im)h+='<a class="ibx-file" href="'+escAttr(u||'#')+'"'+(u?' download rel="noopener"':'')+'>⤓ دریافت فایل</a>';
+  if(opt.del!=null)h+='<button class="pbtn tiny" type="button" data-delpend="'+opt.del+'">حذف این پیام</button>';
+  return h+'</div>';
+}
+function ibxImgs(files){
+  if(!files.length)return '';
+  return '<div class="ibx-imgs"><span class="ii-t">🖼 '+num(files.length)+' تصویر ارسالی کاربر — کلیک برای بزرگ‌کردن</span><div class="ii-row">'+
+    files.map(function(f){
+      var u=f.url||(f.id?('api.php?action=file&f='+encodeURIComponent(f.id)):'');
+      return '<a class="ibx-thumb" href="'+escAttr(u||'#')+'" target="_blank" rel="noopener" data-notap><img src="'+escAttr(u||'')+'" alt="'+escAttr(f.name||'')+'"></a>';
+    }).join('')+'</div></div>';
+}
+function personCard(o){
+  var nm=String(o.name||'').trim()||'بی‌نام', ph=String(o.phone||'').replace(/\D/g,'');
+  var op=!!IBX_OPEN[o.key];
+  return '<div class="ibx-card'+(op?' open':'')+'" data-ibx="'+escAttr(o.key)+'">'+
+    '<div class="ibx-head" role="button" tabindex="0" data-ibxto="'+escAttr(o.key)+'" aria-expanded="'+(op?'true':'false')+'">'+
+      '<span class="ibx-av" aria-hidden="true">'+esc(nm.slice(0,1))+'</span>'+
+      '<span class="ibx-id"><b>'+esc(nm)+'</b>'+
+        '<span class="ibx-ph">'+(ph?'<a href="'+escAttr(telHref(ph))+'" dir="ltr" data-notap>'+esc(whoDisp(ph))+'</a>'+
+          '<button class="ibx-cp" type="button" data-ibxcopy="'+escAttr(ph)+'" title="کپی شماره" aria-label="کپی شماره">⧉</button>'
+          :'<em>— شماره‌ای ثبت نکرده —</em>')+'</span></span>'+
+      '<span class="ibx-right">'+(o.unread?'<span class="pill warn">'+num(o.unread)+' تازه</span>':'')+
+        '<span class="pill '+(o.answered?'ok':'no')+'">'+(o.answered?'پاسخ داده':'بی‌پاسخ')+'</span>'+
+        '<span class="ibx-n">'+num(o.n)+' پیام</span>'+ibxWhen(o.last)+
+        '<span class="ibx-caret" aria-hidden="true">⌄</span></span>'+
+    '</div>'+
+    '<div class="ibx-body"'+(op?'':' hidden')+'>'+o.body+'</div></div>';
+}
+function localGroups(M){
+  var groups={},order=[];
+  (M.messages||[]).forEach(function(m,ix){
+    if(m.to!=null&&!m.me)return;              /* پاسخ ادمین کنار پیام خودش می‌آید */
+    if(!m.me)return;
+    var k='l:'+(m.sid||'local');
+    if(!groups[k]){groups[k]={key:k,items:[],name:'',phone:'',last:0,answered:false,n:0};order.push(k)}
+    groups[k].items.push({m:m,ix:ix});groups[k].n++;
+    groups[k].last=Math.max(groups[k].last,Number(m.ts)||0);
+    var w=m.who||{};
+    if(w.name)groups[k].name=w.name;
+    if(w.phone)groups[k].phone=w.phone;
+  });
+  (M.messages||[]).forEach(function(m,ix){
+    if(m.me||m.to==null)return;
+    var src=M.messages[m.to],k='l:'+((src&&src.sid)||'local');
+    if(!groups[k])return;
+    groups[k].reps=groups[k].reps||[];groups[k].reps.push({m:m,ix:ix});
+    groups[k].answered=true;groups[k].n++;groups[k].last=Math.max(groups[k].last,Number(m.ts)||0);
+  });
+  if(!order.length)return '';
+  return order.map(function(k){
+    var g=groups[k],h='',imgs=[];
+    g.items.forEach(function(it){
+      if(it.m.file&&/^image\//.test(String(it.m.file.type||'')))imgs.push(it.m.file);
+      h+=ibxMsgHTML(it.m,{del:it.ix,who:g.name});
+    });
+    (g.reps||[]).forEach(function(it){h+=ibxMsgHTML(it.m,{rep:true,who:(D.profile&&D.profile.name)||'کارگاه'})});
+    h=ibxImgs(imgs)+(h?'<div class="ibx-log">'+h+'</div>':'');
+    var lastIx=(g.items.length?g.items[g.items.length-1].ix:0);
+    h+='<div class="rep-form" data-rep="'+lastIx+'"><textarea placeholder="پاسخ کارگاه…" dir="auto"></textarea>'+
+      '<div class="form-actions"><button class="pbtn primary" type="button" data-sendrep="'+lastIx+'">ارسال پاسخ</button></div></div>';
+    return personCard({key:g.key,name:g.name,phone:g.phone,when:timeAgo(g.last),last:g.last,n:g.n,answered:g.answered,body:h});
+  }).join('');
+}
 function inboxTable(){
-  var M=AW(),list=(M.messages||[]).filter(function(m){return m.me});
-  if(API.on&&API.threads&&API.threads.length)return serverThreads()+
-    (list.length?'<p class="hint">پیام‌های این مرورگر (محلی):</p>':'');
-  if(!list.length)return (API.on?'<div class="empty">صندوق سرور خالی است — برای گرفتن نسخهٔ محلی، از تب همگام‌سازی «صندوق از سرور» را بزنید.</div>'
-    :'<div class="empty">هنوز پیامی نرسیده است. پیام‌های دریافتی کاربران همین‌جا می‌آید و می‌توانید مستقیم پاسخ دهید.</div>');
-  return '<p class="hint">پیام‌های دریافتی از پایین‌ترین؛ با «پاسخ» یک حباب از طرف کارگاه برای کاربر ثبت می‌شود و در گفتگوی همان مرورگر نمایش داده می‌شود.</p>'+
-  list.map(function(m){
-    var gi=M.messages.indexOf(m),answered=M.messages.some(function(x){return !x.me&&x.to===gi});
-    return '<div class="inbox-item"><span class="ii">'+
-      '<div class="meta"><span>#'+esc(m.sid||D.sid||'')+'</span><span>'+esc(new Date(m.ts).toLocaleString(loc()))+'</span>'+
-      '<span class="pill '+(answered?'ok':'no')+'">'+(answered?'پاسخ داده شد':'بی‌پاسخ')+'</span></div>'+
-      (m.text?'<div class="txt">'+esc(m.text)+'</div>':'')+
-      (m.file?'<div class="txt">📎 '+esc(m.file.name)+' ('+kb(m.file.size)+')</div><img src="'+escAttr(m.file.url)+'" alt="">':'')+
-      '<div class="rep-form" data-rep="'+gi+'"'+(answered?' hidden':'')+'><textarea placeholder="پاسخ کارگاه…" dir="auto"></textarea>'+
-      '<div class="form-actions"><button class="pbtn primary" type="button" data-sendrep="'+gi+'">ارسال پاسخ</button>'+
-      '<button class="pbtn" type="button" data-delpend="'+gi+'">حذف پیام</button></div></div>'+
-      '</span></div>'}).join('');
+  var M=AW();
+  if(API.on&&API.threads&&API.threads.length){
+    var h='<p class="hint">روی نام هر کاربر بزنید تا متن پیام‌ها و تصویرهای فرستاده‌اش باز شود؛ پاسخ هم از همین‌جا فرستاده می‌شود.</p>'+
+      API.threads.map(srvThreadCard).join('');
+    var loc2=(M.messages||[]).filter(function(m){return m.me});
+    if(loc2.length)h+='<p class="hint">پیام‌های این مرورگر (محلی):</p>'+localGroups(M);
+    return h;
+  }
+  var list=(M.messages||[]).filter(function(m){return m.me});
+  if(!list.length)return '<div class="empty">هنوز پیامی نرسیده است. وقتی کاربری در بخش گفتگو پیام بفرستد، نام و شماره‌اش همین‌جا می‌آید.'+
+    (API.on?' <button class="pbtn" type="button" data-apibtn="inbox">🔄 گرفتن صندوق سرور</button>':'')+'</div>';
+  return '<p class="hint">روی نام هر کاربر بزنید تا گفتگو و تصویرهایش باز شود.</p>'+localGroups(M);
 }
 function sendReply(gi,txt){
   if(!txt)return;
@@ -2501,21 +2737,29 @@ function srvBadge(){
   if(!API.on)return '<span class="pill no">محلی</span>';
   return API.setup?'<span class="pill no">نیازمند نصب</span>':(API.writable?'<span class="pill ok">متصل به سرور</span>':'<span class="pill no">پوشهٔ سرور نوشتنی نیست</span>');
 }
+function srvThreadCard(t){
+  var items=(t.items||[]).slice();
+  var g=null;
+  for(var q=0;q<items.length;q++){if(items[q].from!=='admin'){g=items[q];break}}
+  g=g||{};
+  var name=(t.name||g.name||(g.who&&g.who.name)||'').trim();
+  var phone=(t.phone||g.phone||(g.who&&g.who.phone)||'').trim();
+  var imgs=items.filter(function(m){return m.file&&/^image\//.test(String(m.file.type||''))}).map(function(m){return m.file});
+  var nUn=Number(t.unreadForAdmin||t.unread||0), answered=items.some(function(m){return m.from==='admin'});
+  var body=ibxImgs(imgs)+
+    '<div class="ibx-log">'+items.map(function(m){return ibxMsgHTML(m,{rep:m.from==='admin',who:(D.profile&&D.profile.name)||'کارگاه'})}).join('')+'</div>'+
+    '<div class="rep-form" data-srep="'+escAttr(t.sid)+'"><textarea placeholder="پاسخ کارگاه…" dir="auto"></textarea>'+
+    '<div class="form-actions"><button class="pbtn primary" type="button" data-ssend="'+escAttr(t.sid)+'">ارسال پاسخ</button>'+
+    '<button class="pbtn" type="button" data-sread="'+escAttr(t.sid)+'">خوانده شد</button>'+
+
+    '<button class="pbtn" type="button" data-sdel="'+escAttr(t.sid)+'">حذف گفتگو</button></div></div>';
+  return personCard({key:'s'+t.sid,name:name,phone:phone,when:timeAgo(t.last),last:t.last,
+    n:Number(t.n)||items.length,unread:nUn,answered:answered,body:body});
+}
 function serverThreads(){
   var T=API.threads||[];
   if(!T.length)return '<div class="empty">صندوق مشترک سرور خالی است.</div>';
-  var tot=0;T.forEach(function(t){tot+=t.unreadForAdmin||0});
-  return '<p class="hint">📬 صندوق مشترک: '+num(T.length)+' گفتگو · '+num(tot)+' بی‌خوانده. پاسخ فقط روی سرور می‌نشیند و در گفتگوی همان بازدیدکننده ظاهر می‌شود.</p>'+
-    T.map(function(t){
-      var items=(t.items||[]).slice().reverse();
-      return '<div class="inbox-item"><span class="ii"><div class="meta"><span>#'+esc(t.sid)+'</span><span>'+num(t.n)+' پیام</span><span>'+esc(timeAgo(t.last))+'</span>'+
-        (t.unreadForAdmin?'<span class="pill no">'+num(t.unreadForAdmin)+' تازه</span>':'<span class="pill ok">خوانده</span>')+'</div>'+
-        items.map(function(m){return '<div class="txt">'+(m.from==='admin'?'<b>کارگاه: </b>':'')+esc(m.text||'')+
-          (m.file?' <a href="'+escAttr(m.file.id?('api.php?action=file&f='+m.file.id):'#')+'" target="_blank" rel="noopener">📎 '+esc(m.file.name||'فایل')+'</a>':'')+'</div>'}).join('')+
-        '<div class="rep-form" data-srep="'+escAttr(t.sid)+'"><textarea placeholder="پاسخ کارگاه…" dir="auto"></textarea><div class="form-actions">'+
-        '<button class="pbtn primary" type="button" data-ssend="'+escAttr(t.sid)+'">ارسال پاسخ</button>'+
-        '<button class="pbtn" type="button" data-sread="'+escAttr(t.sid)+'">خوانده شد</button>'+
-        '<button class="pbtn" type="button" data-sdel="'+escAttr(t.sid)+'">حذف گفتگو</button></div></div></span></div>'}).join('');
+  return T.map(srvThreadCard).join('');
 }
 function apiThreads(cb){
   if(!API.on||!isAuth()){if(cb)cb();return}
@@ -3062,10 +3306,18 @@ function applyRowJson(i){
 function filterRows(q){
   PUB.found=String(q||'');
   var s=PUB.found.trim().toLowerCase(),n=0;
-  $$('#admBody .row-card, #admBody [data-copyrow]').forEach(function(el){
+  $$('#admBody .row-card, #admBody [data-copyrow], #admBody .ibx-card').forEach(function(el){
     var hit=!s||(el.textContent||'').toLowerCase().indexOf(s)>=0;
     el.style.display=hit?'':'none';
     if(hit)n++;
+    if(el.classList.contains('ibx-card')){
+      var bd=el.querySelector('.ibx-body'),kk=el.dataset.ibx,hb=el.querySelector('[data-ibxto]');
+      if(bd){
+        if(s&&hit){bd.hidden=false;el.classList.add('open');if(hb)hb.setAttribute('aria-expanded','true')}
+        else if(!s){bd.hidden=!IBX_OPEN[kk];el.classList.toggle('open',!!IBX_OPEN[kk]);
+          if(hb)hb.setAttribute('aria-expanded',IBX_OPEN[kk]?'true':'false')}
+      }
+    }
   });
   var p=$('#admFindHit');
   if(p)p.textContent=s?num(n)+' مورد':'';
@@ -3125,6 +3377,13 @@ function renderAdmin(){
       '<label class="field"><span>آدرس بک‌اند (خالی = بدون سرور)</span><input id="admApi" value="'+escAttr(D.settings.apiPath||'')+'" dir="ltr"></label>'+
       '<label class="field"><span>رنگ تم</span><input id="admTheme" value="'+escAttr(D.settings.theme||'')+'"></label>'+
       '<label class="field"><span>متن فوتر (خالی = پیش‌فرض)</span><input id="admFoot" value="'+escAttr(D.settings.foot||'')+'"></label>'+
+      '<div class="row2"><label class="field sw-lab"><input type="checkbox" id="setNeedName"'+(needName()?' checked':'')+'>'+
+        '<span>در گفتگو نام کاربر را بگیرد</span></label>'+
+
+      '<label class="field sw-lab"><input type="checkbox" id="setNeedPhone"'+(needPhone()?' checked':'')+'>'+
+        '<span>شماره تلفن هم اجباری باشد</span></label></div>'+
+      '<p class="hint">اگر خاموش باشد، کاربر می‌تواند بدون نام/شماره پیام بفرستد و در صندوق همان «بی‌نام» یا «— شماره‌ای ثبت نکرده —» نمایش داده می‌شود.</p>'+
+
       '<label class="field" style="flex-direction:row;align-items:center;gap:8px"><span><input type="checkbox" id="setPub"'+(autoPub()?' checked':'')+'> انتشار خودکار روی هاست پس از هر ذخیره</span></label>'+
       '<p class="hint">تنظیمات ظاهری در همین مرورگر می‌ماند؛ با «ذخیره» + «انتشار» برای همه قابل دیدن می‌شود.</p>';
   }else{
@@ -3262,6 +3521,8 @@ function admSave(){
     W.settings.lang=$('#admLang').value;W.settings.bg=$('#admBg').value.trim();
     W.settings.theme=$('#admTheme').value.trim();W.settings.grid=$('#admGrid').value;
     var f=$('#admFoot').value.trim();if(f)W.settings.foot=f;else delete W.settings.foot;
+    var nn=$('#setNeedName');if(nn)W.settings.needName=nn.checked?1:0;
+    var np=$('#setNeedPhone');if(np)W.settings.needPhone=np.checked?1:0;
     var ap=$('#admApi');if(ap){var av=ap.value.trim();if(av)W.settings.api=av;else delete W.settings.api;}
   }else if(admTab==='stats'||admTab==='hobbies'||admTab==='contacts'||admTab==='quick'||admTab==='cats'){
     var j=$('#admJson');
@@ -3458,6 +3719,17 @@ document.addEventListener('click',function(e){
   if(dp){D.messages.splice(Number(dp.dataset.delpend),1);save();renderChatFull();renderAdmin();toast('پیام حذف شد');return}
 
   /* ---- ادمین ---- */
+  if(near('#whoEdit')){bar0();var we=$('#whoName');if(we)we.focus();return}
+  var icp=near('[data-ibxcopy]');
+  if(icp){copy(String(icp.dataset.ibxcopy),'شماره تلفن کپی شد ✓');return}
+  var ito=near('[data-ibxto]');
+  if(ito){var kk=ito.dataset.ibxto;IBX_OPEN[kk]=!IBX_OPEN[kk];
+    var card=ito.closest('.ibx-card');
+    if(card){card.classList.toggle('open',!!IBX_OPEN[kk]);
+      var bd=card.querySelector('.ibx-body');if(bd)bd.hidden=!IBX_OPEN[kk];
+      ito.setAttribute('aria-expanded',IBX_OPEN[kk]?'true':'false');
+      if(IBX_OPEN[kk]){var tx=bd&&bd.querySelector('.rep-form textarea');if(tx&&tx.focus)tx.focus()}}
+    return}
   var at=near('[data-adm-tab]');if(at){admTab=at.dataset.admTab;renderAdmin();return}
   var gt=near('[data-goto-tab]');
   if(gt){admTab=gt.dataset.gotoTab;renderAdmin();var bd=$('#admBody');if(bd)bd.scrollTop=0;
@@ -3541,6 +3813,7 @@ document.addEventListener('submit',function(e){
 });
 document.addEventListener('change',function(e){
   var n=e.target;
+  if(n&&(n.id==='whoName'||n.id==='whoPhone')){whoRead();return}
   if(n.dataset&&n.dataset.gf==='cat'&&W){var i=Number(n.dataset.i);if(W.gallery[i])W.gallery[i].cat=n.value}
   if(n.dataset&&n.dataset.gf==='n'&&W){var j=Number(n.dataset.i);if(W.gallery[j])W.gallery[j].n=n.checked?1:undefined}
 });
@@ -3573,6 +3846,10 @@ document.addEventListener('keydown',function(e){
   if($('#lightbox').classList.contains('open')){
     if(e.key==='ArrowLeft')stepLB(isFa()?1:-1);
     if(e.key==='ArrowRight')stepLB(isFa()?-1:1);
+    if(e.key==='Enter'&&(e.target.id==='whoName'||e.target.id==='whoPhone')){
+      e.preventDefault();var nx=e.target.id==='whoName'?$('#whoPhone'):$('#chatText');if(nx)nx.focus();return}
+    if(e.key==='Enter'||e.key===' '){var hd=e.target&&e.target.closest&&e.target.closest('[data-ibxto]');
+      if(hd){e.preventDefault();hd.click();return}}
     if(e.key==='Enter'){
       var ti2=e.target&&e.target.dataset&&e.target.dataset.taginp;
       if(ti2!=null){e.preventDefault();addDesignTag(Number(ti2),e.target.value);return}
@@ -3651,10 +3928,10 @@ $('#logPass').addEventListener('input',function(){$('#logErr').textContent=''});
 clock();setInterval(clock,15000);
 /* ---------- قلاب عیب‌یابی (کنسول مرورگر و تست‌ها) ----------
    فقط خواندنی است و برایعیب‌یابی سریع روی هاست مفید است: titanali.D ،titanali.API … */
-window.titanali={ver:'1.0.0',
+window.titanali={ver:'1.0.7',
   get D(){return D},get API(){return API},get SESS(){return SESS},get W(){return W},
   isAuth:isAuth,likeCount:likeCount,dlCount:dlCount,cmtList:cmtList,
-  like:toggleLike,download:doDownload,comment:addComment,renderAll:renderAll,go:go,
+  like:toggleLike,download:doDownload,comment:addComment,renderAll:renderAll,renderChatFull:renderChatFull,go:go,
   apiPush:apiPush,apiRefresh:apiRefresh,apiPollThread:apiPollThread,apiThreads:apiThreads,apiBtn:apiBtn,
   logout:logout,adm:adm,save:save,export:admExport,
   tx:tx,feedCfg:feedCfg,feedList:feedList,igExtItems:igExtItems,igApplyFeed:igApplyFeed,

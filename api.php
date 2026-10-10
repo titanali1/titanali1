@@ -22,7 +22,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 
-define('TA_VER', '1.0.0');
+define('TA_VER', '1.0.7');
 define('TA_TOKEN_TTL', 43200);          /* ۱۲ ساعت نشست ادمین */
 
 /* =====================================================================
@@ -618,6 +618,10 @@ if ($ACTION === 'send') {
     $mid = substr(bin2hex(random_bytes(6)), 0, 10);
     $row = array('mid' => $mid, 'sid' => $sid, 'from' => 'guest', 'text' => $txt, 'ts' => time() * 1000,
                  'to' => ta_str(isset($b['to']) ? $b['to'] : '', 24), 'ip' => ta_ip(), 'ua' => substr(ta_str(isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '', 120), 0, 120));
+    $gname = ta_str(isset($b['name']) ? $b['name'] : '', 60);
+    if ($gname !== '') { $row['name'] = $gname; }
+    $gphone = ta_digits(isset($b['phone']) ? $b['phone'] : '');
+    if ($gphone !== '' && strlen($gphone) <= 15) { $row['phone'] = $gphone; }
     if ($file) {
         $row['file'] = array('id' => ta_str(isset($file['id']) ? $file['id'] : '', 40),
                              'name' => ta_str(isset($file['name']) ? $file['name'] : '', 80),
@@ -694,13 +698,20 @@ if ($ACTION === 'inbox') {
     foreach (ta_inbox_all() as $r) {
         if (!is_array($r) || !isset($r['sid'])) continue;
         $sid = $r['sid'];
-        if (!isset($threads[$sid])) $threads[$sid] = array('sid' => $sid, 'n' => 0, 'last' => 0, 'items' => array(), 'unread' => 0);
+        if (!isset($threads[$sid])) $threads[$sid] = array('sid' => $sid, 'n' => 0, 'last' => 0, 'items' => array(), 'unread' => 0,
+                                                            'name' => '', 'phone' => '', 'imgs' => 0, 'answered' => 0);
         $threads[$sid]['n']++;
         $threads[$sid]['last'] = max($threads[$sid]['last'], (int) $r['ts']);
         if (count($threads[$sid]['items']) < 40) $threads[$sid]['items'][] = $r;
         if (isset($r['from']) && $r['from'] !== 'admin') {
             $seen = isset($seenAll[$sid]) && is_array($seenAll[$sid]) && isset($seenAll[$sid]['a']) ? (int) $seenAll[$sid]['a'] : 0;
             if ((int) $r['ts'] > $seen) $threads[$sid]['unread']++;
+            if ($threads[$sid]['name'] === '' && isset($r['name'])) $threads[$sid]['name'] = $r['name'];
+            if ($threads[$sid]['phone'] === '' && isset($r['phone'])) $threads[$sid]['phone'] = $r['phone'];
+            if (!empty($r['file']) && is_array($r['file'])
+                && preg_match('#^image/#', (string) (isset($r['file']['type']) ? $r['file']['type'] : ''))) $threads[$sid]['imgs']++;
+        } else {
+            $threads[$sid]['answered']++;
         }
     }
     foreach ($threads as $k => $v) {
@@ -715,6 +726,16 @@ if ($ACTION === 'inbox') {
     ta_out(200, array('ok' => true, 'threads' => array_values($threads), 'total' => count(ta_inbox_all()), 'unread' => $nu));
 }
 
+/* رقم‌های فارسی/عربی به لاتین، سپس حذف هر چه رقم نیست */
+function ta_digits($v)
+{
+    $v = (string) $v;
+    $v = strtr($v, array("\xD9\xA0" => '0', "\xD9\xA1" => '1', "\xD9\xA2" => '2', "\xD9\xA3" => '3', "\xD9\xA4" => '4',
+                         "\xD9\xA5" => '5', "\xD9\xA6" => '6', "\xD9\xA7" => '7', "\xD9\xA8" => '8', "\xD9\xA9" => '9',
+                         "\xD6\xB0" => '0', "\xD6\xB1" => '1', "\xD6\xB2" => '2', "\xD6\xB3" => '3', "\xD6\xB4" => '4',
+                         "\xD6\xB5" => '5', "\xD6\xB6" => '6', "\xD6\xB7" => '7', "\xD6\xB8" => '8', "\xD6\xB9" => '9'));
+    return preg_replace('/[^0-9]/', '', $v);
+}
 function ta_cmp_ts($a, $b) { return (int) $a['ts'] === (int) $b['ts'] ? 0 : ((int) $a['ts'] < (int) $b['ts'] ? -1 : 1); }
 function ta_cmp_last($a, $b) { return (int) $b['last'] === (int) $a['last'] ? 0 : ((int) $b['last'] < (int) $a['last'] ? -1 : 1); }
 

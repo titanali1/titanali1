@@ -22,7 +22,7 @@ function handle(action, body, qs, tok) {
   const J = (o, st) => ({ obj: Object.assign({ ok: true }, o), status: st || 200 });
   const authed = !!SRV.tokens[tok];
   switch (action) {
-    case 'health': return J({ app: 'titanali', ver: '1.0.0', installed: SRV.users.length > 0, needSetup: SRV.users.length === 0, rev: SRV.rev, writable: true, php: '8.2', dataDir: '/home/x/titanali-data', host: 'titanali1.ir', domain: '' });
+    case 'health': return J({ app: 'titanali', ver: '1.0.7', installed: SRV.users.length > 0, needSetup: SRV.users.length === 0, rev: SRV.rev, writable: true, php: '8.2', dataDir: '/home/x/titanali-data', host: 'titanali1.ir', domain: '' });
     case 'install':
       if (SRV.users.length) return { obj: { ok: false, error: 'قبلاً نصب شده' }, status: 409 };
       if (!body || String(body.p).length < 8) return { obj: { ok: false, error: 'رمز کوتاه است' }, status: 400 };
@@ -64,17 +64,31 @@ function handle(action, body, qs, tok) {
     }
     case 'send': {
       const sid = String(body.sid || '').length < 8 ? 'srv-' + (body.sid || 'new') : String(body.sid);
-      SRV.inbox.push({ mid: 'm' + (SRV.inbox.length + 1), sid, from: 'guest', text: body.text || '', ts: Date.now() });
+      if (body.name) SRV.lastWho = { name: body.name, phone: body.phone };
+      SRV.inbox.push({
+        mid: 'm' + (SRV.inbox.length + 1), sid, from: 'guest', text: body.text || '', ts: Date.now(),
+        name: String(body.name || '').slice(0, 60), phone: String(body.phone || '').replace(/\D/g, ''),
+        file: body.file && body.file.id ? { id: body.file.id, name: body.file.name, type: body.file.type, size: body.file.size } : undefined
+      });
       return J({ mid: 'm' + SRV.inbox.length, sid, ts: Date.now(), unread: 0 });
     }
     case 'thread':
       return J({ messages: SRV.inbox.filter(r => r.from === 'admin' && r.sid === qs.sid).map(r => ({ mid: r.mid, text: r.text, ts: r.ts, from: 'them', name: 'تیتانلی' })), unread: 0 });
-    case 'inbox':
+    case 'inbox': {
       if (!authed) return { obj: { ok: false, error: '۴۰' }, status: 401 };
+      const items = SRV.inbox.slice().sort((a, b) => a.ts - b.ts);
+      const g = items.filter(x => x.from !== 'admin')[0] || {};
       return J({
-        threads: [{ sid: SRV.inbox.length ? SRV.inbox[0].sid : 'x', n: SRV.inbox.length, last: Date.now(), items: SRV.inbox.slice(), unreadForAdmin: SRV.inbox.filter(x => x.from !== 'admin').length }],
-        total: SRV.inbox.length, unread: SRV.inbox.filter(x => x.from !== 'admin').length
+        threads: [{
+          sid: SRV.inbox.length ? SRV.inbox[0].sid : 'x', n: items.length, last: Date.now(), items,
+          name: g.name || '', phone: g.phone || '',
+          imgs: items.filter(x => x.file && /^image\//.test(String(x.file.type || ''))).length,
+          unreadForAdmin: items.filter(x => x.from !== 'admin').length,
+          answered: items.filter(x => x.from === 'admin').length
+        }],
+        total: items.length, unread: items.filter(x => x.from !== 'admin').length
       });
+    }
     case 'reply':
       if (!authed) return { obj: { ok: false, error: '۴۰۱' }, status: 401 };
       SRV.inbox.push({ mid: 'm' + (SRV.inbox.length + 1), sid: body.sid, from: 'admin', name: 'ادمین', text: body.text, ts: Date.now() + 1 });
@@ -189,8 +203,12 @@ SRV.social = { likes: { 0: 7 }, dl: { 0: 2 }, comments: {} };
   T().go('chat'); await sleep(40);
   calls.length = 0;
   const oldSid = T().D.sid;
+  type($('#whoName'), 'سارا محمدی');
+  type($('#whoPhone'), '۰۹۱۲۱۲۳۴۵۶۷');
   type($('#chatText'), 'سلام، سایز ۳۸'); submit($('#chatForm')); await sleep(200);
   A('send به سرور رفت', calls.some(c => c.action === 'send' && /سایز ۳۸/.test(c.body.text)));
+  A('نام کاربر با پیام به سرور رفت', calls.some(c => c.action === 'send' && c.body.name === 'سارا محمدی'));
+  A('شمارهٔ فارسی به لاتین تبدیل شد', calls.some(c => c.action === 'send' && c.body.phone === '09121234567'));
   A('حباب پاسخِ محلی ساخته نشد', T().D.messages.length === 1);
   A('sid کوتاه با شناسهٔ سرور عوض شد', /^srv-/.test(String(T().D.sid)) && T().D.sid !== oldSid);
   SRV.inbox.push({ mid: 'rp1', sid: T().D.sid, from: 'admin', name: 'تیتانلی', text: 'فردا آماده است', ts: Date.now() + 5 });
@@ -246,6 +264,23 @@ SRV.social = { likes: { 0: 7 }, dl: { 0: 2 }, comments: {} };
   click($('[data-ssend]')); await sleep(260);
   A('reply به سرور رفت', calls.some(c => c.action === 'reply' && /فردا/.test(c.body.text)));
   A('پاسخ در صندوق سرور ماند', SRV.inbox.some(r => r.from === 'admin' && /بله/.test(r.text)));
+
+  console.log('— کارت کاربر: نام بالا، شماره پایین، تصاویر و پاسخ از همان‌جا');
+  SRV.inbox.push({ mid: 'im1', sid: T().D.sid, from: 'guest', text: 'اینم عکس مدل', ts: Date.now() + 40,
+    name: 'سارا محمدی', phone: '09121234567', file: { id: 'u9.jpg', name: 'model.jpg', type: 'image/jpeg', size: 24000 } });
+  click($('#admTabs [data-adm-tab="sync"]')); await sleep(60);
+  click($('#admBody [data-apibtn="inbox"]')); await sleep(240);
+  click($('#admTabs [data-adm-tab="inbox"]')); await sleep(90);
+  A('کارت هر کاربر ساخته شد', !!$('#admBody .ibx-card') && !!$('#admBody [data-ibxto]'));
+  A('نام در بالای کارت', /سارا محمدی/.test(($('#admBody .ibx-id b') || {}).textContent || ''));
+  A('شماره زیر نام', /۰۹۱۲ ۱۲۳ ۴۵۶۷/.test(($('#admBody .ibx-ph') || {}).textContent || ''));
+  A('گفتگو اول بسته است', $('#admBody .ibx-body').hidden === true);
+  click($('#admBody [data-ibxto]')); await sleep(90);
+  A('کلیک روی نام، گفتگو را باز کرد', $('#admBody .ibx-body').hidden === false);
+  A('متن پیام کاربر در کارت است', /سلام، سایز ۳۸/.test($('#admBody .ibx-body').textContent));
+  A('تصویر ارسالی کاربر نمایش داده شد', !!$('#admBody .ibx-imgs img') && /action=file/.test($('#admBody .ibx-imgs img').getAttribute('src')));
+  A('فرم پاسخ همین‌جا است', !!$('#admBody .ibx-body [data-ssend]'));
+  A('کارت باز با رندر دوباره باز می‌ماند', ($('#admBody .ibx-card') || {}).classList.contains('open'));
 
   console.log('— حذف کامنت توسط ادمین');
   click($('#admTabs [data-adm-tab="sync"]')); await sleep(60);
