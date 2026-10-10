@@ -18,7 +18,8 @@ if [ -z "${SKIP_TESTS:-}" ]; then
   python3 - <<'PYCHK'
 import re, pathlib, sys
 src = pathlib.Path("index.html").read_text(encoding="utf-8")
-pathlib.Path("/tmp/ta-check.js").write_text(re.search(r"<script>([\s\S]*?)</script>", src).group(1), encoding="utf-8")
+blocks = [m.group(1) for m in re.finditer(r"<script[^>]*>([\s\S]*?)</script>", src)]
+pathlib.Path("/tmp/ta-check.js").write_text(max(blocks, key=len), encoding="utf-8")  # خودِ برنامه، نه بلوک اول
 PYCHK
   node --check /tmp/ta-check.js && echo "✓ سینتکس JS" || { echo "✗ JS"; exit 1; }
 fi
