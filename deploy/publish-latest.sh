@@ -39,5 +39,5 @@ echo
 echo "لینک مستقیم (همیشه بستهٔ آخر):"
 echo "  https://raw.githubusercontent.com/$SLUG/latest/titanali-cpanel.zip"
 echo "  https://raw.githubusercontent.com/$SLUG/latest/titanali-cpanel.zip.sha256"
-echo "تگ قفل‌شدهٔ همین نسخه: https://github.com/$SLUG/releases/tag/$(git describe --tags --abbrev=0 2>/dev/null || echo latest)"
+VER="$(git tag -l 'v*' --sort=-v:refname | head -1)"; [ -n "$VER" ] && echo "بستهٔ همین نسخه (قفل‌شده): https://raw.githubusercontent.com/$SLUG/$VER/titanali-cpanel.zip"
 echo "sha256: $SHA"

@@ -153,16 +153,16 @@ deploy/make-cpanel.py  ← سازندهٔ بسته و تصاویر (python3 depl
 ### دانلود مستقیم بسته
 | چه چیزی | لینک |
 |---|---|
-| **زیپ آمادهٔ `public_html`** (۱۵ فایل، نسخه‌بندی‌شده در مخزن) | https://github.com/titanali1/titanali1/raw/arena/874bf68b-titanali1/titanali-cpanel.zip |
-| فایل `sha256` برای بررسی سلامت | https://github.com/titanali1/titanali1/raw/arena/874bf68b-titanali1/titanali-cpanel.zip.sha256 |
+| **زیپ آمادهٔ `public_html`** (۱۵ فایل، نسخه‌بندی‌شده در مخزن) | https://raw.githubusercontent.com/titanali1/titanali1/latest/titanali-cpanel.zip |
+| فایل `sha256` برای بررسی سلامت | https://raw.githubusercontent.com/titanali1/titanali1/latest/titanali-cpanel.zip.sha256 |
 | صفحهٔ ریلیز (لینک‌های ثابت) | https://github.com/titanali1/titanali1/releases/latest |
 | پیش‌نمایش زندهٔ همین نشست (موقتی) | https://8000-idzdl0fknv1gvvhv82wkj.e2b.app/titanali-cpanel.zip |
 | اگر GitHub Pages فعال باشد | `https://<کاربر>.github.io/titanali1/titanali-cpanel.zip` |
 
 ```bash
 # دانلود + بررسی سلامت
-curl -LJ -o titanali-cpanel.zip 'https://github.com/titanali1/titanali1/raw/arena/874bf68b-titanali1/titanali-cpanel.zip'
-curl -LO 'https://github.com/titanali1/titanali1/raw/arena/874bf68b-titanali1/titanali-cpanel.zip.sha256'
+curl -LJ -o titanali-cpanel.zip 'https://raw.githubusercontent.com/titanali1/titanali1/latest/titanali-cpanel.zip'
+curl -LO 'https://raw.githubusercontent.com/titanali1/titanali1/latest/titanali-cpanel.zip.sha256'
 sha256sum -c titanali-cpanel.zip.sha256      # titanali-cpanel.zip: OK
 unzip -l titanali-cpanel.zip                 # ۱۵ فایل داخل public_html
 ```
@@ -224,6 +224,31 @@ python3 tests/php-syntax.py api.php titanali-config.sample.php
 * `tests/php-syntax.py` بدون نیاز به مفسرِ PHP، توازن بلوک‌ها و سازگاری با PHP 7.0 را می‌سنجد.
 
 جزئیات بیشتر: `tests/README.md`. پوشهٔ `tests/` داخل بستهٔ هاست نمی‌رود.
+
+## لینک مستقیم دانلود
+
+لینک‌های زیر به تگِ متحرّک `latest` می‌روند و همیشه تازه‌ترین بسته را می‌دهند (هر `bash deploy/publish-latest.sh` این تگ را جلو می‌آورد):
+
+| چه چیزی | لینک مستقیم |
+|---|---|
+| بستهٔ سی‌پنل (۱۵ فایل، ~۱۱۱KB) | `https://raw.githubusercontent.com/titanali1/titanali1/latest/titanali-cpanel.zip` |
+| امضای آن | `https://raw.githubusercontent.com/titanali1/titanali1/latest/titanali-cpanel.zip.sha256` |
+| فقط سایت (تک‌فایل) | `https://raw.githubusercontent.com/titanali1/titanali1/latest/index.html` |
+| بک‌اند | `https://raw.githubusercontent.com/titanali1/titanali1/latest/api.php` |
+| فایل نمونهٔ تنظیمات | `https://raw.githubusercontent.com/titanali1/titanali1/latest/titanali-config.sample.php` |
+| بررسی دامنه / نصب ادمین سرور | `…/latest/deploy/verify-site.sh` و `…/latest/deploy/install-api.sh` |
+| نسخهٔ قفل‌شده | `https://raw.githubusercontent.com/titanali1/titanali1/v1.0.1/titanali-cpanel.zip` |
+| آیینهٔ CDN (اگر هاست به گیت‌هاب دسترسی ندارد) | `https://cdn.jsdelivr.net/gh/titanali1/titanali1@latest/titanali-cpanel.zip` |
+
+دریافت و راستی‌آزمایی:
+
+```bash
+curl -fsSLO https://raw.githubusercontent.com/titanali1/titanali1/latest/titanali-cpanel.zip
+curl -fsSLO https://raw.githubusercontent.com/titanali1/titanali1/latest/titanali-cpanel.zip.sha256
+sha256sum -c titanali-cpanel.zip.sha256      # → titanali-cpanel.zip: OK
+```
+
+اگر از داخل هاست (cPanel → Terminal) لینک گیت‌هاب باز نشد، همان دستور را با پیشوند `https://cdn.jsdelivr.net/gh/titanali1/titanali1@latest/` بزنید. برای نسخهٔ قفل‌شده (CDN آن را هفت روز کش می‌کند) `@v1.0.1` را به‌جای `@latest` بگذارید.
 
 ## فعال‌سازی روی دامنه (سی‌پنل) — سه راه
 

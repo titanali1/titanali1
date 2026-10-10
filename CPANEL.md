@@ -1,7 +1,7 @@
 # راهنمای کامل راه‌اندازی و استفاده روی هاست سی‌پنل (cPanel) — تیتانلی
 
 مخزن: `titanali1/titanali1` · شاخهٔ کاری: `arena/874bf68b-titanali1`
-بستهٔ آماده: `titanali-cpanel.zip` (۱۵ فایل، ≈۱۱۰ کیلوبایت) ← [دانلود مستقیم](https://github.com/titanali1/titanali1/raw/arena/874bf68b-titanali1/titanali-cpanel.zip) · [sha256](https://github.com/titanali1/titanali1/raw/arena/874bf68b-titanali1/titanali-cpanel.zip.sha256)
+بستهٔ آماده: `titanali-cpanel.zip` (۱۵ فایل، ≈۱۱۰ کیلوبایت) ← [دانلود مستقیم](https://raw.githubusercontent.com/titanali1/titanali1/latest/titanali-cpanel.zip) · [sha256](https://raw.githubusercontent.com/titanali1/titanali1/latest/titanali-cpanel.zip.sha256)
 
 > این راهنما بر پایهٔ cPanel با پوستهٔ **Jupiter** نوشته شده (در پوستهٔ Retro هم نام آیتم‌ها همان است، فقط جای منو فرق می‌کند).
 > من نمی‌توانم روی هاست واقعی شما تست کنم؛ جایی که رفتار بین هاست‌ها فرق می‌کند، صریحاً گفته‌ام «بستگی دارد».
@@ -203,14 +203,14 @@ cPanel → **Advanced** → **Terminal**. این بلوک را یک‌جا بچ�
 
 ```bash
 cd ~/public_html \
- && curl -fsSL -o titanali-cpanel.zip 'https://github.com/titanali1/titanali1/raw/arena/874bf68b-titanali1/titanali-cpanel.zip' \
+ && curl -fsSL -o titanali-cpanel.zip 'https://raw.githubusercontent.com/titanali1/titanali1/latest/titanali-cpanel.zip' \
  && sha256sum titanali-cpanel.zip \
  && unzip -oq titanali-cpanel.zip && rm -f titanali-cpanel.zip \
  && chmod 644 index.html api.php sw.js site.webmanifest robots.txt sitemap.xml 404.html og.png *.png favicon.svg 2>/dev/null; \
  chmod 644 .htaccess; curl -s 'https://titanali1.ir/api.php?action=health'
 ```
 
-`sha256sum` باید با `d3eba620` شروع شود. اگر هاست به github.com دسترسی ندارد، همان زیپ را با File Manager بریزید (روش A).
+در همین خط، `sha256sum titanali-cpanel.zip` را با محتوای `titanali-cpanel.zip.sha256` (کنار همان بسته) مقایسه کنید؛ اگر هاست به `raw.githubusercontent.com` دسترسی نداشت، آدرس را با `https://cdn.jsdelivr.net/gh/titanali1/titanali1@latest/titanali-cpanel.zip` عوض کنید یا همان زیپ را با File Manager بریزید (روش A).
 
 **ساختن ادمین سرور** (این همان «نصب» است؛ با `read -rs` رمز در تاریخچهٔ شل نمی‌نشیند):
 
