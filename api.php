@@ -309,7 +309,7 @@ function ta_sections_of($d)
 {
     $d = ta_arr($d);
     $out = array();
-    foreach (array('profile', 'cats', 'gallery', 'hobbies', 'quick', 'copy', 'feed', 'contacts', 'ig', 'settings') as $k) {
+    foreach (array('profile', 'tags', 'stats', 'cats', 'gallery', 'hobbies', 'quick', 'copy', 'feed', 'contacts', 'ig', 'settings') as $k) {
         $out[$k] = isset($d[$k]) ? ta_hash_of($d[$k]) : '';
     }
     return $out;

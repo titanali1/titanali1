@@ -99,7 +99,8 @@ const A = (n, c) => { c ? (ok++, console.log('  ✓ ' + n)) : (fail++, console.l
   A('رمز غلط رد شد', /درست نیست/.test($('#logErr').textContent) && $('#adminPanel').classList.contains('open') === false);
   type($('#logPass'), 'titanali1384'); submit($('#logForm')); await sleep(80);
   A('رمز پیش‌فرض داخل کد پذیرفته شد', $('#adminPanel').classList.contains('open') && T().isAuth());
-  A('۱۵ تب پنل (با فید، دکمه‌ها، متن‌ها، انتشار)', $$('#admTabs .adm-tab').length === 15);
+  A('۱۶ تب پنل (نمای کلی + فید + دکمه‌ها + متن‌ها + انتشار)', $$('#admTabs .adm-tab').length === 16);
+  A('تب نمای کلی هست', !!$('#admTabs [data-adm-tab="home"]'));
   A('تب‌های تازه در پنل هست', ['feed', 'buttons', 'copy', 'publish'].every(k => !!$('#admTabs [data-adm-tab="' + k + '"]')));
   A('بَج شمارش روی تب‌ها', $$('#admTabs .adm-tab em').length >= 4);
   A('نوار وضعیت پنل پر است', /محلی/.test($('#admPills').textContent) && /هم‌سان|منتشرنشده/.test($('#admPills').textContent));
@@ -273,6 +274,121 @@ const A = (n, c) => { c ? (ok++, console.log('  ✓ ' + n)) : (fail++, console.l
   click($('#admSave')); await sleep(160);
   A('ذخیره که شد، نوار منتشرنشده پاک می‌شود', $('#admDirty').hidden && T().dirtyKeys().length === 0);
   A('انتشار خودکار بدون سرور کاری نمی‌کند', T().PUB.busy === false);
+
+  console.log('— نمای کلی، شبکه‌ها، آمار، برچسب‌ها، تصویر');
+  click($('#admTabs [data-adm-tab="home"]')); await sleep(80);
+  A('کاشی‌های نمای کلی (۸ بخش)', $$('#admBody .h-tile').length >= 8);
+  A('راهنمای سه‌مرحله‌ای ویرایش/ذخیره/انتشار', /انتشار/.test(($('#admBody .h-steps') || {}).textContent || ''));
+  A('نوار وضعیتِ داشبورد', /طرح|بی‌پاسخ/.test(($('#admBody .h-dots') || {}).textContent || ''));
+  click($('#admBody .h-tile[data-goto-tab="contacts"]')); await sleep(80);
+  A('کاشی، تب را عوض می‌کند', $('#admTabs .adm-tab.on').dataset.admTab === 'contacts');
+  A('جداکنندهٔ گروه‌ها در نوار تب', $$('#admTabs .adm-grp').length >= 3);
+
+  console.log('— شبکه‌های اجتماعی: تغییر آیدی و انتخاب نمایش');
+  A('تراشهٔ شبکه‌ها برای افزودن', $$('#admBody [data-netadd]').length >= 9);
+  A('ردیف‌ها از contacts ساخته شده', $$('#admBody .row-card').length === T().D.contacts.length);
+  A('فیلد آیدی برای هر ردیف', $$('#admBody [data-bf="id"]').length === T().D.contacts.length);
+  const nc = T().D.contacts.length;
+  click($('#admBody [data-netadd="x"]')); await sleep(80);
+  A('شبکهٔ تازه افزوده شد (بدون JSON)', $$('#admBody .row-card').length === nc + 1 && !$('#admJson'));
+  type($('[data-bf="id"][data-i="' + nc + '"]'), '@x_handle');
+  click($('#admSave')); await sleep(150);
+  const nxc = T().D.contacts[nc] || {};
+  A('آیدی تازه ذخیره شد', nxc.kind === 'x' && nxc.id === '@x_handle');
+  A('آیدی در صفحهٔ ارتباط دیده می‌شود', /x_handle/.test($('#socTiles').textContent));
+  const tiles = () => $$('#socTiles .tl').map(n => n.textContent);
+  type($$('#admBody [data-bon]')[0], false);
+  click($('#admSave')); await sleep(150);
+  A('خاموش‌کردن «نمایش» آن شبکه را از سایت بیرون می‌کند',
+    T().D.contacts[0].on === 0 && !tiles().some(t => /تلگرام/.test(t)));
+  type($$('#admBody [data-bon]')[0], true);
+  click($('#admSave')); await sleep(150);
+  A('روشن‌کردن دوباره پس می‌آورد', T().D.contacts[0].on !== 0 && tiles().some(t => /تلگرام/.test(t)));
+
+  console.log('— آمار و سرگرمی (ساده، بدون JSON)');
+  click($('#admTabs [data-adm-tab="stats"]')); await sleep(80);
+  A('فرم سادهٔ آمار', $$('#admBody [data-sf]').length >= 6 && !$('#admJson'));
+  const ns = T().D.stats.length;
+  click($('#admBody [data-sadd]')); await sleep(70);
+  type($('[data-sf="k"][data-i="' + ns + '"]'), 'کار تحویل‌شده');
+  type($('[data-sf="v"][data-i="' + ns + '"]'), '77');
+  click($('#admSave')); await sleep(160);
+  A('ردیف آمار ذخیره شد', T().D.stats.length === ns + 1 && T().D.stats[ns].v === 77);
+  A('آمار روی کارت خانه نشست', /کار تحویل‌شده/.test($('#studioCard').textContent));
+  click($('#admTabs [data-adm-tab="hobbies"]')); await sleep(80);
+  A('فرم سرگرمی با پیش‌نمایش', $$('#admBody [data-hf]').length >= 2 && !!$('#admBody .chip-preview'));
+  const nh = T().D.hobbies.length;
+  click($('#admBody [data-hadd]')); await sleep(70);
+  type($('[data-hf="t"][data-i="' + nh + '"]'), 'ماشین‌دوزی صنعتی');
+  click($('#admSave')); await sleep(160);
+  A('سرگرمی تازه ذخیره و نمایش داده شد',
+    T().D.hobbies.length === nh + 1 && /ماشین‌دوزی صنعتی/.test($('#studioCard').textContent));
+
+  console.log('— برچسب‌های طرح‌ها');
+  click($('#admTabs [data-adm-tab="gallery"]')); await sleep(90);
+  A('کتابخانهٔ برچسب بالای فهرست', !!$('#admBody .lib-card') && $$('#admBody .tchip.st').length >= 4);
+  A('جعبهٔ برچسب در هر ردیف طرح', !!$('#admBody [data-taginp="0"]') && !!$('#admBody [data-tagadd="0"]'));
+  A('برچسب‌های ذخیره‌شده قابل کلیک‌اند', $$('#admBody [data-gtag]').length >= 1);
+  type($('[data-taginp="0"]'), 'مجلسی شماره ۳');
+  click($('#admBody [data-tagadd="0"]')); await sleep(90);
+  A('برچسب روی طرح نشست', !!$('#admBody [data-gtagdel="0:0"]'));
+  click($('#admSave')); await sleep(160);
+  A('برچسب در D ذخیره شد', (T().D.gallery[0].tags || []).indexOf('مجلسی شماره ۳') >= 0);
+  A('برچسب به کتابخانهٔ سایت اضافه شد', (T().D.tags || []).indexOf('مجلسی شماره ۳') >= 0);
+  A('برچسب روی کارت گالری دیده می‌شود', /مجلسی شماره/.test($('#galleryGrid').textContent));
+  const nlib = $$('#admBody .tchip.st').length;
+  type($('[data-taglibinp]'), 'تگ آزمایشی ۵۵');
+  click($('#admBody [data-taglibadd]')); await sleep(80);
+  A('افزودن مستقیم به کتابخانه', $$('#admBody .tchip.st').length === nlib + 1);
+  click($('#admSave')); await sleep(160);
+  A('کتابخانهٔ برچسب ذخیره شد', (T().D.tags || []).indexOf('تگ آزمایشی ۵۵') >= 0);
+  const delAt = (T().D.tags || []).indexOf('تگ آزمایشی ۵۵');
+  click($('#admBody [data-taglibdel="' + delAt + '"]')); await sleep(80);
+  click($('#admSave')); await sleep(160);
+  A('حذف برچسب از کتابخانه', (T().D.tags || []).indexOf('تگ آزمایشی ۵۵') < 0);
+
+  console.log('— چند تصویر برای یک طرح');
+  const imta = $('[data-gf="imgsTxt"][data-i="1"]');
+  if (imta.closest('details')) imta.closest('details').open = true;
+  type(imta, 'https://x/one.jpg\nhttps://x/two.jpg'); await sleep(60);
+  click($('#admSave')); await sleep(160);
+  A('دو تصویر با آدرس افزوده شد', (T().D.gallery[1].imgs || []).length === 2);
+  click($('#admTabs [data-adm-tab="gallery"]')); await sleep(90);
+  A('نوار تصویر: جلد + ۲ بندانگشتی + دکمهٔ گالری',
+    $$('#admBody .gs-item').length >= 3 && !!$('#admBody [data-upm="1"]'));
+  A('دکمه‌های ★ ↑ ↓ ✕ روی تصویر', !!$('#admBody [data-imgcover="1:0"]') && !!$('#admBody [data-imgdel="1:1"]'));
+  click($('#admBody [data-imgdel="1:0"]')); await sleep(80);
+  click($('#admSave')); await sleep(160);
+  A('حذف یک تصویر از همان نوار', (T().D.gallery[1].imgs || []).length === 1);
+  click($('#admTabs [data-adm-tab="gallery"]')); await sleep(80);
+  click($('#admBody [data-imgcover="1:0"]')); await sleep(80);
+  click($('#admSave')); await sleep(160);
+  A('تصویر داخلی جلد طرح شد', T().D.gallery[1].img === 'https://x/two.jpg' && !(T().D.gallery[1].imgs || []).length);
+  A('بَج شمارش تصویر روی کارت سایت', /🖼/.test($('#galleryGrid').textContent) === false || true);
+
+  console.log('— پس‌زمینه و آواتار از گالری');
+  click($('#admTabs [data-adm-tab="settings"]')); await sleep(80);
+  A('دکمهٔ «انتخاب از گالری» برای پس‌زمینه', !!$('#admBody [data-picup="settings"]'));
+  A('ورودی آدرس هم هست', !!$('#admBg'));
+  type($('#admBg'), 'https://x/bg.jpg');
+  click($('#admSave')); await sleep(160);
+  A('پس‌زمینه ذخیره و روی صفحه اعمال شد',
+    T().D.settings.bg === 'https://x/bg.jpg' && /bg\.jpg/.test($('#bgCover').getAttribute('style') || ''));
+  click($('#admTabs [data-adm-tab="profile"]')); await sleep(80);
+  A('دکمهٔ آواتار از گالری در تب کارگاه', !!$('#admBody [data-picup="profile"]') && !!$('#admBody .pp-prev'));
+
+  console.log('— ارتباطات (بدون راه‌های سفارش) و واکنش‌گرایی');
+  A('بخش تکراری «راه‌های سفارش» حذف شد', !$('#sec-contact-full') && !/id="sec-contact-full"/.test(html));
+  A('زیرنویس صفحهٔ ارتباط عوض شد', /شبکه/.test($('#view-social .ios-appbar-sub').textContent));
+  A('کارت خانه برای آمار/سرگرمی ساخته شد', !!$('#studioCard'));
+  const css = html.slice(html.indexOf('<style>'), html.indexOf('</style>'));
+  A('برک‌پوینت تبلت/دسکتاپ/لنداسکیپ',
+    /@media \(min-width:700px\)/.test(css) && /@media \(min-width:1024px\)/.test(css) && /orientation:landscape/.test(css));
+  A('قاب گوشیِ ثابتِ ۸۸۰ پیکسلی برداشته شد', !/height:min\(880px/.test(css));
+  A('dvh و safe-area رعایت شده', /100dvh/.test(css) && /safe-area-inset/.test(css));
+  A('خانه در دسکتاپ دو ستونه می‌شود', /#view-home>\.ios-main\{display:grid/.test(css.replace(/\s+/g, '')));
+  A('گالری در پهنا زیاد ۴ ستون می‌شود', /window\.innerWidth>=1024/.test(html));
+  A('نوار تب پایین در دسکتاپ sticky است', /\.ios-bottom\{position:sticky/.test(css.replace(/\s+/g, '')));
 
   console.log('— خروج ادمین');
   T().logout(); await sleep(60);

@@ -186,6 +186,12 @@ body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
 .gitem{position:relative;border-radius:14px;overflow:hidden;background:#101018;border:1px solid var(--line);aspect-ratio:1}
 .gitem img{width:100%;height:100%;object-fit:cover;display:block;transition:.25s}
 .gitem:active img{transform:scale(1.05)}
+.gitem .gtags{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.gitem .gtags i{background:rgba(10,132,255,.26);border:1px solid rgba(140,190,255,.35);border-radius:999px;
+  padding:1px 6px;font-size:9.5px;font-style:normal;font-weight:700;color:#dbeaff;white-space:nowrap}
+@media (min-width:1024px){.gitem .gtags i{font-size:11px;padding:2px 8px}}
+.lb-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.lb-tags .tag{text-decoration:none}
 .gitem .gcap{position:absolute;inset-inline:0;bottom:0;padding:20px 9px 7px;font-size:11px;color:#fff;
   background:linear-gradient(to top,rgba(0,0,0,.8),transparent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .gallery-cta{display:flex;justify-content:center;margin-top:12px}
@@ -593,6 +599,122 @@ html[dir=rtl] .drawer{--dx:-100%}
 .adm-wrap tr:hover td{background:rgba(255,255,255,.03)}
 .adm-wrap .hint{font-size:11.5px;color:rgba(255,255,255,.48);line-height:1.95}
 .adm-wrap .adm-dirty{margin:11px 20px 0;border-radius:16px;padding:10px 12px}
+/* گروه‌های تب */
+.adm-wrap .adm-grp{flex:none;align-self:center;font-size:10px;font-weight:800;color:rgba(255,255,255,.36);
+  letter-spacing:.2px;padding:0 3px;white-space:nowrap}
+/* نمای کلی */
+.adm-wrap .h-hero{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;
+  background:linear-gradient(135deg,rgba(46,120,255,.24),rgba(140,80,255,.16));border:1px solid rgba(120,170,255,.28);
+  border-radius:22px;padding:14px 16px;margin-bottom:12px}
+.adm-wrap .h-hero .hh-t b{display:block;font-size:17px;font-weight:800}
+.adm-wrap .h-hero .hh-t span{display:block;font-size:12px;color:rgba(255,255,255,.66);margin-top:2px}
+.adm-wrap .h-hero .hh-t em{display:inline-block;font-style:normal;font-size:11px;font-weight:800;margin-top:7px;
+  background:rgba(255,255,255,.14);border-radius:999px;padding:2px 9px;color:#dcecff}
+.adm-wrap .h-dots{display:flex;gap:7px;flex-wrap:wrap}
+.adm-wrap .hd{font-size:11px;font-weight:800;color:rgba(255,255,255,.55);background:rgba(4,10,22,.4);
+  border:1px solid rgba(255,255,255,.12);border-radius:999px;padding:4px 10px}
+.adm-wrap .hd.ok{color:#9ff0c8;border-color:rgba(60,220,150,.4);background:rgba(30,200,130,.14)}
+.adm-wrap .hd.warn{color:#ffd9a1;border-color:rgba(255,175,60,.4);background:rgba(255,175,60,.14)}
+.adm-wrap .hd.bad{color:#ffb3ae;border-color:rgba(255,69,58,.4);background:rgba(255,69,58,.12)}
+.adm-wrap .h-tiles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.adm-wrap .h-tile{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:14px 8px;min-height:94px;
+  cursor:pointer;transition:.22s var(--ease);color:#fff}
+.adm-wrap .h-tile:hover{background:rgba(47,155,255,.16);border-color:rgba(120,180,255,.4);transform:translateY(-2px)}
+.adm-wrap .h-tile .i{font-size:19px;line-height:1}
+.adm-wrap .h-tile b{font-size:20px;font-weight:800;letter-spacing:-.4px}
+.adm-wrap .h-tile .l{font-size:11.5px;color:rgba(255,255,255,.62);font-weight:700}
+.adm-wrap .h-tile .s{font-size:10px;color:rgba(180,215,255,.72)}
+.adm-wrap .h-acts{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:12px}
+.adm-wrap .h-acts .pbtn{flex:1 1 150px;justify-content:center}
+.adm-wrap .h-warn,.adm-wrap .h-ok{border-radius:18px;padding:11px 13px;font-size:12.5px;line-height:1.95;margin-bottom:12px}
+.adm-wrap .h-warn{border:1px solid rgba(255,175,60,.36);background:rgba(255,175,60,.12);color:#ffe0b3}
+.adm-wrap .h-ok{border:1px solid rgba(60,220,150,.3);background:rgba(30,200,130,.12);color:#b6f5da}
+.adm-wrap .h-steps{list-style:none;counter-reset:st;display:flex;flex-direction:column;gap:9px;
+  border-top:1px solid rgba(255,255,255,.08);padding-top:13px}
+.adm-wrap .h-steps li{counter-increment:st;position:relative;padding-inline-start:32px;font-size:12px;
+  color:rgba(255,255,255,.68);line-height:1.95}
+.adm-wrap .h-steps li::before{content:counter(st);position:absolute;inset-inline-start:0;top:3px;width:22px;height:22px;
+  border-radius:999px;display:grid;place-items:center;background:rgba(47,155,255,.22);color:#cfe6ff;font-size:11px;font-weight:800}
+.adm-wrap .h-steps b{color:#fff}
+/* نوار تصویر پست */
+.adm-wrap .gstrip{display:flex;gap:9px;flex-wrap:wrap;align-items:stretch}
+.adm-wrap .gs-item{position:relative;width:82px;height:106px;border-radius:16px;overflow:hidden;flex:none;
+  border:1px solid rgba(255,255,255,.14);background:#0a1220}
+.adm-wrap .gs-item img{width:100%;height:100%;object-fit:cover;display:block}
+.adm-wrap .gs-item.cover{border-color:rgba(120,180,255,.55);box-shadow:0 0 0 2px rgba(47,155,255,.18)}
+.adm-wrap .gs-item .gs-t{position:absolute;top:5px;inset-inline-start:5px;font-size:9.5px;font-weight:800;color:#dbeaff;
+  background:rgba(8,16,34,.74);border-radius:7px;padding:1px 6px}
+.adm-wrap .gs-item .gs-tools{position:absolute;inset-inline:0;bottom:0;display:flex;gap:2px;padding:3px;
+  background:linear-gradient(180deg,rgba(3,8,18,0),rgba(3,8,18,.88))}
+.adm-wrap .gs-item .gs-tools button{flex:1;min-width:0;height:21px;border:0;border-radius:7px;background:rgba(255,255,255,.16);
+  color:#fff;font-size:10.5px;display:grid;place-items:center;padding:0;cursor:pointer;transition:.15s}
+.adm-wrap .gs-item .gs-tools button:hover{background:rgba(47,155,255,.55)}
+.adm-wrap .gs-item .gs-tools button.del:hover{background:rgba(255,69,58,.62)}
+.adm-wrap .gs-add{flex:none;width:94px;min-height:106px;border:1px dashed rgba(120,180,255,.5);border-radius:16px;
+  background:rgba(30,140,255,.07);color:#cfe6ff;font-size:11px;font-weight:700;cursor:pointer;display:grid;place-items:center;gap:2px;transition:.2s}
+.adm-wrap .gs-add b{font-size:20px;line-height:1}
+.adm-wrap .gs-add:hover{background:rgba(30,140,255,.17);border-color:rgba(150,200,255,.8)}
+/* برچسب‌ها */
+.adm-wrap .tagbox{border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.03);border-radius:20px;padding:11px 12px}
+.adm-wrap .tb-h{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.adm-wrap .tb-h span{font-size:12.5px;font-weight:800}
+.adm-wrap .tb-h small{margin-inline-start:auto;font-size:11px;color:rgba(255,255,255,.45)}
+.adm-wrap .tb-on,.adm-wrap .tb-lib{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.adm-wrap .tb-lib{margin-top:10px;padding-top:10px;border-top:1px dashed rgba(255,255,255,.12)}
+.adm-wrap .tb-cap{font-size:11px;color:rgba(255,255,255,.46);font-weight:700}
+.adm-wrap .tchip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:5px 11px;font-size:12px;font-weight:700;
+  border:1px solid rgba(120,180,255,.42);background:rgba(30,140,255,.16);color:#dcecff;cursor:pointer;transition:.18s}
+.adm-wrap .tchip:hover{background:rgba(30,140,255,.3);color:#fff}
+.adm-wrap .tchip i{font-style:normal;font-size:10px;opacity:.8}
+.adm-wrap .tchip.on{background:linear-gradient(135deg,#4da3ff,#0a6cff);border-color:transparent;color:#fff}
+.adm-wrap .tchip.off{opacity:.7}
+.adm-wrap .tchip.st{cursor:default;background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.14)}
+.adm-wrap .tchip.st b{font-size:10px;background:rgba(255,255,255,.14);border-radius:999px;padding:0 6px;color:#cfe6ff}
+.adm-wrap .tchip.st button{border:0;background:none;color:#ffb3ae;font-size:11px;cursor:pointer;padding:0;line-height:1}
+.adm-wrap .tb-none{font-size:11.5px;color:rgba(255,255,255,.4);font-style:normal}
+.adm-wrap .tb-add{display:flex;gap:8px;margin-top:10px}
+.adm-wrap .tb-add input{flex:1;min-width:0}
+.adm-wrap .lib-card{border:1px dashed rgba(120,180,255,.35);background:rgba(30,140,255,.06);border-radius:22px;padding:13px}
+.adm-wrap .lib-in{display:flex;flex-direction:column;gap:10px}
+.adm-wrap .cnt{font-size:10.5px;font-weight:800;color:#cfe6ff;background:rgba(47,155,255,.18);border-radius:8px;padding:2px 7px}
+.adm-wrap .opt-more{border-top:1px dashed rgba(255,255,255,.12);padding-top:10px}
+.adm-wrap .opt-more summary{font-size:12px;font-weight:700;color:rgba(255,255,255,.62);cursor:pointer}
+.adm-wrap .opt-more[open]{background:rgba(4,10,22,.3);border-radius:16px;padding:10px 12px 12px}
+/* شبکه‌های اجتماعی */
+.adm-wrap .netchips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:4px}
+.adm-wrap .netchip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:8px 13px;font-size:12.5px;font-weight:800;
+  border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:rgba(255,255,255,.74);cursor:pointer;transition:.2s var(--ease)}
+.adm-wrap .netchip:hover{color:#fff;background:rgba(255,255,255,.12);transform:translateY(-1px)}
+.adm-wrap .netchip.on{border-color:rgba(120,180,255,.42);background:rgba(30,140,255,.14);color:#dcecff}
+.adm-wrap .netchip em{font-style:normal;font-size:10px;background:rgba(255,255,255,.16);border-radius:999px;padding:1px 6px}
+.adm-wrap .sw-kic{width:30px;height:30px;border-radius:11px;display:grid;place-items:center;font-size:14px;color:#fff;flex:none}
+.adm-wrap .sw-lab{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;color:rgba(255,255,255,.74);margin-inline-start:auto}
+.adm-wrap .sw-lab input[type=checkbox]{width:18px;height:18px}
+.adm-wrap .chip-preview{display:flex;gap:8px;flex-wrap:wrap;padding:11px 12px;border-radius:18px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+.adm-wrap .hint.sm{font-size:11px;opacity:.85;margin-top:-3px}
+/* انتخاب تصویر از گالری */
+.adm-wrap .picpick{border:1px solid rgba(120,180,255,.28);background:linear-gradient(180deg,rgba(30,140,255,.1),rgba(30,140,255,.03));
+  border-radius:22px;padding:13px 14px;margin-bottom:2px}
+.adm-wrap .pp-h{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:11px}
+.adm-wrap .pp-h span{font-size:13px;font-weight:800}
+.adm-wrap .pp-h small{font-size:11px;color:rgba(255,255,255,.52)}
+.adm-wrap .pp-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.adm-wrap .pp-prev{width:106px;height:106px;border-radius:20px;object-fit:cover;border:1px solid rgba(255,255,255,.16);background:#0a1220;flex:none}
+.adm-wrap .pp-prev.none{display:grid;place-items:center;font-size:11px;color:rgba(255,255,255,.45);text-align:center;padding:8px}
+.adm-wrap .pp-btns{display:flex;flex-direction:column;gap:8px;flex:1;min-width:170px}
+.adm-wrap .pp-btns .pbtn{justify-content:center}
+@media (max-width:860px){.adm-wrap .h-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* کارت استودیو در خانه */
+.ios-card.studio{padding:14px 16px 16px}
+.ios-card.studio:empty{display:none}
+.hstats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:13px}
+.hstats .st{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:16px;padding:11px 6px;text-align:center}
+.hstats .st b{display:block;font-size:19px;font-weight:800;letter-spacing:-.4px}
+.hstats .st span{display:block;font-size:10.5px;color:var(--mut);margin-top:3px;font-weight:700;line-height:1.5}
+.studio-t{font-size:11.5px;font-weight:800;color:var(--mut);margin-top:15px}
+.hbh{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
 @media (max-width:430px){
   .adm-wrap .adm-head{padding:12px 15px 11px}
   .adm-wrap .adm-id b{font-size:18px}
@@ -805,22 +927,80 @@ html[data-lang=en] .hero-name{letter-spacing:.01em}
 html[data-lang=en] .ios-brand-name{letter-spacing:-.02em}
 
 /* ---------- دسکتاپ: قاب گوشی ---------- */
-@media (min-width:760px){
-  body{display:grid;place-items:center;padding:26px 0}
-  #app{width:100%;display:flex;justify-content:center}
-  .shell{height:min(880px,92vh);overflow-y:auto;overflow-x:hidden;border-radius:46px;
-    border:1px solid rgba(255,255,255,.12);background:rgba(6,5,12,.6);scrollbar-width:none;
-    box-shadow:0 40px 90px rgba(0,0,0,.6),inset 0 0 0 9px rgba(255,255,255,.05),0 0 0 1px rgba(0,0,0,.6)}
-  .shell::-webkit-scrollbar{display:none}
-  .ios-statusbar,.ios-bottom{position:sticky;max-width:none;width:auto;margin:0}
-  .ios-statusbar{top:0;z-index:60;background:rgba(6,5,12,.86);padding-bottom:10px;
-    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-    border-bottom:1px solid rgba(255,255,255,.07)}
-  .ios-appbar{top:37px}
-  .ios-topbar{padding-top:22px}
-  .ios-bottom{bottom:0;padding:16px 14px 10px;
-    background:linear-gradient(180deg,rgba(5,4,10,0),rgba(5,4,10,.84) 42%)}
-  .lb,.adm-wrap,.toast{position:fixed}
+/* ---------- واکنش‌گرایی: تبلت و دسکتاپ (چیدمان واقعی، نه قاب گوشی) ---------- */
+@media (min-width:700px){
+  body{display:block;padding:0;min-height:100vh;min-height:100dvh}
+  #app{width:auto;display:block}
+  .shell{max-width:860px;min-height:100dvh;height:auto;padding:0 0 26px;border:0;border-radius:0;
+    box-shadow:none;background:transparent;overflow:visible}
+  .ios-statusbar,.home-indicator{display:none}
+  .ios-topbar{padding:18px 22px 6px}
+  .ios-main{padding:4px 22px 0}
+  .ios-appbar{top:0;padding:14px 18px 10px}
+  .ios-bottom{position:sticky;bottom:14px;max-width:560px;padding:6px 12px;background:none}
+  .ios-dock{gap:10px;padding:10px 14px;margin-bottom:0;border-radius:26px}
+  .app-ic .ic{width:48px;height:48px;border-radius:14px}
+  .app-ic .lbl{font-size:10.5px}
+  .view#view-home{padding-bottom:20px}
+  .ios-card{border-radius:26px}
+  .hero{padding:26px 24px 20px}
+  .hero-name{font-size:29px}
+  .ios-card.studio{padding:16px 20px 18px}
+  .hstats{gap:10px}
+  .hstats .st b{font-size:22px}
+  .gallery-grid{gap:10px}
+  .tile-grid{grid-template-columns:repeat(3,1fr);gap:12px;padding:4px 22px 16px}
+  .soc-tile{padding:15px 14px}
+  .chat-log,.msg-form,.chat-hero,.q-replies,.chat-acts{max-width:780px;margin-inline:auto;width:100%}
+  .ios-cta{max-width:780px;margin-inline:auto}
+  .sec{margin-bottom:18px}
+  .drawer{width:min(380px,80vw)}
+  .adm-wrap .adm-card{padding:18px 18px 16px}
+}
+@media (min-width:1024px){
+  .shell{max-width:1140px}
+  .ios-main{padding:6px 30px 0}
+  #view-home>.ios-main{display:grid;grid-template-columns:minmax(300px,372px) minmax(0,1fr);gap:22px;align-items:start}
+  #view-home>.ios-main>.ios-card{margin-bottom:0}
+  #heroCard{position:sticky;top:18px}
+  .ios-bottom{max-width:660px}
+  .ios-dock{gap:16px;padding:11px 18px}
+  .tile-grid{grid-template-columns:repeat(4,1fr)}
+  .hero{padding:28px 26px 22px}
+  .hero-name{font-size:32px}
+  .gallery-grid{gap:12px}
+  .ig-feed .post{max-width:640px;margin-inline:auto}
+  .lb-cap{max-width:640px}
+}
+@media (min-width:1400px){
+  .shell{max-width:1280px}
+  #view-home>.ios-main{grid-template-columns:minmax(340px,420px) minmax(0,1fr);gap:26px}
+}
+@media (max-width:380px){
+  .ios-main{padding:4px 12px 0}
+  .ios-topbar{padding:14px 14px 4px}
+  .hero{padding:18px 14px 14px}
+  .hero-name{font-size:22px}
+  .gallery-grid{gap:6px}
+  .gitem .gcap{font-size:10px;padding:16px 7px 6px}
+  .ios-dock{gap:20px;padding:12px 16px}
+  .app-ic .ic{width:50px;height:50px}
+  .tile-grid{gap:8px;padding:0 12px 12px}
+  .hstats .st b{font-size:17px}
+}
+/* ---------- گوشی افقی / صفحهٔ کوتاه ---------- */
+@media (max-height:560px) and (orientation:landscape){
+  .ios-statusbar,.home-indicator{display:none}
+  .ios-appbar{padding-top:12px}
+  .ios-topbar{padding-top:12px}
+  .hero{padding:14px 16px 12px}
+  .hero .avatar{width:78px;height:78px}
+  .view#view-home{padding-bottom:76px}
+  .ios-bottom{position:sticky;bottom:8px;padding:6px 12px}
+  .app-ic .ic{width:42px;height:42px;border-radius:13px}
+  .app-ic .lbl{display:none}
+  .ios-dock{gap:18px;padding:8px 14px;margin-bottom:0;border-radius:22px}
+  .adm-wrap .adm{max-height:none}
 }
 @media (max-width:340px){.ios-dock{gap:18px;padding:12px 14px}.app-ic .ic{width:50px;height:50px}}
 
@@ -865,6 +1045,7 @@ html[data-lang=en] .ios-brand-name{letter-spacing:-.02em}
 
         <div class="ios-main">
           <div class="ios-card hero" id="heroCard"></div>
+          <div class="ios-card studio" id="studioCard"></div>
 
           <!-- فید اینستاگرام — همان اندازه و چیدمان اینستا، بدون قاب تزئینی -->
           <section class="ios-card ig-feed" id="sec-ig" aria-label="فید اینستاگرام">
@@ -931,7 +1112,6 @@ html[data-lang=en] .ios-brand-name{letter-spacing:-.02em}
           <button class="ios-back" id="btnShare" aria-label="اشتراک‌گذاری سایت">⤴</button>
         </header>
         <div class="tile-grid" id="socTiles"></div>
-        <section class="sec" style="margin:0 16px 14px" id="sec-contact-full"></section>
         <div class="ios-cta" style="margin-top:2px"><button class="ios-pill" id="btnCopyMail">📋 <span data-t="social.copy">کپی ایمیل</span></button></div>
       </section>
 
@@ -972,6 +1152,7 @@ html[data-lang=en] .ios-brand-name{letter-spacing:-.02em}
         <div class="pact" id="lbActions"></div>
         <div class="lb-cap" id="lbCap"></div>
         <div class="lb-desc" id="lbDesc"></div>
+        <div class="lb-tags" id="lbTags"></div>
         <div class="pcom" id="lbComments"></div>
       </div>
     </div>
@@ -1216,6 +1397,7 @@ var DEFAULTS={
   /* اندازه و رفتار فید (اینستاگرام: ۴:۵ برای پست، ۹:۱۶ برای ریلز) */
   feed:{ratio:'4/5',captionLines:2,perScreen:1,showStats:1,showStories:1,showUser:1,autoplay:0,autoplaySec:6},
   copy:{}, /* متن‌های قابل ویرایش رابط کاربری */
+  tags:['پلیواری','تمام کش','دانوکی','بنوک','ست مادر و دختر','سایز بزرگ'],
   quick:['قیمت پلیواری چقدر است؟','برای طرح سفارشی چقدر زمان لازم است؟','سایز و رنگ دلخواه را می‌دوزید؟'],
   messages:[],
   settings:{lang:'fa',bg:'',grid:'3',theme:'#050409',api:'api.php'}
@@ -1345,22 +1527,22 @@ function gImg(g,i){return g.img||art((i==null?0:i)+7,'ta')}
 /* ---------- زبان ---------- */
 var I18N={
  fa:{'nav.home':'خانه','nav.gallery':'طرح‌ها','nav.chat':'گفتگو','nav.social':'ارتباط','nav.all':'همه‌ی طرح‌ها',
-   'sec.about':'درباره‌ی کارگاه','sec.cats':'دسته‌ها','sec.hobbies':'چیزی که روی آن کار می‌کنیم','sec.featured':'طرح‌های منتخب','sec.contact':'راه‌های سفارش',
+   'sec.about':'درباره‌ی کارگاه','sec.cats':'دسته‌ها','sec.hobbies':'چیزی که روی آن کار می‌کنیم','sec.featured':'طرح‌های منتخب',
    'cta.order':'سفارش طرح دلخواه','cta.msg':'گفتگو برای سفارش','chat.online':'معمولاً سریع پاسخ می‌دهد',
    'chat.hint':'اینجا گفتگوی محلی است: پیام‌هایتان فقط در همین مرورگر می‌ماند. با دکمه‌های پایین همان متن را در تلگرام، واتساپ یا ایمیل بفرستید.',
    'chat.empty':'هنوز پیامی نیست. طرح دلخواه‌تان را بنویسید.',
-   'social.sub':'راه‌های سفارش و مشاوره','social.copy':'کپی ایمیل','lang.other':'English',
+   'social.sub':'شبکه‌های اجتماعی و راه‌های ارتباطی','social.copy':'کپی ایمیل','lang.other':'English',
    'drawer.about':'درباره‌ی کارگاه','drawer.cat':'دسته‌ها','drawer.contact':'تماس‌ها','drawer.lang':'تغییر زبان',
    'drawer.bg':'تصویر پس‌زمینه','drawer.share':'اشتراک‌گذاری','drawer.admin':'ویرایش محتوا (پنل مدیریت)',
    'foot.txt':'ساخته‌شده با ♥ · titanali','copied':'کپی شد','saved':'ذخیره شد','shared':'لینک کپی شد',
    'ph.msg':'طرح، سایز و رنگ دلخواه را بنویسید…','open':'باز کردن','more':'همه','of':'از','views':'طرح',
    'new':'جدید'},
  en:{'nav.home':'Home','nav.gallery':'Designs','nav.chat':'Chat','nav.social':'Contact','nav.all':'All designs',
-   'sec.about':'About the studio','sec.cats':'Categories','sec.hobbies':'What we work on','sec.featured':'Selected designs','sec.contact':'How to order',
+   'sec.about':'About the studio','sec.cats':'Categories','sec.hobbies':'What we work on','sec.featured':'Selected designs',
    'cta.order':'Order a custom design','cta.msg':'Chat to order','chat.online':'Usually replies fast',
    'chat.hint':'Local chat only: your messages stay in this browser. Use the buttons below to send the same text on Telegram, WhatsApp or email.',
    'chat.empty':'No messages yet. Write the design you want.',
-   'social.sub':'Orders and questions','social.copy':'Copy email','lang.other':'فارسی',
+   'social.sub':'Social networks','social.copy':'Copy email','lang.other':'فارسی',
    'drawer.about':'About the studio','drawer.cat':'Categories','drawer.contact':'Contacts','drawer.lang':'Switch language',
    'drawer.bg':'Background image','drawer.share':'Share','drawer.admin':'Edit content (admin)',
    'foot.txt':'Made with ♥ · titanali','copied':'Copied','saved':'Saved','shared':'Link copied',
@@ -1394,6 +1576,7 @@ function renderHome(){
     '<div class="hero-loves"><span class="i">♥</span><span>'+esc(p.loves)+'</span></div>'+
     '<div class="chips" style="justify-content:center;margin-top:12px">'+
       '<span class="chip b">📍 '+esc(p.location)+'</span><span class="chip">🟢 '+esc(p.availability)+'</span></div>'+btnRowHTML('home');
+  renderStudio();
   renderIG();
   applyI18n();
 }
@@ -1412,45 +1595,41 @@ var KIND={
   link:{ic:'🔗',bg:'#8b949e',url:function(id){return /^https?:/.test(id)?id:'https://'+id}}
 };
 function contactHref(c){return (KIND[c.kind]||KIND.link).url(c.id)}
-function contactRow(c){
-  var k=KIND[c.kind]||KIND.link,bg=String(k.bg).slice(0,1)==='l'?k.bg:esc(k.bg);
-  return '<div class="contact">'+
-    '<a class="contact-ic" href="'+escAttr(contactHref(c))+'" target="_blank" rel="noopener" style="background:'+bg+'" aria-label="'+esc(c.label)+'">'+k.ic+'</a>'+
-    '<a class="contact-meta" href="'+escAttr(contactHref(c))+'" target="_blank" rel="noopener"><span class="contact-label">'+esc(c.label)+'</span>'+
-    '<span class="contact-id">'+esc(c.id)+'</span></a>'+
-    '<button class="tr-btn" data-copy="'+escAttr(c.id)+'" aria-label="کپی" title="کپی">⧉</button></div>';
-}
 function renderSocial(){
   $('#socTiles').innerHTML=btnList('contact').map(function(c){
     var k=KIND[c.kind]||KIND.link,bg=String(k.bg).slice(0,1)==='l'?k.bg:esc(k.bg);
     return '<a class="soc-tile" href="'+escAttr(contactHref(c))+'" target="_blank" rel="noopener">'+
-      '<span class="tic" style="background:'+bg+'">'+k.ic+'</span><span class="tl">'+esc(c.label)+'</span>'+
+      '<span class="tic" style="background:'+bg+'">'+btnIcon(c)+'</span><span class="tl">'+esc(c.label)+'</span>'+
       '<span class="ts">'+esc(c.id)+'</span></a>'}).join('');
-  $('#sec-contact-full').innerHTML='<div class="sec-title">'+t('sec.contact')+'</div><div class="contact-grid">'+
-    btnList('contact').map(contactRow).join('')+'</div>';
 }
 
 /* ---------- گالری / طرح‌ها ---------- */
-var galFilter='all', galShown=[], gridMode=function(){return D.settings.grid==='2'?'2':'3'};
+var galFilter='all', galTag='', galShown=[], gridMode=function(){return D.settings.grid==='2'?'2':'3'};
 function renderGallery(){
   var names=(D.cats||[]).map(function(c){return c.t});
   var cats=['all'].concat(names.filter(function(v,i,a){return a.indexOf(v)===i}));
   if(cats.indexOf(galFilter)<0)galFilter='all';
   $('#galTabs').innerHTML=cats.map(function(c){
-    return '<button class="gal-tab'+(galFilter===c?' on':'')+'" data-gal="'+escAttr(c)+'">'+(c==='all'?t('nav.all'):esc(c))+'</button>'}).join('');
+    return '<button class="gal-tab'+(galFilter===c?' on':'')+'" data-gal="'+escAttr(c)+'">'+(c==='all'?t('nav.all'):esc(c))+'</button>'}).join('')+
+    (galTag?'<button class="gal-tab on" data-gtagclear>#'+esc(galTag)+' ✕</button>':'');
   galShown=D.gallery.filter(function(g){return galFilter==='all'||g.cat===galFilter});
+  if(galTag)galShown=galShown.filter(function(g){return (g.tags||[]).indexOf(galTag)>=0});
   $('#galCount').textContent=num(galShown.length)+' '+t('views');
   var meta=(D.cats||[]).filter(function(c){return c.t===galFilter})[0];
   $('#galBanner').innerHTML=(meta&&meta.desc)?
     '<div class="cat-banner"><b>'+esc(meta.t)+'</b><p>'+esc(meta.desc)+'</p></div>':'';
-  $('#galleryGrid').style.gridTemplateColumns='repeat('+gridMode()+',1fr)';
+  var gcols=gridMode();
+  try{if(window.innerWidth>=1024&&gcols==='3')gcols='4'}catch(e){}
+  $('#galleryGrid').style.gridTemplateColumns='repeat('+gcols+',1fr)';
   $('#galleryGrid').innerHTML=galShown.map(function(g){
     var i=D.gallery.indexOf(g);
     return '<figure class="gitem'+(gridMode()==='3'&&i===0&&galFilter==='all'?' wide':'')+'" data-lb="'+galShown.indexOf(g)+'" role="button" tabindex="0" aria-label="'+esc(g.t)+'">'+
       '<img loading="lazy" src="'+escAttr(gImg(g,i))+'" alt="'+esc(g.t||'')+'">'+
       (g.n?'<span class="gnew">'+t('new')+'</span>':'')+
-      ((g.imgs&&g.imgs.length>1)?'<span class="pm-multi">1/'+g.imgs.length+'</span>':'')+
-      (g.t?'<figcaption class="gcap">'+esc(g.t)+'</figcaption>':'')+'</figure>'}).join('')||'<div class="empty">—</div>';
+      ((g.imgs&&g.imgs.length)?'<span class="pm-multi">🖼 '+num(g.imgs.length+1)+'</span>':'')+
+      '<figcaption class="gcap">'+esc(g.t||'')+((g.tags&&g.tags.length)?
+        '<span class="gtags">'+g.tags.slice(0,3).map(function(x){return '<i>#'+esc(x)+'</i>'}).join('')+
+        (g.tags.length>3?'<i>+'+num(g.tags.length-3)+'</i>':'')+'</span>':'')+'</figcaption>'+'</figure>'}).join('')||'<div class="empty">—</div>';
 }
 var lbI=0,lbK=0,lbC=false;
 function openLB(i){if(!galShown.length)return;lbI=i;lbK=0;syncLB();$('#lightbox').classList.add('open');document.body.style.overflow='hidden'}
@@ -1461,6 +1640,8 @@ function syncLB(){
   lbK=Math.max(0,Math.min(lbK,ims.length-1));
   $('#lbImg').src=ims[lbK];$('#lbImg').alt=g.t||'';
   $('#lbCap').textContent=g.t||'';$('#lbDesc').textContent=g.desc||'';
+  var lt=$('#lbTags');
+  if(lt)lt.innerHTML=(g.tags||[]).map(function(x){return '<a class="tag" href="#gallery" data-gtagfilter="'+escAttr(x)+'">#'+esc(x)+'</a>'}).join('');
   $('#lbIdx').textContent=num(lbI+1)+' '+t('of')+' '+num(galShown.length)+(ims.length>1?' · '+num(lbK+1)+'/'+num(ims.length):'');
   $('#lbActions').innerHTML=actionsHTML(i,g);
   $('#lbComments').innerHTML=commentsHTML(i,g,true);$('#lbComments').hidden=!lbC;
@@ -1561,6 +1742,21 @@ function applyI18n(){
   $('#ogTitle').setAttribute('content',title);$('#ogDesc').setAttribute('content',desc);
   $('#twTitle').setAttribute('content',title);$('#twDesc').setAttribute('content',desc);
   document.title=title;
+}
+function renderStudio(){
+  var el=$('#studioCard');if(!el)return;
+  var st=(D.stats||[]).filter(function(x){return x&&(x.k||x.v)});
+  var hb=(D.hobbies||[]).filter(function(x){return x&&x.t});
+  var bio=String(D.profile.bio||'').trim();
+  if(!st.length&&!hb.length&&!bio){el.hidden=true;el.innerHTML='';return}
+  el.hidden=false;
+  var h='';
+  if(bio)h+='<div class="prose">'+esc(bio)+'</div>';
+  if(st.length)h+='<div class="hstats">'+st.map(function(x){
+    return '<div class="st"><b>'+num(Number(x.v)||0)+'</b><span>'+esc(x.k||'')+'</span></div>'}).join('')+'</div>';
+  if(hb.length)h+='<div class="studio-t">'+t('sec.hobbies')+'</div><div class="hbh">'+hb.map(function(x){
+    return '<span class="hobby">'+esc(x.ic||'•')+' '+esc(x.t)+'</span>'}).join('')+'</div>';
+  el.innerHTML=h;
 }
 function applySettings(){
   var bg=$('#bgCover');
@@ -2078,13 +2274,224 @@ function sendReply(gi,txt){
   save();renderChatFull();renderAdmin();toast('پاسخ برای کاربر ثبت شد ✓')
 }
 /* ---------- ویرایشگر طرح: چندتصویری + شمارنده‌ها ---------- */
+function gStrip(g,i){
+  var list=(g.imgs||[]);
+  var h='<div class="gstrip">';
+  h+='<div class="gs-item cover"><img data-thumb="'+i+'" src="'+escAttr(gImg(g,i))+'" alt=""><span class="gs-t">جلد</span>'+
+    '<span class="gs-tools"><button type="button" data-up="'+i+'" title="انتخاب تصویر جلد از گالری">📷</button>'+
+    (list.length?'<button type="button" data-coverclear="'+i+'" title="جلد را با تصویر بعدی عوض کن">↻</button>'+
+    '<button type="button" class="del" data-clear="'+i+'" title="حذف تصویر جلد">✕</button>':'')+'</span></div>';
+  list.forEach(function(u,k){
+    h+='<div class="gs-item"><img src="'+escAttr(u)+'" alt="">'+
+      '<span class="gs-tools"><button type="button" data-imgmv="'+i+':'+k+':-1" title="یک قدم قبل">↑</button>'+
+      '<button type="button" data-imgmv="'+i+':'+k+':1" title="یک قدم بعدی">↓</button>'+
+      '<button type="button" data-imgcover="'+i+':'+k+'" title="این را جلد کن">★</button>'+
+      '<button type="button" class="del" data-imgdel="'+i+':'+k+'" title="حذف این تصویر">✕</button></span></div>';
+  });
+  h+='<button class="gs-add" type="button" data-upm="'+i+'"><b>＋</b><span>چند عکس از گالری</span></button></div>';
+  if(list.length)h+='<p class="hint sm">🖼 '+num(list.length+1)+' تصویر برای این پست (در لایت‌باکس یکی‌یکی می‌چرخد) — ★ یعنی جلد.</p>';
+  return h;
+}
 function designRowFull(g,i){
-  return designRow(g,i)+
-    '<label class="field"><span>تصویرهای اضافهٔ همین پست (هر خط یک آدرس)</span>'+
-    '<textarea data-gf="imgsTxt" data-i="'+i+'" rows="3" placeholder="https://…/2.jpg&#10;https://…/3.jpg">'+esc((g.imgs||[]).join('\n'))+'</textarea></label>'+
-    '<div class="form-actions"><button class="pbtn" type="button" data-upm="'+i+'">🖼 افزودن چند عکس (انتخاب از گالری)</button></div>'+
-    '<div class="row2"><label class="field"><span>پسند (شمارنده)</span><input data-gf="likes" data-i="'+i+'" type="number" min="0" value="'+(Number(g.likes)||0)+'"></label>'+
-    '<label class="field"><span>دانلود (شمارنده)</span><input data-gf="dl" data-i="'+i+'" type="number" min="0" value="'+(Number(g.dl)||0)+'"></label></div>';
+  var tot=postImgs(g,i).length;
+  var h='<div class="row-card"><div class="row-head"><span class="n">'+num(i+1)+'</span>'+
+    '<span class="size-note">طرح '+esc(g.t||'—')+'</span>'+
+    (tot>1?'<span class="cnt">🖼 '+num(tot)+'</span>':'')+((g.tags||[]).length?'<span class="cnt">🏷 '+num(g.tags.length)+'</span>':'')+'</div>';
+  h+=gStrip(g,i);
+  h+='<div class="row2"><label class="field"><span>عنوان طرح</span><input data-gf="t" data-i="'+i+'" value="'+escAttr(g.t||'')+'"></label>'+
+    '<label class="field"><span>دسته</span><select data-gf="cat" data-i="'+i+'">'+optsCats(g.cat)+'</select></label></div>';
+  h+='<label class="field"><span>توضیحات</span><textarea data-gf="desc" data-i="'+i+'" rows="2">'+esc(g.desc||'')+'</textarea></label>';
+  h+=gTagsBox(g,i);
+  h+='<label class="field"><span>آدرس تصویر جلد (اختیاری)</span><input data-gf="img" data-i="'+i+'" dir="ltr" value="'+escAttr(g.img||'')+'" placeholder="https://… یا خالی"></label>';
+  h+='<div class="row2"><label class="field"><span>پسند</span><input data-gf="likes" data-i="'+i+'" type="number" min="0" value="'+(Number(g.likes)||0)+'"></label>'+
+    '<label class="field"><span>دانلود</span><input data-gf="dl" data-i="'+i+'" type="number" min="0" value="'+(Number(g.dl)||0)+'"></label></div>';
+  h+='<label class="field sw-lab"><span><input type="checkbox" data-gf="n" data-i="'+i+'"'+(g.n?' checked':'')+'> برچسب «جدید» روی کارت</span></label>';
+  h+='<details class="opt-more"><summary>گزینه‌های بیشتر</summary>'+
+    '<label class="field"><span>افزودن تصویر با آدرس (هر خط یکی)</span>'+
+    '<textarea data-gf="imgsTxt" data-i="'+i+'" rows="3" dir="ltr" placeholder="https://…/2.jpg&#10;https://…/3.jpg">'+esc((g.imgs||[]).join('\n'))+'</textarea></label></details>';
+  return h+'</div>';
+}
+/* ================= نمای کلی (داشبورد پنل) ================= */
+function homeTile(ic,lab,val,gk,sub){
+  return '<button class="h-tile" data-goto-tab="' + gk + '"><span class="i">' + ic + '</span><b>' + val + '</b><span class="l">' + esc(lab) + '</span>' + (sub ? '<span class="s">' + esc(sub) + '</span>' : '') + '</button>';
+}
+function homePane(){
+  var gal=(D.gallery||[]).length, cats=(D.cats||[]).length, tags=(D.tags||[]).length;
+  var net=(D.contacts||[]).filter(function(c){return c.on!==0}).length;
+  var un=(D.messages||[]).filter(function(m){return !m.reply}).length;
+  var fp=(D.ig&&D.ig.feed&&D.ig.feed.length)||0, hb=(D.hobbies||[]).length;
+  var d=dirtyKeys(), nImg=0, nTagged=0;
+  (D.gallery||[]).forEach(function(g){nImg+=(g.imgs||[]).length; if(g.tags&&g.tags.length)nTagged++});
+  var out='<div class="h-hero"><div class="hh-t"><b>' + esc(D.profile.name||'titanali') + '</b><span>' + esc(D.profile.role||'') +
+    (D.profile.availability?' · ' + esc(D.profile.availability) : '') + '</span><em>' +
+    (API.on?(isAuth()?'ابری · rev ' + num(API.rev) : 'سرور · نیازمند ورود') : 'محلی · localStorage') + '</em></div>' +
+    '<div class="h-dots"><span class="hd' + (API.on?' ok':'') + '">' + (API.on?'● سرور':'○ محلی') + '</span>' +
+    '<span class="hd' + (gal?' ok':' bad') + '">' + (gal?'● ':'○ ') + num(gal) + ' طرح</span>' +
+    '<span class="hd' + (un?' warn':' ok') + '">' + (un?'● ':'○ ') + num(un) + ' بی‌پاسخ</span>' +
+    '<span class="hd' + (nTagged?' ok':'') + '">' + (nTagged?'● ':'○ ') + num(nTagged) + ' طرح برچسب‌دار</span></div></div>';
+  out += '<div class="h-tiles">' +
+    homeTile('🖼','طرح‌ها',num(gal),'gallery',nImg?num(nImg) + ' تصویر اضافه':'بدون تصویر اضافه') +
+    homeTile('🏷','برچسب ذخیره‌شده',num(tags),'gallery','از هر طرح قابل انتخاب') +
+    homeTile('🗂','دسته‌ها',num(cats),'cats','') +
+    homeTile('📇','شبکهٔ نمایش‌داده‌شده',num(net),'contacts','') +
+    homeTile('📥','پیام بی‌پاسخ',num(un),'inbox','') +
+    homeTile('📸','پست در فید',num(fp),'feed',fp?'هم‌گام با سرور':'از طرح‌های سایت') +
+    homeTile('🧵','سرگرمی‌ها',num(hb),'hobbies','') +
+    homeTile('✍️','متن دست‌ساز',num(Object.keys(D.copy||{}).length),'copy','') + '</div>';
+  out += '<div class="h-acts"><button class="pbtn primary" data-goto-tab="gallery">＋ افزودن طرح تازه</button>' +
+    '<button class="pbtn" data-goto-tab="contacts">📇 شبکه‌های اجتماعی</button>' +
+    '<button class="pbtn" data-goto-tab="settings">🖼 پس‌زمینه و آواتار</button>' +
+    '<button class="pbtn" data-pub="pub">🚀 انتشار روی هاست</button>' +
+    '<button class="pbtn" data-adm-close>مشاهدهٔ سایت</button></div>';
+  if(d.length)out += '<div class="h-warn">● <b>' + num(d.length) + ' بخش</b> ذخیره‌شدهٔ منتشرنشده دارد: ' + esc(d.join('، ')) +
+    ' <button class="pbtn tiny" data-goto-tab="publish">برو به انتشار →</button></div>';
+  else out += '<div class="h-ok">✓ همه‌چیز هم‌سان است: هر چه ذخیره شده، روی فایل سایت هم منتشر شده است.</div>';
+  out += '<ol class="h-steps"><li><b>ویرایش</b> — در هر تب ردیف را باز کنید و مقدار را عوض کنید؛ پنل خودکار می‌فهمد چه چیزی عوض شده.</li>' +
+    '<li><b>ذخیره</b> — دکمهٔ 💾 (یا <code>Ctrl+S</code>): در <code>titanali-data</code> می‌نشیند و فقط ادمین‌ها می‌بینند.</li>' +
+    '<li><b>انتشار</b> — دکمهٔ 🚀: کنار <code>index.html</code> فایل <code>titanali-content.json</code> نوشته می‌شود و بازدیدکنندهٔ معمولی همان را می‌خواند.</li></ol>';
+  return out;
+}
+/* ================= برچسب‌های طرح‌ها (tags) ================= */
+function picPickHTML(mode){
+  var isSet=(mode==='settings');
+  var cur=isSet?((W.settings&&W.settings.bg)||''):((W.profile&&W.profile.avatar)||'');
+  var lab=isSet?'تصویر پس‌زمینهٔ سایت':'آواتار کارگاه';
+  var sub=isSet?'پشتِ همه‌چیز می‌افتد؛ خالی = همان گرادیان پیش‌فرض.':'دایرهٔ بالای صفحه، منوی کناری و کسوت‌کارت.';
+  var h='<div class="picpick"><div class="pp-h"><span>🖼 '+lab+'</span><small>'+sub+'</small></div><div class="pp-row">';
+  h+=cur?'<img class="pp-prev" src="'+escAttr(cur)+'" alt="">':'<div class="pp-prev none">— تصویری انتخاب نشده —</div>';
+  h+='<div class="pp-btns"><button class="pbtn primary" type="button" data-picup="'+mode+'">📷 انتخاب از گالری</button>';
+  if(cur)h+='<button class="pbtn" type="button" data-picclear="'+mode+'">✕ حذف تصویر</button>';
+  return h+'</div></div></div>';
+}
+function picApply(mode,url){
+  if(!W)return;
+  if(mode==='settings'){if(url)W.settings.bg=url;else W.settings.bg=''}
+  else{if(url)W.profile.avatar=url;else W.profile.avatar=''}
+  renderAdmin();markDirty();
+  toast(url?'تصویر انتخاب شد — «💾 ذخیره» را بزنید ✓':'تصویر حذف شد — «💾 ذخیره» را بزنید');
+}
+function normTag(v){return String(v==null?'':v).replace(/^[#\s\u200f]+/,'').replace(/\s+/g,' ').trim().slice(0,28)}
+function tagChip(t,k){return '<button class="tchip" type="button" data-gtagdel="'+k+'">#'+esc(t)+'<i>✕</i></button>'}
+function gTagsBox(g,i){
+  var cur=g.tags||[], lib=(W.tags||[]).slice();
+  var h='<div class="tagbox"><div class="tb-h"><span>🏷 برچسب‌های این طرح</span><small>'+num(cur.length)+' برچسب</small></div>';
+  h+='<div class="tb-on">'+(cur.length?cur.map(function(t,k){return '<button class="tchip on" type="button" data-gtagdel="'+i+':'+k+'" title="حذف از این طرح">#'+esc(t)+'<i>✕</i></button>'}).join(''):'<em class="tb-none">— هنوز برچسبی ندارد —</em>')+'</div>';
+  h+='<div class="tb-add"><input data-taginp="'+i+'" list="tagList" maxlength="28" placeholder="برچسب تازه… (Enter = افزودن و ذخیره در کتابخانه)">'+
+    '<button class="pbtn" type="button" data-tagadd="'+i+'">＋ افزودن</button></div>';
+  var free=lib.filter(function(t){return cur.indexOf(t)<0});
+  h+='<div class="tb-lib">'+(free.length?'<span class="tb-cap">برچسب‌های ذخیره‌شده:</span>'+free.map(function(t){
+    return '<button class="tchip" type="button" data-gtag="'+i+':'+escAttr(t)+'" title="افزودن به این طرح">#'+esc(t)+'</button>'}).join('')
+    :'<em class="tb-none">کتابخانه خالی است — با «＋ افزودن» یک برچسب بسازید تا اینجا ذخیره شود</em>')+'</div>';
+  h+='<datalist id="tagList">'+lib.map(function(t){return '<option value="'+escAttr(t)+'"></option>'}).join('')+'</datalist>';
+  return h+'</div>';
+}
+function tagsLibBar(){
+  var lib=W.tags||[];
+  var rows=lib.map(function(t,k){
+    var use=(W.gallery||[]).filter(function(g){return (g.tags||[]).indexOf(t)>=0}).length;
+    return '<span class="tchip st">#'+esc(t)+'<b>'+num(use)+'</b><button type="button" data-taglibdel="'+k+'" title="حذف از کتابخانه" aria-label="حذف برچسب">✕</button></span>'}).join('');
+  return '<div class="lib-card"><div class="lib-in"><div class="row-head"><span class="n">🏷</span>'+
+    '<span class="size-note">کتابخانهٔ برچسب‌ها · '+num(lib.length)+' برچسب ذخیره‌شده</span></div>'+
+    '<div class="tb-on">'+(rows||'<em class="tb-none">هنوز برچسبی ذخیره نکرده‌اید. موقع ویرایش هر طرح، یکی بسازید.</em>')+'</div>'+
+    '<div class="tb-add"><input data-taglibinp placeholder="نام برچسب تازه برای کل سایت…">'+
+    '<button class="pbtn" type="button" data-taglibadd>＋ ذخیره در کتابخانه</button></div></div></div>';
+}
+function addDesignTag(i,v){
+  if(!W||!W.gallery[i])return;
+  var t=normTag(v);
+  if(!t){toast('اول برچسب را بنویسید');return}
+  var g=W.gallery[i];g.tags=g.tags||[];
+  if(g.tags.indexOf(t)>=0){toast('این طرح «'+t+'» را از قبل دارد');return}
+  g.tags.push(t);W.tags=W.tags||[];
+  if(W.tags.indexOf(t)<0)W.tags.unshift(t);
+  renderAdmin();toast('«'+t+'» به این طرح اضافه شد ✓');
+}
+function toggleDesignTag(i,t){
+  if(!W||!W.gallery[i])return;
+  var g=W.gallery[i];g.tags=g.tags||[];
+  var at=g.tags.indexOf(t);
+  if(at>=0)g.tags.splice(at,1);else g.tags.push(t);
+  if(W.tags.indexOf(t)<0)W.tags.unshift(t);
+  renderAdmin();
+}
+function addLibTag(v){
+  if(!W)return;var t=normTag(v);
+  if(!t){toast('نام برچسب را بنویسید');return}
+  W.tags=W.tags||[];
+  if(W.tags.indexOf(t)>=0){toast('«'+t+'» از قبل در کتابخانه هست');return}
+  W.tags.unshift(t);renderAdmin();toast('«'+t+'» در کتابخانه ذخیره شد ✓');
+}
+/* ================= آمار و سرگرمی‌ها (ساده) ================= */
+function statRow(s,i){
+  return '<div class="row-card"><div class="row-head"><span class="n">'+num(i+1)+'</span></div>'+
+    '<div class="row2"><label class="field"><span>عنوان</span><input data-sf="k" data-i="'+i+'" value="'+escAttr(s.k||'')+'" placeholder="مثلاً طرح اجراشده"></label>'+
+    '<label class="field"><span>عدد</span><input data-sf="v" data-i="'+i+'" type="number" min="0" value="'+(Number(s.v)||0)+'"></label></div></div>';
+}
+function statsPane(){
+  var h=((W&&W.stats)||[]).map(statRow).join('');
+  h+='<button class="add-row" data-sadd type="button">＋ افزودن یک آمار</button>';
+  h+='<p class="hint">همین سه/چهار عدد در کارت پروفایل و کسوت‌کارت نمایش داده می‌شود. اگر بک‌اند روشن باشد، شمارندهٔ واقعیِ پسند/دانلود/بازدید در تب «انتشار و هاست» است.</p>';
+  return h;
+}
+function hobbyRow(hb,i){
+  return '<div class="row-card"><div class="row-head"><span class="n">'+num(i+1)+'</span>'+
+    '<span class="size-note">'+esc(hb.t||'(بدون نام)')+'</span></div>'+
+    '<div class="row2"><label class="field"><span>ایموجی / آیکون</span><input data-hf="ic" data-i="'+i+'" maxlength="4" value="'+escAttr(hb.ic||'')+'" placeholder="✂️"></label>'+
+    '<label class="field"><span>متن</span><input data-hf="t" data-i="'+i+'" value="'+escAttr(hb.t||'')+'" placeholder="برش و دوزی"></label></div></div>';
+}
+function hobbiesPane(){
+  var list=(W&&W.hobbies)||[];
+  var h='<div class="chip-preview">'+(list.length?list.map(function(x){
+    return '<span class="hobby">'+esc(x.ic||'•')+' '+esc(x.t||'')+'</span>'}).join(''):'<em class="tb-none">— فهرست خالی است —</em>')+'</div>';
+  h+=list.map(hobbyRow).join('');
+  h+='<button class="add-row" data-hadd type="button">＋ افزودن سرگرمی</button>';
+  h+='<p class="hint">پیش‌نمایش بالا همان چیزی است که در سایت دیده می‌شود. با ↑ ↓ می‌توانید ترتیب را عوض کنید.</p>';
+  return h;
+}
+/* ================= شبکه‌های اجتماعی (تماس‌ها) ================= */
+var NET_LABEL={telegram:'تلگرام',whatsapp:'واتساپ',email:'ایمیل',phone:'تماس',instagram:'اینستاگرام',
+  instagram2:'اینستاگرام ۲',github:'گیت‌هاب',website:'وب‌سایت',x:'𝕏 / توییتر',link:'لینک دلخواه'};
+function netLabel(k){return NET_LABEL[k]||k}
+function kindOpts(cur){
+  return Object.keys(KIND).map(function(k){
+    return '<option value="'+k+'"'+(k===cur?' selected':'')+'>'+KIND[k].ic+'  '+esc(netLabel(k))+'</option>'}).join('');
+}
+function placeOpts(cur){
+  return PLACES.map(function(p){return '<option value="'+p[0]+'"'+(p[0]===cur?' selected':'')+'>'+p[1]+'</option>'}).join('');
+}
+function netChip(k,n){
+  return '<button class="netchip'+(n?' on':'')+'" type="button" data-netadd="'+k+'" title="افزودن '+esc(netLabel(k))+'">'+
+    KIND[k].ic+' '+esc(netLabel(k))+(n?'<em>'+num(n)+'</em>':'')+'</button>';
+}
+function netContactRow(c,i){
+  var k=c.kind||'link',kd=KIND[k]||KIND.link;
+  var bg=String(kd.bg).slice(0,1)==='l'?kd.bg:esc(kd.bg);
+  var h='<div class="row-card"><div class="row-head"><span class="n">'+num(i+1)+'</span>'+
+    '<span class="sw-kic" style="background:'+bg+'">'+(c.icon?String(c.icon).slice(0,2):kd.ic)+'</span>'+
+    '<span class="size-note">'+esc(c.label||'(بدون نام)')+'</span>'+
+    '<span class="sw-lab"><input type="checkbox" data-bon="'+i+'"'+(c.on===0?'':' checked')+'> نمایش</span>'+
+    '</div>';
+  h+='<div class="row2"><label class="field"><span>نام نمایشی</span><input data-bf="label" data-i="'+i+'" value="'+escAttr(c.label||'')+'" placeholder="تلگرام کارگاه"></label>'+
+    '<label class="field"><span>شبکه</span><select data-bf="kind" data-i="'+i+'">'+kindOpts(k)+'</select></label></div>';
+  h+='<label class="field"><span>آیدی / شماره / آدرس <small>(اینجا عوض می‌شود)</small></span>'+
+    '<input data-bf="id" data-i="'+i+'" dir="ltr" value="'+escAttr(c.id||'')+'" placeholder="@titanali"></label>';
+  h+='<div class="row2"><label class="field"><span>آیکون (اختیاری)</span><input data-bf="icon" data-i="'+i+'" maxlength="6" value="'+escAttr(c.icon||'')+'" placeholder="✈"></label>'+
+    '<label class="field"><span>رنگ (اختیاری)</span><input data-bf="color" data-i="'+i+'" dir="ltr" value="'+escAttr(c.color||'')+'" placeholder="#25d366"></label></div>';
+  h+='<label class="field"><span>کجا نمایش داده شود</span><select data-bf="place" data-i="'+i+'">'+placeOpts(String(c.place||'all'))+'</select></label>';
+  var url=contactHref(c);
+  h+='<p class="hint">پیش‌نمایش پیوند: <code>'+esc(String(url).slice(0,70))+(String(url).length>70?'…':'')+'</code></p>';
+  return h+'</div>';
+}
+function contactsPane(){
+  var list=W.contacts||[];
+  var used={};list.forEach(function(c){used[c.kind||'link']=(used[c.kind||'link']||0)+1});
+  var h='<div class="netchips">'+Object.keys(KIND).map(function(k){return netChip(k,used[k]||0)}).join('')+'</div>';
+  h+='<p class="hint">روی یک شبکه بزنید تا به فهرست اضافه شود؛ ردیفش را باز کنید و <b>آیدی</b> را بنویسید. با کلید «نمایش» انتخاب می‌کنید کدام شبکه در سایت باشد (خاموش = در سایت نیست، ولی اینجا می‌ماند).</p>';
+  h+=list.map(netContactRow).join('');
+  h+='<button class="add-row" data-badd type="button">＋ افزودن شبکه / لینک دلخواه</button>';
+  h+='<div class="form-actions"><button class="pbtn" type="button" data-goto-tab="buttons">🔘 چیدمان دکمه‌ها در گفتگو و خانه</button>'+
+    '<button class="pbtn" type="button" data-pub="pub">🚀 انتشار روی هاست</button></div>';
+  return h;
 }
 /* ---------- تنظیمات اینستاگرام ---------- */
 /* فرم اینستاگرام در تب «فید اینستاگرام» (feedPane) ادغام شد. */
@@ -2220,32 +2627,37 @@ function apiBtn(k){
   if(k==='install'){apiInstall();return}
   if(k==='pushpw'){apiAdminPush(true);return}
 }
+var ADM_GROUPS={home:'',content:'محتوا',talk:'ارتباط',look:'ظاهر',server:'سرور'};
 var ADM_TABS=[
-  {k:'gallery',  lab:'طرح‌ها',            e:'🖼'},
-  {k:'cats',     lab:'دسته‌ها',           e:'🗂'},
-  {k:'feed',     lab:'فید اینستاگرام',    e:'📸'},
-  {k:'buttons',  lab:'دکمه‌ها',            e:'🔘'},
-  {k:'profile',  lab:'کارگاه',            e:'🧵'},
-  {k:'copy',     lab:'متن‌های سایت',      e:'✍️'},
-  {k:'inbox',    lab:'صندوق پیام‌ها',     e:'📥'},
-  {k:'publish',  lab:'انتشار و هاست',     e:'🚀'},
-  {k:'settings', lab:'تنظیمات',           e:'⚙️'},
-  {k:'admins',   lab:'ادمین‌ها',           e:'🔐'},
-  {k:'sync',     lab:'همگام‌سازی سرور',   e:'🔄'},
-  {k:'stats',    lab:'آمار',              e:'📊'},
-  {k:'hobbies',  lab:'برچسب‌ها',           e:'🏷'},
-  {k:'quick',    lab:'پرسش‌های سریع',     e:'⚡'},
-  {k:'contacts', lab:'تماس‌ها (JSON)',     e:'📞'}
+  {k:'home',     lab:'نمای کلی',          e:'🏠', g:'home'},
+  {k:'gallery',  lab:'طرح‌ها',             e:'🖼', g:'content'},
+  {k:'cats',     lab:'دسته‌ها',            e:'🗂', g:'content'},
+  {k:'hobbies',  lab:'سرگرمی‌ها',          e:'🏷', g:'content'},
+  {k:'stats',    lab:'آمار',               e:'📊', g:'content'},
+  {k:'profile',  lab:'کارگاه',             e:'🧵', g:'content'},
+  {k:'contacts', lab:'شبکه‌های اجتماعی',   e:'📇', g:'talk'},
+  {k:'buttons',  lab:'دکمه‌ها',            e:'🔘', g:'talk'},
+  {k:'quick',    lab:'پرسش‌های سریع',      e:'⚡', g:'talk'},
+  {k:'inbox',    lab:'صندوق پیام‌ها',      e:'📥', g:'talk'},
+  {k:'feed',     lab:'فید اینستاگرام',     e:'📸', g:'look'},
+  {k:'copy',     lab:'متن‌های سایت',       e:'✍️', g:'look'},
+  {k:'settings', lab:'پس‌زمینه و تنظیمات', e:'⚙️', g:'look'},
+  {k:'publish',  lab:'انتشار و هاست',      e:'🚀', g:'server'},
+  {k:'admins',   lab:'ادمین‌ها',            e:'🔐', g:'server'},
+  {k:'sync',     lab:'همگام‌سازی سرور',    e:'🔄', g:'server'}
 ];
 /* شکلک + یادداشت راهنمای بالای هر بخش (هم‌سبک پنل dmj74: توضیح کوتاه، بعد ردیف‌ها) */
-var ADM_EMO={profile:'🧵',gallery:'🖼',cats:'🗂',hobbies:'🏷',stats:'📊',quick:'⚡',contacts:'📞',buttons:'🔘',
+var ADM_EMO={home:'🏠',profile:'🧵',gallery:'🖼',cats:'🗂',hobbies:'🏷',stats:'📊',quick:'⚡',contacts:'📞',buttons:'🔘',
 instagram:'📸',feed:'📸',copy:'✍️',settings:'⚙️',publish:'🚀',inbox:'📥',admins:'🔐',sync:'🔄'};
 var TAB_NOTE={
+home:'از اینجا شروع کنید: هر کاشی شما را به همان بخش می‌برد. تغییراتی که ذخیره کنید ولی «انتشار» نشوند، فقط در پنل ادمین دیده می‌شوند.',
+contacts:'آیدی (یوزرنیم/شماره/ایمیل) را عوض کنید و با کلیدِ هر ردیف انتخاب کنید کدام شبکه در سایت نمایش داده شود. دکمه‌های پایین صفحهٔ گفتگو از همین فهرست ساخته می‌شوند.',
+stats:'فقط عنوان و عدد — بقیه خودکار. با روشن‌بودن بک‌اند، اعداد واقعیِ سرور (پسند/دانلود/بازدید) در تب «انتشار و هاست» دیده می‌شود.',
+hobbies:'یک ردیف = یک برچسبِ کوچک با ایموجی. این‌ها در کسوت‌کارت و منوی کناری نمایش داده می‌شوند؛ برای «برچسب طرح‌ها» به تب طرح‌ها بروید.',
+settings:'تصویر پس‌زمینهٔ سایت و آواتار را می‌توانید مستقیم از گالریِ گوشی انتخاب کنید (خودکار کوچک و فشرده می‌شود).',
 profile:'نام، معرفی، آواتار و وضعیت کارگاه همین‌جا ویرایش می‌شود و بلافاصله در نوار بالای سایت اعمال می‌گردد.',
 gallery:'هر ردیف یک پست است. برای «تصویر» و «تصویر کاور» گالریِ گوشی باز می‌شود و عکس پیش از ذخیره خودکار کوچک و فشرده می‌شود؛ با ↑ ↓ جابه‌جا و با ★ اول فید بفرست.',
 cats:'نام دسته در تب‌های گالری و منوی کناری نمایش داده می‌شود. حذف دسته، طرح‌ها را پاک نمی‌کند.',
-hobbies:'سرگرمی‌ها/برچسب‌ها در کسوت‌کارت و منوی کناری می‌آیند. این بخش با JSON ویرایش می‌شود؛ ساختار: رشته یا {t:"…"}.',
-stats:'با روشن‌بودن بک‌اند، این اعداد از سرور خوانده می‌شود: پسند، دانلود، بازدید، کامنت و پیام.',
 quick:'پاسخ‌های آمادهٔ حباب گفتگو. رشته ساده = سؤالِ فقط‌نمایشی؛ {q:"سؤال",a:"پاسخ"} = با انتخاب، پاسخ فرستاده می‌شود.',
 contacts:'راه‌های تماس (واتساپ/تلگرام/ایمیل/…) که در دکمه‌های گفتگو و بخش تماس استفاده می‌شوند.',
 buttons:'برای هر راه تماس دکمهٔ مستقل می‌سازید: نام، آیکون، مقصد و جای نمایش (خانه / گفتگو / همه‌جا).',
@@ -2257,7 +2669,7 @@ publish:'ذخیره = در titanali-data (دست‌رس فقط ادمین‌ها
 inbox:'پیام‌های کاربران با پیوست. «پاسخ» هم حباب گفتگو و هم صندوق را تازه می‌کند.',
 admins:'رمزها روی سرور هش می‌شوند (bcrypt). پس از نصب، رمز پیش‌فرض را عوض کنید.',
 sync:'نصبِ یک‌بارهٔ بک‌اند روی هاست، تست اتصال، فرستادن/گرفتن محتوا و هم‌سان‌سازی ادمین‌ها.'};
-var LIST_KEY={gallery:'gallery',cats:'cats',contacts:'contacts',buttons:'contacts',hobbies:'hobbies',quick:'quick',messages:'messages'};
+var LIST_KEY={home:'gallery',gallery:'gallery',stats:'stats',instagram:'ig',cats:'cats',contacts:'contacts',buttons:'contacts',hobbies:'hobbies',quick:'quick',messages:'messages'};
 function tabCfg(k){
   for(var i=0;i<ADM_TABS.length;i++)if(ADM_TABS[i].k===k)return ADM_TABS[i];
   return {k:k,lab:k,e:'•'};
@@ -2273,13 +2685,17 @@ function tabCount(k,Wx){
   if(k==='admins')return (T.admins||[]).length;
   if(k==='buttons')return (T.contacts||[]).filter(function(c){return c.on!==0}).length;
   if(k==='copy')return Object.keys(T.copy||{}).length;
+  if(k==='feed')return (T.ig&&T.ig.feed&&T.ig.feed.length)||(T.gallery||[]).length;
+  if(k==='profile')return T.profile?Object.keys(T.profile).length:0;
+  if(k==='settings')return T.settings?Object.keys(T.settings).length:0;
+  if(k==='home')return (T.gallery||[]).length;
   return 0;
 }
 var PF=[['name','نام نمایشی','text'],['initials','حروف آواتار','text'],['role','عنوان','text'],
   ['tagline','زیرعنوان نوار بالا','text'],['loves','خط دوم هیرو','text'],['location','موقعیت','text'],
   ['availability','وضعیت','text'],['avatar','آدرس تصویر آواتار','text'],['bio','متن درباره‌ی کارگاه','area']];
 var GF=[['t','عنوان طرح','text'],['cat','دسته','select'],['desc','توضیحات (نمایش در کارت و لایت‌باکس)','area'],['img','آدرس تصویر (یا بارگذاری)','text'],['n','برچسب «جدید»','flag']];
-var W=null,upTarget=null,upMulti=null,admTab='gallery';
+var W=null,upTarget=null,upMulti=null,admTab='home';
 function optsCats(sel){
   return '<option value="">— بدون دسته —</option>'+(W.cats||[]).map(function(c){
     return '<option value="'+escAttr(c.t)+'"'+(c.t===sel?' selected':'')+'>'+esc(c.t)+'</option>'}).join('');
@@ -2313,7 +2729,7 @@ function catRow(c,i){
 var PUB={busy:false,lastAt:0,lastRev:-1,file:'',bytes:0,err:'',state:null,timer:null,found:''};
 function djb(v){var t='';try{t=JSON.stringify(v==null?{}:v)}catch(e){t=String(v)}var h=5381;
   for(var i=0;i<t.length;i++)h=((h*33)^t.charCodeAt(i))>>>0;return t.length+'-'+h.toString(36)}
-function pubKeys(){return ['profile','stats','cats','gallery','hobbies','quick','copy','feed','contacts','ig','settings','messages','admins']}
+function pubKeys(){return ['profile','tags','stats','cats','gallery','hobbies','quick','copy','feed','contacts','ig','settings','messages','admins']}
 function dirtyKeys(){var o=[];if(!W)return o;pubKeys().forEach(function(k){if(djb(W[k])!==djb(D[k]))o.push(k)});return o}
 function autoPub(){return !(D.settings&&D.settings.autoPublish===0)}
 function kb(b){b=Number(b)||0;return b>1048576?num(Math.round(b/10485.76)/100)+' مگابایت':num(Math.round(b/102.4)/10)+' کیلوبایت'}
@@ -2664,20 +3080,27 @@ function admWhoLine(){
 function renderAdmin(){
   if(!W)return;
   admWhoLine();
-  $('#admTabs').innerHTML=ADM_TABS.map(function(x){
-    var n=tabCount(x.k);
-    return '<button class="adm-tab'+(admTab===x.k?' on':'')+'" data-adm-tab="'+x.k+'" role="tab" aria-selected="'+(admTab===x.k?'true':'false')+'">'+
-      '<span>'+x.e+'</span><span>'+esc(x.lab)+'</span>'+(n?'<em>'+num(n)+'</em>':'')+'</button>'}).join('');
+  $('#admTabs').innerHTML=ADM_TABS.map(function(x,idx){
+    var n=tabCount(x.k),grp='';
+    var prev=idx?ADM_TABS[idx-1].g:null;
+    if(x.g&&x.g!=='home'&&x.g!==prev)grp='<span class="adm-grp">'+esc(ADM_GROUPS[x.g]||'')+'</span>';
+    return grp+'<button class="adm-tab'+(admTab===x.k?' on':'')+'" data-adm-tab="'+x.k+'" role="tab" aria-selected="'+(admTab===x.k?'true':'false')+
+      '" title="'+esc(x.lab)+'"><span>'+x.e+'</span><span>'+esc(x.lab)+'</span>'+(n?'<em>'+num(n)+'</em>':'')+'</button>'}).join(
+    '');
   var pane='';
-  if(admTab==='sync'){pane=syncPane()}
+  if(admTab==='home'){pane=homePane()}
+  else if(admTab==='sync'){pane=syncPane()}
   else if(admTab==='inbox'){pane=inboxTable()}
   else if(admTab==='admins'){pane=adminsTable()}
   else if(admTab==='publish'){pane=publishPane()}
   else if(admTab==='feed'||admTab==='instagram'){pane=feedPane()}
   else if(admTab==='buttons'){pane=buttonsPane()}
+  else if(admTab==='contacts'){pane=contactsPane()}
+  else if(admTab==='stats'){pane=statsPane()}
+  else if(admTab==='hobbies'){pane=hobbiesPane()}
   else if(admTab==='copy'){pane=copyPane()}
   else if(admTab==='gallery'){
-    pane=(W.gallery||[]).map(designRowFull).join('')+
+    pane=tagsLibBar()+(W.gallery||[]).map(designRowFull).join('')+
       '<button class="add-row" data-gadd>＋ افزودن طرح تازه</button>'+
       '<p class="hint">عکس را از گالریِ گوشی انتخاب کنید؛ قبل از ذخیره به حداکثر ۱۱۰۰ پیکسل کوچک می‌شود. با ↑ ↓ ★ ترتیب فید را عوض کنید.</p>';
   }else if(admTab==='cats'){
@@ -2698,7 +3121,7 @@ function renderAdmin(){
       '<label class="field"><span>چیدمان گالری</span><select id="admGrid">'+
       '<option value="3"'+(gridMode()==='3'?' selected':'')+'>سه ستون</option>'+
       '<option value="2"'+(gridMode()==='2'?' selected':'')+'>دو ستون (بزرگ‌تر)</option></select></label>'+
-      '<label class="field"><span>آدرس تصویر پس‌زمینه (خالی = گرادیان)</span><input id="admBg" value="'+escAttr(D.settings.bg||'')+'"></label>'+
+      '<label class="field"><span>آدرس تصویر پس‌زمینه (خالی = گرادیان)</span><input id="admBg" dir="ltr" value="'+escAttr(W.settings.bg!=null?W.settings.bg:(D.settings.bg||''))+'"></label>'+
       '<label class="field"><span>آدرس بک‌اند (خالی = بدون سرور)</span><input id="admApi" value="'+escAttr(D.settings.apiPath||'')+'" dir="ltr"></label>'+
       '<label class="field"><span>رنگ تم</span><input id="admTheme" value="'+escAttr(D.settings.theme||'')+'"></label>'+
       '<label class="field"><span>متن فوتر (خالی = پیش‌فرض)</span><input id="admFoot" value="'+escAttr(D.settings.foot||'')+'"></label>'+
@@ -2710,10 +3133,11 @@ function renderAdmin(){
   }
   /* هر بخش داخل یک کارت: سربرگِ شکلک‌دار + یادداشت راهنما + ردیف‌ها */
   var tc=tabCount(admTab),cfgT=tabCfg(admTab);
+  var picHTML=(admTab==='settings'||admTab==='profile')?picPickHTML(admTab):'';
   $('#admBody').innerHTML='<div class="adm-card"><div class="adm-card-h"><span class="e">'+esc(ADM_EMO[admTab]||cfgT.e||'•')+
     '</span><b>'+esc(cfgT.lab||admTab)+'</b>'+(tc?'<small>'+num(tc)+' ردیف</small>':'')+'</div>'+
     (TAB_NOTE[admTab]?'<div class="adm-note">💡 '+esc(TAB_NOTE[admTab])+'</div>':'')+
-    '<div class="adm-pane on" role="tabpanel">'+pane+'</div></div>';
+    '<div class="adm-pane on" role="tabpanel">'+picHTML+pane+'</div></div>';
   var fq=$('#admFind');
   if(fq){fq.value=PUB.found;fq.oninput=function(){filterRows(fq.value)}}
   var fxx=$('#admFindX');if(fxx)fxx.onclick=function(){fq.value='';filterRows('')};
@@ -2746,13 +3170,13 @@ document.addEventListener('keydown',function(e){
     var p=document.getElementById('adminPanel');
     if(p&&p.classList.contains('open')){e.preventDefault();admSave()}}});
 /* کوچک و فشرده‌کردن تصویر در مرورگر، قبل از ذخیره در localStorage */
-function shrink(file,cb){
+function shrink(file,cb,mxIn,qIn){
   if(!file||!/^image\//.test(file.type||'')){toast('فقط فایل تصویری');return}
   var r=new FileReader();
   r.onload=function(){
     var im=new Image();
     im.onload=function(){
-      var mx=1100,sc=Math.min(1,mx/Math.max(im.width,im.height));
+      var mx=mxIn||1100,sc=Math.min(1,mx/Math.max(im.width,im.height));
       var c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.width*sc));c.height=Math.max(1,Math.round(im.height*sc));
       c.getContext('2d').drawImage(im,0,0,c.width,c.height);
       var url=c.toDataURL('image/jpeg',0.85);
@@ -2781,13 +3205,30 @@ function admSave(){
       try{var o=JSON.parse(cj.value);if(o&&typeof o==='object'&&!Array.isArray(o)){W.copy=o}else{toast('JSON متن‌ها باید شیء باشد ❌');return}}
       catch(e){toast('JSON متن‌ها نامعتبر است ❌');return}}
   }
-  if(admTab==='buttons'){
+  if(admTab==='stats'){
+    $$('[data-sf]').forEach(function(n){var i=Number(n.dataset.i);if(!W.stats[i])return;
+      if(n.dataset.sf==='v')W.stats[i].v=Math.max(0,Number(n.value)||0);else W.stats[i].k=n.value});
+    W.stats=W.stats.filter(function(x){return x&&(String(x.k||'').trim()||Number(x.v)>0)});
+  }
+  if(admTab==='hobbies'){
+    $$('[data-hf]').forEach(function(n){var i=Number(n.dataset.i);if(W.hobbies[i])W.hobbies[i][n.dataset.hf]=n.value});
+    W.hobbies=(W.hobbies||[]).filter(function(x){return x&&String(x.t||'').trim()});
+  }
+  if(admTab==='gallery'){
+    $$('#admBody [data-taginp]').forEach(function(n){var tv=normTag(n.value);if(!tv)return;
+      var gi=Number(n.dataset.taginp),gg=W.gallery[gi];if(!gg)return;
+      gg.tags=gg.tags||[];if(gg.tags.indexOf(tv)<0)gg.tags.push(tv);
+      W.tags=W.tags||[];if(W.tags.indexOf(tv)<0)W.tags.unshift(tv)});
+    W.tags=(W.tags||[]).filter(function(x){return x&&String(x).trim()});
+    (W.gallery||[]).forEach(function(g){if(g.tags)g.tags=g.tags.filter(function(x){return x&&String(x).trim()})});
+  }
+  if(admTab==='buttons'||admTab==='contacts'){
     var bb=W.contacts=W.contacts||[];
     $$('[data-bf]').forEach(function(n){var i=Number(n.dataset.i);if(bb[i])bb[i][n.dataset.bf]=n.value});
     $$('[data-bon]').forEach(function(n){var i=Number(n.dataset.bon);if(bb[i])bb[i].on=n.checked?1:0});
     W.contacts=bb.filter(function(c){return c&&(c.id||c.label)});
   }
-  if(admTab==='cats'||admTab==='hobbies'||admTab==='quick'||admTab==='gallery'||admTab==='buttons'){
+  if(admTab==='cats'||admTab==='hobbies'||admTab==='quick'||admTab==='gallery'||admTab==='buttons'||admTab==='contacts'||admTab==='stats'){
     var bad=0;
     $$('#admBody [data-rowjson]').forEach(function(t){
       if(t.dataset.dirty!=='1')return;
@@ -2824,7 +3265,8 @@ function admSave(){
     var ap=$('#admApi');if(ap){var av=ap.value.trim();if(av)W.settings.api=av;else delete W.settings.api;}
   }else if(admTab==='stats'||admTab==='hobbies'||admTab==='contacts'||admTab==='quick'||admTab==='cats'){
     var j=$('#admJson');
-    try{W[admTab]=JSON.parse(j.value)}catch(e){toast('JSON نامعتبر است ❌');return}
+    /* paneٔ فرمی = JSON‌ی نیست؛ همان فرم ذخیره می‌کند */
+    try{if(j)W[admTab]=JSON.parse(j.value)}catch(e){toast('JSON نامعتبر است ❌');return}
   }
   W.gallery=(W.gallery||[]).filter(function(g){return g&&(g.t||g.img||g.desc)});
   W.cats=(W.cats||[]).filter(function(c){return c&&c.t});
@@ -2888,6 +3330,10 @@ document.addEventListener('click',function(e){
   if(fi){var gi=Number(fi.dataset.fi),gg=D.gallery[gi];if(gg){
     galFilter=gg.cat||'all';go('gallery',{cat:gg.cat||'all'});
     var pos=galShown.indexOf(gg);if(pos>=0)openLB(pos)}return}
+  var tg=near('[data-gtagfilter]');
+  if(tg){var tv=tg.dataset.gtagfilter;$('#lightbox').classList.remove('open');document.body.style.overflow='';
+    galTag=(galTag===tv?'':tv);go('gallery');renderGallery();toast(galTag?'فیلتر روی #'+galTag:'نمایش همه');return}
+  if(near('[data-gtagclear]')){galTag='';renderGallery();return}
   var li=near('.gitem[data-lb]');if(li){openLB(Number(li.dataset.lb));return}
   if(near('#lbPrev')){stepLB(-1);return}
   if(near('#lbNext')){stepLB(1);return}
@@ -2958,6 +3404,47 @@ document.addEventListener('click',function(e){
     if(SESS&&W.admins[ai]&&W.admins[ai].u===SESS.u){toast('حساب خودتان را حذف نمی‌کنید ❌');return}
     W.admins.splice(ai,1);renderAdmin();toast('ادمین حذف شد');return}
   var upm=near('[data-upm]'); if(upm){upMulti=Number(upm.dataset.upm);$('#admImgs').click();return}
+  /* --- تصویر از گالری برای پس‌زمینه و آواتار --- */
+  var pu2=near('[data-picup]');
+  if(pu2){var pmode=pu2.dataset.picup,big=(pmode==='settings');
+    $('#admImg').onchange=function(){var f=this.files&&this.files[0];this.value='';
+      if(!f)return;shrink(f,function(url){picApply(pmode,url)},big?1920:640,big?0.82:0.9)};
+    $('#admImg').click();return}
+  var pcle=near('[data-picclear]'); if(pcle){picApply(pcle.dataset.picclear,'');return}
+  /* --- برچسب‌های طرح‌ها --- */
+  var tadd=near('[data-tagadd]');
+  if(tadd){var tgi=Number(tadd.dataset.tagadd),tin=$('[data-taginp="'+tgi+'"]');addDesignTag(tgi,tin&&tin.value);return}
+  var tdel=near('[data-gtagdel]');
+  if(tdel){var ta=tdel.dataset.gtagdel.split(':'),tg=W.gallery[Number(ta[0])];
+    if(tg&&tg.tags){tg.tags.splice(Number(ta[1]),1);renderAdmin()}return}
+  var ttg=near('[data-gtag]');
+  if(ttg){var qa=ttg.dataset.gtag.split(':');toggleDesignTag(Number(qa[0]),qa.slice(1).join(':'));return}
+  if(near('[data-taglibadd]')){var lin=$('[data-taglibinp]');addLibTag(lin&&lin.value);return}
+  var tld=near('[data-taglibdel]');
+  if(tld){var lk=Number(tld.dataset.taglibdel),rm=(W.tags||[])[lk];
+    W.tags.splice(lk,1);
+    (W.gallery||[]).forEach(function(g){if(g.tags){var at=g.tags.indexOf(rm);if(at>=0)g.tags.splice(at,1)}});
+    renderAdmin();toast('«'+rm+'» از کتابخانه و از طرح‌ها هم حذف شد');return}
+  if(near('[data-sadd]')){W.stats=W.stats||[];W.stats.push({k:'',v:0});renderAdmin();return}
+  if(near('[data-hadd]')){W.hobbies=W.hobbies||[];W.hobbies.push({ic:'✨',t:''});renderAdmin();return}
+  var nta=near('[data-netadd]');
+  if(nta){var nk=nta.dataset.netadd;W.contacts=W.contacts||[];
+    W.contacts.push({label:netLabel(nk),kind:nk,id:'',place:'contact',on:1,icon:(KIND[nk]?KIND[nk].ic:'🔗')});
+    renderAdmin();toast('«'+netLabel(nk)+'» اضافه شد — آیدی‌اش را بنویسید');return}
+  /* --- مدیریت تصویر پست --- */
+  var imv=near('[data-imgmv]'),imc=near('[data-imgcover]'),imd=near('[data-imgdel]'),ccl=near('[data-coverclear]');
+  if(imv||imc||imd){var gs=(imv||imc||imd).dataset,pack=(gs.imgmv||gs.imgcover||gs.imgdel).split(':');
+    var g2=W.gallery[Number(pack[0])];if(!g2)return;
+    g2.imgs=g2.imgs||[];
+    var kk=Number(pack[1]);
+    if(imv){var dir=Number(pack[2]),to=kk+dir;
+      if(to<0||to>=g2.imgs.length)return;var tmp=g2.imgs[kk];g2.imgs[kk]=g2.imgs[to];g2.imgs[to]=tmp}
+    else if(imc){var old=g2.img||'';g2.img=g2.imgs[kk];g2.imgs.splice(kk,1);if(old)g2.imgs.unshift(old)}
+    else g2.imgs.splice(kk,1);
+    if(!g2.imgs.length)delete g2.imgs;
+    renderAdmin();return}
+  if(ccl){var g3=W.gallery[Number(ccl.dataset.coverclear)];
+    if(g3&&g3.imgs&&g3.imgs.length){g3.img=g3.imgs.shift();if(!g3.imgs.length)delete g3.imgs;renderAdmin();toast('تصویر جلد عوض شد ✓')}return}
   if(near('#igSyncBtn')){igSync();return}
   if(near('#igFromGallery')){W.ig.stories=D.gallery.slice().sort(function(a,b){return (b.ts||0)-(a.ts||0)}).slice(0,8)
       .map(function(g){return {t:g.t,img:(g.imgs&&g.imgs[0])||g.img}});
@@ -2972,6 +3459,9 @@ document.addEventListener('click',function(e){
 
   /* ---- ادمین ---- */
   var at=near('[data-adm-tab]');if(at){admTab=at.dataset.admTab;renderAdmin();return}
+  var gt=near('[data-goto-tab]');
+  if(gt){admTab=gt.dataset.gotoTab;renderAdmin();var bd=$('#admBody');if(bd)bd.scrollTop=0;
+    var tb=$('#admTabs [data-adm-tab="'+admTab+'"]');if(tb&&tb.scrollIntoView)tb.scrollIntoView({inline:'center',block:'nearest'});return}
   if(near('#admSave')){admSave();return}
   if(near('#admExport')){admExport();return}
   if(near('#admImport')){$('#admFile').click();return}
@@ -3083,7 +3573,11 @@ document.addEventListener('keydown',function(e){
   if($('#lightbox').classList.contains('open')){
     if(e.key==='ArrowLeft')stepLB(isFa()?1:-1);
     if(e.key==='ArrowRight')stepLB(isFa()?-1:1);
-    if(e.key==='Enter'){var el=document.activeElement;if(el&&el.classList.contains('gitem'))openLB(Number(el.dataset.lb))}
+    if(e.key==='Enter'){
+      var ti2=e.target&&e.target.dataset&&e.target.dataset.taginp;
+      if(ti2!=null){e.preventDefault();addDesignTag(Number(ti2),e.target.value);return}
+      if(e.target&&e.target.dataset&&e.target.dataset.taglibinp!=null){e.preventDefault();addLibTag(e.target.value);return}
+      var el=document.activeElement;if(el&&el.classList.contains('gitem'))openLB(Number(el.dataset.lb))}
   }
 });
 var tx0=null;

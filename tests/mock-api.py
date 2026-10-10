@@ -54,7 +54,7 @@ def rev():
     return int(read("meta.json", {}).get("rev", 0))
 
 
-SECKEYS = ("profile", "cats", "gallery", "hobbies", "quick", "copy", "feed", "contacts", "ig", "settings")
+SECKEYS = ("profile", "tags", "stats", "cats", "gallery", "hobbies", "quick", "copy", "feed", "contacts", "ig", "settings")
 BAKED = os.path.join(ROOT, "titanali-content.json")
 
 
