@@ -22,7 +22,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 
-define('TA_VER', '1.0.7');
+define('TA_VER', '1.0.9');
 define('TA_TOKEN_TTL', 43200);          /* ۱۲ ساعت نشست ادمین */
 
 /* =====================================================================

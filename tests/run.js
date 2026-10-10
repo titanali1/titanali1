@@ -463,6 +463,10 @@ const A = (n, c) => { c ? (ok++, console.log('  ✓ ' + n)) : (fail++, console.l
     A('نسخه در نوار وضعیت ثبت شد', T().API.published === 99);
     window.fetch = of;
   }
+  A('«راه\u200cهای سفارش» از قسمت ارتباطات حذف است (در کل منبع)', !/راه[\u200c ]های سفارش/.test(html));
+  A('برچسب تماس\u200cها پسوند «(سفارش)» ندارد', !/\(سفارش\)/.test(html));
+  A('زیرعنوان پیش\u200cفرض «ارتباط» با جدول متن\u200cها هم\u200cخوان است',
+    /data-t="social\.sub">شبکه\u200cهای اجتماعی و راه\u200cهای ارتباطی</.test(html));
   console.log('\nRESULT pass=' + ok + ' fail=' + fail + ' consoleErrors=' + real.length);
   if (real.length) console.log(real.slice(0, 5).join('\n'));
   process.exit(fail || real.length ? 1 : 0);
