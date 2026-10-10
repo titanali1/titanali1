@@ -239,7 +239,7 @@ python3 tests/php-syntax.py api.php titanali-config.sample.php
 | بررسی دامنه / نصب ادمین سرور | `…/latest/deploy/verify-site.sh` و `…/latest/deploy/install-api.sh` |
 > بسته **تکرارپذیر** است: دو بیلد از یک محتوا، یک `sha256` می‌دهد (زمان درون زیپ قفل روی ۱۹۸۰ و ترتیب فایل‌ها ثابت). پس هر عددی که در `.sha256` می‌بینید، فقط یعنی «محتوا فرق کرده».
 
-| نسخهٔ قفل‌شده | `https://raw.githubusercontent.com/titanali1/titanali1/v1.0.1/titanali-cpanel.zip` |
+| نسخهٔ قفل‌شده (همیشه همان بایت‌ها) | `https://raw.githubusercontent.com/titanali1/titanali1/v1.0.2/titanali-cpanel.zip` · sha256 `cb297a7b081b19d5a3c7d48648e91143b327d7d088d2a3f281c7c089a187174b` |
 | آیینهٔ CDN (اگر هاست به گیت‌هاب دسترسی ندارد) | `https://cdn.jsdelivr.net/gh/titanali1/titanali1@latest/titanali-cpanel.zip` |
 
 دریافت و راستی‌آزمایی:
