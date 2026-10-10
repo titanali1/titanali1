@@ -1,0 +1,76 @@
+name: دامنه — بررسی و فعال‌سازی (verify / install)
+
+# چیزی برای ساخت PR یا merge لازم نیست: این فایل را در GitHub → Actions باز کنید،
+# «Run workflow» را بزنید و «step» را انتخاب کنید.
+#   verify              فقط خواندنی: وضعیت دامنه، دامنه در فایل‌ها، امنیت، تازگی فایل‌ها
+#   install             یک بار «ادمین سرور» را می‌سازد (نیازمند دو راز زیر)
+#   verify-then-install اول بررسی، بعد نصب، بعد دوباره بررسی
+#
+# رازهای لازم برای install (GitHub → Settings → Secrets and variables → Actions):
+#   TA_ADMIN_USER   نام کاربری ادمین (۳ تا ۳۲ نویسهٔ لاتین)
+#   TA_ADMIN_PASS   رمز (۱۲ نویسه یا بیشتر؛ روی سرور bcrypt می‌شود)
+#   TA_ADMIN_NAME   اختیاری — نام نمایشی در پنل
+# رمز در لاگ چاپ نمی‌شود؛ فقط از stdin به curl می‌رود.
+
+on:
+  workflow_dispatch:
+    inputs:
+      site:
+        description: "آدرس سایت روی هاست"
+        required: false
+        default: "https://titanali1.ir"
+      step:
+        description: "چه کاری انجام شود"
+        type: choice
+        required: false
+        default: "verify"
+        options:
+          - verify
+          - install
+          - verify-then-install
+
+permissions:
+  contents: read
+
+concurrency:
+  group: domain-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: ${{ inputs.step }} روی دامنه
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: خواندن مخزن
+        uses: actions/checkout@v4
+
+      - name: بررسی دامنه (فقط خواندنی)
+        if: ${{ inputs.step != 'install' }}
+        continue-on-error: true
+        run: bash deploy/verify-site.sh "${{ inputs.site }}"
+
+      - name: نصب ادمین سرور (یک بار)
+        if: ${{ inputs.step != 'verify' }}
+        env:
+          TA_ADMIN_USER: ${{ secrets.TA_ADMIN_USER }}
+          TA_ADMIN_PASS: ${{ secrets.TA_ADMIN_PASS }}
+          TA_ADMIN_NAME: ${{ secrets.TA_ADMIN_NAME }}
+        run: bash deploy/install-api.sh "${{ inputs.site }}"
+
+      - name: بررسی نهایی
+        if: ${{ always() && inputs.step != 'verify' }}
+        continue-on-error: true
+        run: bash deploy/verify-site.sh "${{ inputs.site }}"
+
+      - name: قدم بعدی
+        if: ${{ always() }}
+        run: |
+          {
+            echo ""
+            echo "### قدم بعدی"
+            echo ""
+            echo "۱. اگر نصب سبز بود: در مرورگرِ اصلی‌تان (همان که طرح‌ها را در آن ویرایش کرده‌اید) وارد \`${{ inputs.site }}\` شوید → روی عنوان «تیتانلی» کلیک کنید → رمز → تب «همگام‌سازی سرور» → «⬆ فرستادن محتوا به سرور»."
+            echo "۲. رمز را عوض کنید: تب «ادمین‌ها» → رمز تازه → «ذخیره» → تب «همگام‌سازی سرور» → «🔑 رمز ادمین‌ها روی سرور»."
+            echo "۳. اگر رازها را ساختید، بعد از موفقیت پاکشان کنید: \`gh secret delete TA_ADMIN_PASS TA_ADMIN_USER\`"
+          } >> "$GITHUB_STEP_SUMMARY"
