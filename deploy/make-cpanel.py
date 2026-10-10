@@ -180,9 +180,17 @@ def main():
     for f in junk:
         if f.exists(): f.unlink()
     z = ROOT / 'dist' / 'titanali-cpanel.zip'
+    # بایت‌به‌بایت تکرارپذیر: ترتیب نام‌ها ثابت و همهٔ زمان‌ها روی ۱۹۸۰ قفل می‌شوند،
+    # تا sha256 فقط وقتی عوض شود که واقعاً محتوای بسته عوض شده باشد (لینک مستقیم + checksum).
     with zipfile.ZipFile(z, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
         for p in sorted(DIST.iterdir()):
-            if p.is_file(): zf.write(p, p.name)
+            if not p.is_file():
+                continue
+            zi = zipfile.ZipInfo(p.name, date_time=(1980, 1, 1, 0, 0, 0))
+            zi.compress_type = zipfile.ZIP_DEFLATED
+            zi.external_attr = (0o644 if not p.name.endswith('.sh') else 0o755) << 16
+            zi.create_system = 3
+            zf.writestr(zi, p.read_bytes())
     # یک نسخه در ریشهٔ مخزن، تا لینک دانلود مستقیم داشته باشد (+/checksum)
     import hashlib, shutil as _sh
     root_zip = ROOT / 'titanali-cpanel.zip'
