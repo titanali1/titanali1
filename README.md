@@ -213,10 +213,13 @@ sha256sum -c titanali-cpanel.zip.sha256      # titanali-cpanel.zip: OK
 unzip -l titanali-cpanel.zip                 # ۱۵ فایل داخل public_html
 ```
 
+> در ریشه فقط **یک** بسته می‌ماند (دو زیپ + دو امضا)؛ `publish-latest.sh` در پایان پوشهٔ میانی `dist/` را پاک می‌کند، پس هیچ بیلد قدیمی‌ای جمع نمی‌شود. برای بایگانی نسخه‌ها تگ می‌سازیم (`v1.0.11`) و اگر روزی خواستید نسخه‌های قدیمی را پاک کنید، تنها کار لازم `gh release delete vX --cleanup-tag --yes` است.
+
 زیپ همان فایلِ تعهدشده در ریشهٔ مخزن است؛ با هر بار اجرای `python3 deploy/make-cpanel.py` بازسازی و در همان شاخه پوش می‌شود، پس لینک بالا همیشه به تازه‌ترین بسته می‌رسد. اگر خواستید فایل را به‌عنوان **attachment ریلیز** هم بچسبانید (این سندباکس به `uploads.github.com` دسترسی ندارد، پس روی ماشین خودتان):
 
 ```bash
-gh release create v1.0.0 titanali-cpanel.zip titanali-cpanel.zip.sha256 \
+V=$(git describe --tags --abbrev=0)        # آخرین تگ، مثلاً v1.0.11
+gh release create "$V" titanali-cpanel.zip titanali-cpanel.zip.sha256 \
   --target arena/874bf68b-titanali1 --title "بستهٔ هاست سی‌پنل" --notes "محتوای public_html"
 ```
 

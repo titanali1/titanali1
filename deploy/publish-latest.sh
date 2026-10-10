@@ -32,6 +32,9 @@ echo "── بستهٔ پروژهٔ اندروید ──"
 bash deploy/pack-android.sh 2>&1 | grep -E "^✓|^sha256" || { echo "✗ بستهٔ اندروید ساخته نشد"; exit 1; }
 sha256sum -c titanali-android.zip.sha256 || exit 1
 
+# بیلد میانی نگه داشته نمی‌شود: در ریشه فقط دو بستهٔ آخر (+امضایشان) می‌ماند
+rm -rf dist
+
 git add -A
 if git diff --cached --quiet; then echo "· فایل‌ها بدون تغییر"; else
   git commit -q -m "build: بستهٔ تازهٔ cpanel ($(date -u '+%Y-%m-%d %H:%M') UTC)" || exit 1
