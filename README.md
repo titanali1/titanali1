@@ -225,6 +225,24 @@ python3 tests/php-syntax.py api.php titanali-config.sample.php
 
 جزئیات بیشتر: `tests/README.md`. پوشهٔ `tests/` داخل بستهٔ هاست نمی‌رود.
 
+## نصب روی هاست — دو لینک مستقیم
+
+**۱) یک خط در Terminal سی‌پنل** (بکاپ می‌گیرد، بسته را می‌ریزد، مجوزها را تنظیم می‌کند، داده را بیرون `public_html` می‌برد و ادمین سرور را می‌سازد):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/titanali1/titanali1/latest/deploy/install-on-server.sh | bash
+```
+
+بدون پرس‌وگرم و برای CI: `SITE=https://titanali1.ir TA_ADMIN_USER=admin TA_ADMIN_PASS='…' SKIP_INSTALL=0 bash install-on-server.sh` — گزینه‌ها: `PUB`، `MOVE_DATA=0`، `SKIP_INSTALL=1`، `YES=1`، `ZIP_FILE=…`، `REF=v1.0.2`.
+
+**۲) نصب‌کنندهٔ وب داخل بسته** — اگر Terminal ندارید: بسته را در `public_html` Extract کنید و سپس باز کنید:
+
+```
+https://titanali1.ir/titanali-install.php
+```
+
+اول وضعیت را بررسی می‌کند (فایل‌های بسته، PHP، نوشتن، پوشهٔ داده، تازگی `index.html`)، بعد ادمین سرور را از راه `api.php` می‌سازد (bcrypt سمت سرور)، `titanali-config.php` را می‌نویسد و **خودش را پاک می‌کند**. تا وقتی ادمینی نباشد کار می‌کند، nonce یک‌بارمصرف و سقف ۶ تلاش در ساعت دارد، و رمز را در هیچ جا نمی‌نویسد. اگر خودش پاک نشد، صفحه دستور `rm` را نشان می‌دهد — حتماً پاکش کنید.
+
 ## لینک مستقیم دانلود
 
 لینک‌های زیر به تگِ متحرّک `latest` می‌روند و همیشه تازه‌ترین بسته را می‌دهند (هر `bash deploy/publish-latest.sh` این تگ را جلو می‌آورد):

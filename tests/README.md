@@ -25,6 +25,11 @@ node tests/run.js && node tests/sync.js && python3 tests/php-syntax.py
 python3 tests/mock-api.py 8099 &                 # سایت + api.php ساختگی، از ریشهٔ مخزن
 NO_TLS=1 SKIP_DOMAIN=1 bash deploy/verify-site.sh http://127.0.0.1:8099/
 TA_ADMIN_USER=admin TA_ADMIN_PASS=devpass-1234 bash deploy/install-api.sh http://127.0.0.1:8099/
+
+# و تمرین «نصب کامل روی هاست» روی یک public_html ساختگی:
+mkdir -p ~/fakehome/public_html
+SITE=http://127.0.0.1:8099 PUB=~/fakehome/public_html ZIP_FILE=../titanali-cpanel.zip \
+  MOVE_DATA=1 TA_ADMIN_USER=admin TA_ADMIN_PASS=devpass-1234 bash deploy/install-on-server.sh < /dev/null
 ```
 
 دادهٔ موک در `.mockapi/` می‌نشیند (در `.gitignore`)؛ پاکش کنید: `rm -rf .mockapi`.

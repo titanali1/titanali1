@@ -29,6 +29,23 @@ NEWER = [
 WANT = ['ta_out', 'ta_read', 'ta_put', 'ta_lock', 'ta_cfg', 'ta_need_admin', 'ta_check_pw']
 
 
+def php_only(src):
+    """فقط بخش‌های PHP (بین <?php و ?>) — تا HTML/CSSِ فایل‌های نمایشی شمرده نشود."""
+    out, i, n = [], 0, len(src)
+    while i < n:
+        a, b = src.find('<?php', i), src.find('<?=', i)
+        if a < 0 and b < 0:
+            break
+        start = a if (a >= 0 and (b < 0 or a < b)) else b
+        end = src.find('?>', start)
+        stop = n if end < 0 else end
+        seg = src[start:stop]
+        seg = seg[5:] if seg.startswith('<?php') else seg[2:]
+        out.append(seg + '\n')
+        i = n if end < 0 else end + 2
+    return ''.join(out) if out else src
+
+
 def strip_php(src):
     """حذف رشته‌ها و کامنت‌ها (برای شمارش متوازن بودن)."""
     out, i, n = [], 0, len(src)
@@ -72,11 +89,11 @@ def check(path):
     errs = []
     if not src.lstrip().startswith('<?php'):
         errs.append('سطر اول باید <?php باشد')
-    if '?>' in src:
-        errs.append('برچسب بستن ?> دارد (فایل خالصِ PHP نباید داشته باشد)')
+    if '?>' in src and 'api' in f.name:
+        errs.append('فایل API برچسب بستن ?> دارد (خروجی JSON را خراب می‌کند)')
     if src.startswith('\ufeff') or src.lstrip().startswith('\ufeff'):
         errs.append('BOM دارد؛ خروجی JSON را خراب می‌کند')
-    clean = strip_php(src)
+    clean = strip_php(php_only(src))
     for a, b in (('{', '}'), ('(', ')'), ('[', ']')):
         if clean.count(a) != clean.count(b):
             errs.append('عدم توازن %s%s: %d در برابر %d' % (a, b, clean.count(a), clean.count(b)))

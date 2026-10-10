@@ -16,9 +16,9 @@ SRC  = ROOT / 'index.html'
 DIST = ROOT / 'dist' / 'titanali-cpanel'
 # فایل‌های عمومی که باید در ریشه (و پس از آن در public_html) باشند
 PUBLIC = ['index.html', '.htaccess', '404.html', 'sw.js', 'api.php', 'titanali-config.sample.php', 'site.webmanifest', 'favicon.svg',
-          'robots.txt', 'sitemap.xml', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png',
+          'robots.txt', 'sitemap.xml', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png', 'titanali-install.php',
           'maskable-512.png', 'og.png']
-COPIES = ['.htaccess', 'sw.js', '404.html', 'robots.txt', 'sitemap.xml', 'titanali-config.sample.php']  # منبعشان deploy/files/ است
+COPIES = ['.htaccess', 'sw.js', '404.html', 'robots.txt', 'sitemap.xml', 'titanali-config.sample.php', 'titanali-install.php']  # منبعشان deploy/files/ است
 SITE = 'https://titanali1.ir/'
 BRAND, TAG_FA, TAG_EN = 'titanali', 'طراحی و دوخت', 'Design & Tailoring · Tehran'
 
@@ -201,7 +201,9 @@ def main():
     shutil.copyfile(z, DIST / 'titanali-cpanel.zip')   # تا GitHub Pages هم همان لینک را بدهد
     print('sha256: ' + digest)
     with zipfile.ZipFile(z) as zf:
-        n = len([x for x in zf.namelist() if not x.endswith('/')])
+        names = [x for x in zf.namelist() if not x.endswith('/')]
+        n = len(names)
+        assert 'titanali-install.php' in names, 'نصب‌کننده داخل بسته نیست!'
     print('\n✔ %s  (%.1f KB، %d فایل داخل بسته)' % (z, z.stat().st_size / 1024, n))
     print('  در سی‌پنل: File Manager → public_html → Upload این zip → Extract (با «Overwrite»).')
     print('  یا فقط محتویات dist/titanali-cpanel/ را در public_html کپی کنید.')
