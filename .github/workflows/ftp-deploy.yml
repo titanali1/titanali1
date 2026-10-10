@@ -1,0 +1,88 @@
+name: دامنه — همگام‌سازی فایل‌ها با FTP (اختیاری)
+
+# این workflow جای «File Manager → آپلود → Extract» را می‌گیرد: بسته را می‌سازد و
+# با FTP بالای public_html می‌فرستد. فقط وقتی کار می‌کند که رازهای FTP را ساخته باشید:
+#   FTP_HOST   (مثلاً ftp.titanali1.ir یا IP هاست)     FTP_USER   کاربر FTP سی‌پنل
+#   FTP_PASS   رمز آن کاربر                            — و اگر می‌خواهید رمز را عوض کنید،
+#   در cPanel → FTP Accounts رمز تازه بگذارید و همین‌جا به‌روزرسانی کنید.
+# حالت پیش‌فرض «فقط اضافه/بازنویسی» است: هیچ فایلی روی هاست پاک نمی‌شود
+# (پوشهٔ titanali-data/ و آپلودها دست‌نخورده می‌مانند).
+
+on:
+  workflow_dispatch:
+    inputs:
+      path:
+        description: "مسیر روی هاست (نسبت به ریشهٔ حساب FTP)"
+        required: false
+        default: "/public_html/"
+      port:
+        description: "پورت FTP"
+        required: false
+        default: "21"
+      tls:
+        description: "رمزنگاری FTP"
+        type: choice
+        required: false
+        default: "try"
+        options: [try, strict, "off"]
+      dry:
+        description: "فقط نمایش چه چیزی می‌فرستد (بدون نوشتن)"
+        type: boolean
+        required: false
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ftp-deploy
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: ساخت بسته و فرستادن به هاست
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: خواندن مخزن
+        uses: actions/checkout@v4
+
+      - name: ابزار ساخت بسته (Pillow برای og.png و آیکون‌ها)
+        run: python3 -m pip install --quiet --upgrade pillow arabic-reshaper python-bidi
+
+      - name: ساخت بسته
+        run: |
+          python3 deploy/make-cpanel.py
+          ls -la dist/titanali-cpanel
+          echo "بسته: $(du -h dist/titanali-cpanel.zip | cut -f1)، $(unzip -l dist/titanali-cpanel.zip | tail -1)" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: بررسی رازهای FTP
+        env:
+          H: ${{ secrets.FTP_HOST }}
+          U: ${{ secrets.FTP_USER }}
+          P: ${{ secrets.FTP_PASS }}
+        run: |
+          if [ -z "$H" ] || [ -z "$U" ] || [ -z "$P" ]; then
+            echo "::error::رازهای FTP_HOST / FTP_USER / FTP_PASS تنظیم نشده‌اند. در GitHub → Settings → Secrets and variables → Actions اضافهشان کنید (یا همین‌ها را در cPanel ساخت/تغییر دهید)."
+            exit 1
+          fi
+          echo "· رازها تنظیم شده‌اند ✓"
+
+      - name: فرستادن فایل‌ها
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASS }}
+          port: ${{ inputs.port }}
+          tls: ${{ inputs.tls }}
+          server-dir: ${{ inputs.path }}
+          local-dir: ./dist/titanali-cpanel/
+          dry-run: ${{ inputs.dry }}
+          dangerous-auto-remove-file: "false"
+          exclude: "**/titanali-data/** **/.git/** **/.github/** **/node_modules/**"
+
+      - name: بررسی دامنه بعد از ارسال
+        if: ${{ always() && inputs.dry == false }}
+        continue-on-error: true
+        run: bash deploy/verify-site.sh https://titanali1.ir
