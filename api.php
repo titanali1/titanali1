@@ -939,7 +939,12 @@ if ($ACTION === 'baked') {
     if (is_string($raw) && $raw !== '') {
         $etag = '"' . md5($raw) . '"';
         if (isset($_SERVER['HTTP_IF_NONE_MATCH']) && trim((string) $_SERVER['HTTP_IF_NONE_MATCH']) === $etag) {
-            ta_out(304, array());
+            // ۳۰۴ نباید بدنه داشته باشد؛ برای همین ta_out صدا نمی‌شود.
+            @http_response_code(304);
+            @header('ETag: ' . $etag);
+            @header('Cache-Control: public, max-age=60, must-revalidate');
+            @header('X-Content-Type-Options: nosniff');
+            exit;
         }
         if (!headers_sent()) {
             @header('Content-Type: application/json; charset=utf-8');
