@@ -470,7 +470,9 @@ html[dir=rtl] .drawer{--dx:-100%}
   transform:translateY(101%);transition:transform .4s var(--ease)}
 .adm-wrap.open .adm{transform:none}
 @media (min-width:780px){.adm-wrap .adm{bottom:20px;border-bottom:1px solid rgba(255,255,255,.09);
-  border-radius:32px;max-height:calc(100dvh - 40px)}}
+  border-radius:32px;max-height:calc(100dvh - 40px)}
+  .adm-wrap .adm-grab{display:none}
+  .adm-wrap .adm{box-shadow:0 30px 80px rgba(0,0,0,.62),inset 0 1px 0 rgba(255,255,255,.07)}}
 .adm-wrap .adm-grab{width:44px;height:5px;border-radius:3px;background:rgba(255,255,255,.3);margin:10px auto 0}
 /* سربرگ */
 .adm-wrap .adm-head{display:grid;grid-template-columns:1fr auto;gap:12px 10px;align-items:start;
@@ -484,7 +486,9 @@ html[dir=rtl] .drawer{--dx:-100%}
 .adm-wrap .adm-btn:hover{background:rgba(255,255,255,.13);transform:translateY(-1px)}
 .adm-wrap .adm-btn.danger{color:#ffb3ae;border-color:rgba(255,69,58,.36);background:rgba(255,69,58,.13)}
 .adm-wrap .adm-x{width:34px;height:34px;border-radius:12px;border:1px solid rgba(255,255,255,.12);
-  background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);display:grid;place-items:center;font-size:13px;padding:0;cursor:pointer}
+  background:rgba(255,255,255,.06);color:rgba(255,255,255,.75);display:grid;place-items:center;font-size:13px;padding:0;
+  cursor:pointer;transition:.2s var(--ease)}
+.adm-wrap .adm-x:hover{background:rgba(255,255,255,.14);color:#fff;transform:rotate(90deg)}
 .adm-wrap .adm-pills{grid-column:1/-1;display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end;margin:0}
 /* جست‌وجو */
 .adm-wrap .adm-find{position:relative;padding:12px 20px 0}
@@ -568,9 +572,12 @@ html[dir=rtl] .drawer{--dx:-100%}
 .adm-wrap .pbtn{border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);border-radius:16px;padding:11px 15px;
   font-size:12.5px;font-weight:800;cursor:pointer;transition:.2s var(--ease);color:#fff}
 .adm-wrap .pbtn:hover{background:rgba(255,255,255,.13);transform:translateY(-1px)}
-.adm-wrap .pbtn.primary,.adm-wrap .pbtn.pub{border-color:transparent;color:#fff;
+.adm-wrap .pbtn.primary{border-color:transparent;color:#fff;
   background:linear-gradient(135deg,#4da3ff,#0a6cff);box-shadow:0 10px 26px rgba(20,130,255,.36)}
-.adm-wrap .pbtn.primary:hover,.adm-wrap .pbtn.pub:hover{box-shadow:0 14px 34px rgba(20,130,255,.5)}
+.adm-wrap .pbtn.primary:hover{box-shadow:0 14px 34px rgba(20,130,255,.5)}
+.adm-wrap .pbtn.pub{border-color:rgba(120,180,255,.45);color:#cfe6ff;background:rgba(30,140,255,.15)}
+.adm-wrap .pbtn.pub:hover{background:rgba(30,140,255,.26);color:#fff}
+.adm-wrap .pbtn.pub.done{border-color:rgba(60,220,150,.45);color:#b6f5da;background:rgba(30,200,130,.14)}
 .adm-wrap .form-actions{gap:9px}
 /* نوار پایین */
 .adm-wrap .adm-foot{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end;align-items:center;
