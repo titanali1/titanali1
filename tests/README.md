@@ -19,4 +19,14 @@ pip install --break-system-packages phply     # اختیاری
 node tests/run.js && node tests/sync.js && python3 tests/php-syntax.py
 ```
 
+## موکِ بک‌اند (برای تست اسکریپت‌های استقرار)
+
+```bash
+python3 tests/mock-api.py 8099 &                 # سایت + api.php ساختگی، از ریشهٔ مخزن
+NO_TLS=1 SKIP_DOMAIN=1 bash deploy/verify-site.sh http://127.0.0.1:8099/
+TA_ADMIN_USER=admin TA_ADMIN_PASS=devpass-1234 bash deploy/install-api.sh http://127.0.0.1:8099/
+```
+
+دادهٔ موک در `.mockapi/` می‌نشیند (در `.gitignore`)؛ پاکش کنید: `rm -rf .mockapi`.
+
 > `tests/` بخشی از بستهٔ آپلودی روی هاست **نیست**؛ فقط برای توسعه است.

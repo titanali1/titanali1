@@ -22,6 +22,8 @@
 
 ---
 
+> می‌خواهید همه‌چیز را با یک پاست یا یک کلیک انجام دهید؟ به بخش **۹-الف** بروید (Terminal سی‌پنل یا GitHub Actions).
+
 ## ۱) چه چیزی روی هاست می‌نشیند
 
 | فایل | کار | اجباری؟ |
@@ -191,6 +193,62 @@ cPanel → **File Manager** → انتخاب فایل‌ها → راست‌کل
 - عکس طرح‌ها: اگر سرور وصل باشد، «📷 انتخاب عکس از گالری» عکس را **روی هاست آپلود** می‌کند و آدرس سرور را جای data URL می‌گذارد (سبک‌تر و قابل‌مشاهده در همهٔ دستگاه‌ها).
 
 ---
+
+## ۹-الف) فعال‌سازی از راه دور: با Terminal سی‌پنل یا GitHub Actions
+
+اگر حوصلهٔ File Manager ندارید، دو راه خودکار هست. هر دو همان کاری را می‌کنند که بخش‌های بالا دستی انجام می‌دهند.
+
+### روش T — Terminal سی‌پنل (سریع‌ترین؛ چیزی در GitHub نمی‌ماند)
+cPanel → **Advanced** → **Terminal**. این بلوک را یک‌جا بچسبانید (فایل‌ها از مخزن، بدون رمز):
+
+```bash
+cd ~/public_html \
+ && curl -fsSL -o titanali-cpanel.zip 'https://github.com/titanali1/titanali1/raw/arena/874bf68b-titanali1/titanali-cpanel.zip' \
+ && sha256sum titanali-cpanel.zip \
+ && unzip -oq titanali-cpanel.zip && rm -f titanali-cpanel.zip \
+ && chmod 644 index.html api.php sw.js site.webmanifest robots.txt sitemap.xml 404.html og.png *.png favicon.svg 2>/dev/null; \
+ chmod 644 .htaccess; curl -s 'https://titanali1.ir/api.php?action=health'
+```
+
+`sha256sum` باید با `d3eba620` شروع شود. اگر هاست به github.com دسترسی ندارد، همان زیپ را با File Manager بریزید (روش A).
+
+**ساختن ادمین سرور** (این همان «نصب» است؛ با `read -rs` رمز در تاریخچهٔ شل نمی‌نشیند):
+
+```bash
+read -rs 'PW?رمز ادمین سرور (۱۲+ نویسه): '; echo
+TA_P="$PW" python3 -c 'import json,os;print(json.dumps({"u":"admin","p":os.environ["TA_P"],"name":"ادمین سرور"}))' \
+ | curl -s -X POST -H 'Content-Type: application/json' --data-binary @- 'https://titanali1.ir/api.php?action=install'
+unset PW TA_P; history -c
+```
+
+خروجی درست: `{"ok":true,"token":"…","rev":0,"msg":"…"`. از این لحظه ورودِ پنل با همین رمز است و رمز پیش‌فرضِ داخل فایل بی‌اثر می‌شود.
+اگر `{"ok":false,"error":"روی این سرور قبلاً نصب شده است"}` دیدید، یعنی نصب انجام شده — با همان رمز وارد شوید.
+
+**داده را بیرون از `public_html` بگذارید** (اختیاری، ولی مسیر فایل نمونه دقیقاً همین را می‌دهد):
+
+```bash
+mkdir -p ~/titanali-data && chmod 700 ~/titanali-data \
+ && cp -n ~/public_html/titanali-data/*.json ~/titanali-data/ 2>/dev/null \
+ && cp ~/public_html/titanali-config.sample.php ~/public_html/titanali-config.php \
+ && chmod 600 ~/public_html/titanali-config.php \
+ && curl -s 'https://titanali1.ir/api.php?action=health'
+```
+
+در پاسخ، `dataDir` باید `/home/titanali/titanali-data` باشد (دیگر داخل وب نیست). اگر هاست `open_basedir` را محدود کرده و `writable:false` شد، همین `titanali-config.php` را پاک کنید تا داده به `public_html/titanali-data/` برگردد (که `.htaccess` می‌بنددش).
+
+### روش G — GitHub Actions (بدون شل، با گزارش کامل)
+فایل‌های `.github/workflows/domain-deploy.yml` و `ftp-deploy.yml` داخل مخزن‌اند. در GitHub → **Actions**:
+
+| workflow | چه می‌کند | چه لازم دارد |
+|---|---|---|
+| **دامنه — بررسی و فعال‌سازی** با `step=verify` | فقط‌خواندنی: سلامت `api.php`، دامنه در `canonical`/OG/منیفست/robots/sitemap، بسته‌بودن `titanali-data/`، `http→https`، در دسترس‌بودن `www`، و اینکه فایل‌های هاست با مخزن یکی‌اند یا کهنه | هیچ چیز |
+| همان، `step=install` | یک بار `action=install` را می‌زند و ادمین سرور را می‌سازد (و با `login` اثبات می‌کند رمز کار می‌کند) | رازهای `TA_ADMIN_USER`، `TA_ADMIN_PASS` (و اختیاری `TA_ADMIN_NAME`) |
+| همان، `step=verify-then-install` | بررسی، نصب، بررسی دوباره | مثل بالا |
+| **دامنه — همگام‌سازی فایل‌ها با FTP** | `dist/titanali-cpanel` را می‌سازد و با FTP بالای `public_html` می‌فرستد (پیش‌فرض `dry-run: true` است؛ برای نوشتن واقعی خاموشش کنید) | رازهای `FTP_HOST`، `FTP_USER`، `FTP_PASS` |
+
+رازها: GitHub → Settings → **Secrets and variables → Actions** → *New repository secret*. هیچ رمز یا توکنی در لاگ چاپ نمی‌شود (اسکریپت‌ها `deploy/verify-site.sh` و `deploy/install-api.sh` هستند و روی ماشین خودتان هم اجرا می‌شوند؛ برای تست محلی: `python3 tests/mock-api.py 8099`).
+
+بعد از موفقیت، رازها را پاک کنید: `gh secret delete TA_ADMIN_PASS TA_ADMIN_USER` (یا از همان صفحهٔ Settings). اگر از Actions نصب کردید، همین حالا رمز را از پنل عوض کنید: تب «ادمین‌ها» → رمز تازه → «ذخیره» → تب «همگام‌سازی سرور» → «🔑 رمز ادمین‌ها روی سرور».
 
 ## ۱۰) کش، به‌روزرسانی و دیدن نسخهٔ تازه
 

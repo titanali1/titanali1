@@ -225,6 +225,23 @@ python3 tests/php-syntax.py api.php titanali-config.sample.php
 
 جزئیات بیشتر: `tests/README.md`. پوشهٔ `tests/` داخل بستهٔ هاست نمی‌رود.
 
+## فعال‌سازی روی دامنه (سی‌پنل) — سه راه
+
+| راه | چقدر طول می‌کشد | چه لازم دارد |
+|---|---|---|
+| **Terminal سی‌پنل** — یک بلوک `curl + unzip` و یک `install` | ~۲ دقیقه | دسترسی Terminal هاست |
+| **GitHub Actions** → workflow «دامنه — بررسی و فعال‌سازی» | ~۱ دقیقه | برای `install`: دو راز `TA_ADMIN_USER/TA_ADMIN_PASS` |
+| **File Manager** — آپلود زیپ و Extract | ~۵ دقیقه | چیزی نه |
+
+بررسی خودکارِ هرچه روی دامنه لازم است (دامنه در متاتگ‌ها، بسته‌بودن `titanali-data/`، HTTPS، `www`، و اینکه فایل‌های هاست با مخزن یکی‌اند):
+
+```bash
+bash deploy/verify-site.sh https://titanali1.ir
+bash deploy/install-api.sh https://titanali1.ir     # فقط برای ساخت ادمین سرور (یک بار)
+```
+
+هر دو را می‌توانید روی موک محلی تمرین کنید: `python3 tests/mock-api.py 8099`. جزئیات: [`CPANEL.md`](CPANEL.md) بخش «۹-الف».
+
 ## انتشار (گیت‌هاب پیجز)
 
 - **GitHub Pages:** [`.github/workflows/pages.yml`](.github/workflows/pages.yml) با هر پوش روی `main` ریشه‌ی مخزن را منتشر می‌کند (Settings → Pages → *GitHub Actions*).
