@@ -6,6 +6,7 @@ const path = require('path');
 const { JSDOM, VirtualConsole } = require('jsdom');
 const ROOT = path.resolve(__dirname, '..');
 const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+const APP_VER = (/window\.titanali=\{ver:'([\d.]+)'/.exec(html) || [])[1] || '0';
 
 const errs = [], calls = [];
 const vc = new VirtualConsole();
@@ -22,7 +23,7 @@ function handle(action, body, qs, tok) {
   const J = (o, st) => ({ obj: Object.assign({ ok: true }, o), status: st || 200 });
   const authed = !!SRV.tokens[tok];
   switch (action) {
-    case 'health': return J({ app: 'titanali', ver: '1.0.7', installed: SRV.users.length > 0, needSetup: SRV.users.length === 0, rev: SRV.rev, writable: true, php: '8.2', dataDir: '/home/x/titanali-data', host: 'titanali1.ir', domain: '' });
+    case 'health': return J({ app: 'titanali', ver: APP_VER, siteVer: APP_VER, installed: SRV.users.length > 0, needSetup: SRV.users.length === 0, rev: SRV.rev, writable: true, php: '8.2', dataDir: '/home/x/titanali-data', host: 'titanali1.ir', domain: '' });
     case 'install':
       if (SRV.users.length) return { obj: { ok: false, error: 'قبلاً نصب شده' }, status: 409 };
       if (!body || String(body.p).length < 8) return { obj: { ok: false, error: 'رمز کوتاه است' }, status: 400 };
@@ -182,6 +183,7 @@ SRV.social = { likes: { 0: 7 }, dl: { 0: 2 }, comments: {} };
   await sleep(300);
   console.log('— اتصال و گرفتن محتوا');
   A('بک‌اند شناسایی شد', T().API.on === true);
+  A('نسخهٔ پوستهٔ روی هاست از health دریافت شد', T().API.siteVer === APP_VER);
   A('سرور هنوز ادمین ندارد (needSetup)', T().API.setup === true);
   A('محتوای سرور جایگزین پیش‌فرض شد', /طرح سروری/.test($('#posts').textContent) && T().D.gallery.length === 1);
   A('قاب تک‌پست با محتوای سرور', $$('#posts .post').length === 1);

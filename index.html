@@ -23,6 +23,7 @@
 <meta name="author" content="titanali">
 <meta name="robots" content="index, follow">
 <meta name="format-detection" content="telephone=no">
+<meta name="titanali:ver" content="1.0.10">
 <link rel="canonical" href="https://titanali1.ir/">
 
 <!-- پیش‌نمایش لینک (تلگرام / واتساپ / ایکس / فیسبوک) -->
@@ -1500,7 +1501,7 @@ function save(){try{localStorage.setItem(KEY,JSON.stringify(D));return true}
 /* ================= بک‌اند اختیاری روی سرور (api.php) =================
    اگر api.php کنار index.html باشد: محتوا، لایک/دانلود/کامنت، صندوق پیام‌ها و
    ورود ادمین روی سرور مشترک می‌شود. اگر نباشد، همه‌چیز مثل قبل محلی است. */
-var API={on:false,setup:false,rev:-1,updated:0,writable:true,php:'',tok:'',
+var API={on:false,setup:false,rev:-1,updated:0,writable:true,php:'',siteVer:'',tok:'',
   social:{likes:{},dl:{},comments:{}},threads:null,serverAdmins:null,timer:null,pushState:'idle',conflict:false,lastErr:''};
 try{API.tok=localStorage.getItem('titanali.tok')||''}catch(e){}
 function apiPath(){
@@ -1577,7 +1578,7 @@ function apiProbe(cb){
   if(location.protocol==='file:'){if(cb)cb();return}
   taCall('health').then(function(j){
     if(!j||j.app!=='titanali'){API.on=false;if(cb)cb();return}
-    API.on=true;API.setup=!!j.needSetup;API.writable=j.writable!==false;API.php=j.php||'';API.rev=Number(j.rev)||0;
+    API.on=true;API.setup=!!j.needSetup;API.writable=j.writable!==false;API.php=j.php||'';API.rev=Number(j.rev)||0;API.siteVer=String(j.siteVer||'');
     apiRefresh(function(){  if(isAuth())apiThreads(); if(cb)cb(); });
   }).catch(function(){API.on=false;if(cb)cb()});
 }
@@ -2854,7 +2855,7 @@ function apiBtn(k){
   if(k==='test'){
     toast(isFa()?'در حال بررسی…':'Checking…');
     taCall('health').then(function(j){
-      if(j&&j.app==='titanali'){API.on=true;API.setup=!!j.needSetup;API.writable=j.writable!==false;API.php=j.php||'';API.rev=Number(j.rev)||0;
+      if(j&&j.app==='titanali'){API.on=true;API.setup=!!j.needSetup;API.writable=j.writable!==false;API.php=j.php||'';API.rev=Number(j.rev)||0;API.siteVer=String(j.siteVer||'');
         toast(isFa()?'اتصال برقرار ✓ (rev '+num(API.rev)+')':'Connected ✓');
         apiRefresh(function(){if(W){W=clone(D);renderAdmin()}});
       } else toast(isFa()?'api.php پاسخ JSON نداد — PHP روی هاست فعال است؟':'api.php did not return JSON — is PHP enabled?');
@@ -3226,6 +3227,15 @@ function copyPane(){
     '</div>';
 }
 /* ---------- تب انتشار ---------- */
+/* ردیف «نسخهٔ پوسته» در تب انتشار — روشن می‌کند index.html روی هاست به‌روز است یا نه */
+function shellVerNote(){
+  var mine=(window.titanali&&window.titanali.ver)||'—', th=String(API.siteVer||'');
+  if(!th)return '<span class="hint">سرور نسخهٔ پوسته را نمی‌داند (api.php کهنه است)</span>';
+  if(th===mine)return '<span style="color:#8ce99a">✓ یکی است</span>';
+  return '<span style="color:#ffd98a">⚠ پوستهٔ روی هاست '+esc(th)+' و همین فایل '+esc(mine)+
+    ' — بستهٔ تازه را در public_html Extract کنید</span>';
+}
+
 function publishPane(){
   var st=PUB.state||{},p=st.publish||{},bk=st.baked||{},up=st.uploads||{},d=dirtyKeys();
   var h='<div class="adm-sec"><h4>🚀 وضعیت انتشار روی هاست<small>api.php → public_html</small></h4>';
@@ -3244,6 +3254,9 @@ function publishPane(){
       '<div class="publine"><span>پیوست‌ها: <b>'+num(up.files||0)+' فایل · '+esc(kb(up.bytes||0))+'</b></span>'+
       '<span>صندوق: <b>'+num(st.inbox||0)+'</b></span><span>ادمین: <b>'+num((st.counts||{}).admins||0)+'</b></span>'+
       '<span>طرح: <b>'+num((st.counts||{}).gallery||0)+'</b></span></div>'+
+      '<div class="publine"><span>پوستهٔ سایت روی هاست: <b>'+esc(API.siteVer||'—')+'</b></span>'+
+      '<span>پوستهٔ همین فایل: <b>'+esc((window.titanali&&window.titanali.ver)||'—')+'</b></span>'+
+      shellVerNote()+'</div>'+
       (p.error?'<p class="hint" style="color:#ffb3ae">⚠ نوشتن فایل ایستا نشد ('+esc(p.error)+'). اگر مجوز public_html اجازه ندهد، در config کلید publishFile را خاموش کنید — محتوا همان‌جا در titanali-data می‌ماند و سایت کار می‌کند.</p>':'')+
       '<div class="form-actions">'+
       '<button class="pbtn primary" type="button" data-pub="pub">🚀 انتشار فوری</button>'+
@@ -3952,7 +3965,7 @@ $('#logPass').addEventListener('input',function(){$('#logErr').textContent=''});
 clock();setInterval(clock,15000);
 /* ---------- قلاب عیب‌یابی (کنسول مرورگر و تست‌ها) ----------
    فقط خواندنی است و برایعیب‌یابی سریع روی هاست مفید است: titanali.D ،titanali.API … */
-window.titanali={ver:'1.0.9',
+window.titanali={ver:'1.0.10',
   get D(){return D},get API(){return API},get SESS(){return SESS},get W(){return W},
   isAuth:isAuth,likeCount:likeCount,dlCount:dlCount,cmtList:cmtList,
   like:toggleLike,download:doDownload,comment:addComment,renderAll:renderAll,renderChatFull:renderChatFull,go:go,

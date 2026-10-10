@@ -22,7 +22,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 
-define('TA_VER', '1.0.9');
+define('TA_VER', '1.0.10');
 define('TA_TOKEN_TTL', 43200);          /* ۱۲ ساعت نشست ادمین */
 
 /* =====================================================================
@@ -483,9 +483,22 @@ ta_cors();
 $ME = ta_whoami();
 $AUTH = is_array($ME);
 
+/** نسخهٔ پوستهٔ سایت از <head> — تا ببینید index.html روی هاست بهٔروز است یا نه */
+function ta_site_ver()
+{
+    $f = __DIR__ . '/index.html';
+    if (!is_readable($f)) { return ''; }
+    $fp = @fopen($f, 'rb');
+    if (!$fp) { return ''; }
+    $head = (string) fread($fp, 8192);
+    fclose($fp);
+    if (preg_match('/name="titanali:ver" content="([0-9.]+)"/', $head, $m)) { return $m[1]; }
+    return '';
+}
+
 /* ---------- عمومی ---------- */
 if ($ACTION === 'health') {
-    ta_out(200, array('ok' => true, 'app' => 'titanali', 'ver' => TA_VER, 'installed' => ta_installed(),
+    ta_out(200, array('ok' => true, 'app' => 'titanali', 'ver' => TA_VER, 'siteVer' => ta_site_ver(), 'installed' => ta_installed(),
                       'needSetup' => !ta_installed(), 'rev' => ta_rev(),
                       'writable' => is_writable(ta_cfg()['dataDir']),
                       'php' => PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION,

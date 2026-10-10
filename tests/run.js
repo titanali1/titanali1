@@ -467,6 +467,16 @@ const A = (n, c) => { c ? (ok++, console.log('  ✓ ' + n)) : (fail++, console.l
   A('برچسب تماس\u200cها پسوند «(سفارش)» ندارد', !/\(سفارش\)/.test(html));
   A('زیرعنوان پیش\u200cفرض «ارتباط» با جدول متن\u200cها هم\u200cخوان است',
     /data-t="social\.sub">شبکه\u200cهای اجتماعی و راه\u200cهای ارتباطی</.test(html));
+  A('متای titanali:ver با نسخهٔ اسکریپت یکی است', (() => {
+    const v = (/window\.titanali=\{ver:'([\d.]+)'/.exec(html) || [])[1];
+    const m = (/name="titanali:ver" content="([\d.]+)"/.exec(html) || [])[1];
+    return !!v && v === m;
+  })());
+  A('API.siteVer از پاسخ health پر می‌شود', /API\.siteVer=String\(j\.siteVer/.test(html));
+  A('تب «انتشار و هاست» نسخهٔ پوستهٔ هاست را مقایسه می‌کند',
+    /\u067e\u0648\u0633\u062a\u0647\u0654 \u0633\u0627\u06cc\u062a \u0631\u0648\u06cc \u0647\u0627\u0633\u062a/.test(html) && /function shellVerNote\(/.test(html) && /API\.siteVer=String/.test(html));
+  A('api.php هم نسخهٔ پوسته را از <head> می‌خواند',
+    /titanali:ver/.test(fs.readFileSync(path.join(ROOT, 'api.php'), 'utf8')));
   console.log('\nRESULT pass=' + ok + ' fail=' + fail + ' consoleErrors=' + real.length);
   if (real.length) console.log(real.slice(0, 5).join('\n'));
   process.exit(fail || real.length ? 1 : 0);
