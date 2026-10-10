@@ -23,7 +23,7 @@
 <meta name="author" content="titanali">
 <meta name="robots" content="index, follow">
 <meta name="format-detection" content="telephone=no">
-<meta name="titanali:ver" content="1.0.10">
+<meta name="titanali:ver" content="1.0.11">
 <link rel="canonical" href="https://titanali1.ir/">
 
 <!-- پیش‌نمایش لینک (تلگرام / واتساپ / ایکس / فیسبوک) -->
@@ -333,6 +333,10 @@ html[dir=rtl] .drawer{--dx:-100%}
   background:var(--glass);border:1px solid var(--line);border-radius:18px;padding:16px 10px;
   text-align:center;color:#fff;transition:.18s var(--ease)}
 .soc-tile:active,.gen-tile:active,.sec-tile:active{transform:scale(.96);background:var(--glass2)}
+.soc-tile{position:relative}
+.tile-ed{position:absolute;top:5px;inset-inline-end:5px;z-index:3;border:0;border-radius:9px;padding:4px 7px;
+  background:rgba(10,10,14,.55);color:#fff;font-size:12px;line-height:1;cursor:pointer;backdrop-filter:blur(6px)}
+.tile-ed:hover,.tile-ed:focus-visible{background:#0a84ff;outline:none}
 .soc-tile .tic,.gen-tile .tic,.sec-tile .tic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;
   font-size:19px;color:#fff;box-shadow:inset 0 1px 1px rgba(255,255,255,.3)}
 .soc-tile .tl,.gen-tile .tl,.sec-tile .tl{font-size:13px;font-weight:700}
@@ -641,6 +645,16 @@ html[dir=rtl] .drawer{--dx:-100%}
 .adm-wrap .ibx-id b{font-size:14px;font-weight:850;letter-spacing:-.15px;overflow:hidden;
   text-overflow:ellipsis;white-space:nowrap}
 .adm-wrap .ibx-ph{display:flex;align-items:center;gap:6px;font-size:12px;color:rgba(255,255,255,.52);font-weight:700}
+.adm-wrap .ibx-ed{border:0;border-radius:8px;padding:3px 7px;margin-inline-start:5px;background:rgba(255,255,255,.1);
+  color:inherit;font-size:12px;line-height:1.2;cursor:pointer;vertical-align:1px}
+.adm-wrap .ibx-ed:hover,.adm-wrap .ibx-ed:focus-visible{background:#0a84ff;color:#fff;outline:none}
+.who-edit{display:grid;gap:7px;margin:7px 0 3px;padding:9px;border-radius:12px;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.12)}
+.who-edit .field{display:grid;gap:3px;font-size:11px;color:rgba(255,255,255,.62)}
+.who-edit input{width:100%;background:rgba(0,0,0,.32);color:inherit;border:1px solid rgba(255,255,255,.18);
+  border-radius:9px;padding:7px 9px;font:inherit}
+.who-edit input:focus{border-color:#0a84ff;outline:none}
+.who-edit .form-actions{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin:0}
 .adm-wrap .ibx-ph a{color:var(--blue2);text-decoration:none;font-variant-numeric:tabular-nums}
 .adm-wrap .ibx-ph a:hover{text-decoration:underline}
 .adm-wrap .ibx-ph em{font-style:normal;color:rgba(255,255,255,.32);font-weight:600}
@@ -1703,11 +1717,16 @@ var KIND={
 };
 function contactHref(c){return (KIND[c.kind]||KIND.link).url(c.id)}
 function renderSocial(){
+  var ed=isAuth();
   $('#socTiles').innerHTML=btnList('contact').map(function(c){
     var k=KIND[c.kind]||KIND.link,bg=String(k.bg).slice(0,1)==='l'?k.bg:esc(k.bg);
+    var idx=(D.contacts||[]).indexOf(c);
     return '<a class="soc-tile" href="'+escAttr(contactHref(c))+'" target="_blank" rel="noopener">'+
       '<span class="tic" style="background:'+bg+'">'+btnIcon(c)+'</span><span class="tl">'+esc(c.label)+'</span>'+
-      '<span class="ts">'+esc(c.id)+'</span></a>'}).join('');
+      '<span class="ts">'+esc(c.id)+'</span>'+
+      (ed?'<span class="tile-ed" role="button" tabindex="0" data-socedit="'+idx+'" title="عوض کردن آیدی همین شبکه">'+
+        '<b aria-hidden="true">✎</b></span>':'')+
+      '</a>'}).join('');
 }
 
 /* ---------- گالری / طرح‌ها ---------- */
@@ -2461,7 +2480,9 @@ function personCard(o){
   return '<div class="ibx-card'+(op?' open':'')+'" data-ibx="'+escAttr(o.key)+'">'+
     '<div class="ibx-head" role="button" tabindex="0" data-ibxto="'+escAttr(o.key)+'" aria-expanded="'+(op?'true':'false')+'">'+
       '<span class="ibx-av" aria-hidden="true">'+esc(nm.slice(0,1))+'</span>'+
-      '<span class="ibx-id"><b>'+esc(nm)+'</b>'+
+      '<span class="ibx-id"><b>'+esc(nm)+'</b>'+(isAuth()?'<button class="ibx-ed" type="button" data-whosed="'+escAttr(o.key)+
+        '" data-who-n="'+escAttr(String(o.name||''))+'" data-who-p="'+escAttr(whoPhone(o.phone))+
+        '" title="عوض کردن نام و شمارهٔ همین کاربر" aria-label="ویرایش نام و شماره">✎</button>':'')+
         '<span class="ibx-ph">'+(ph?'<a href="'+escAttr(telHref(ph))+'" dir="ltr" data-notap>'+esc(whoDisp(ph))+'</a>'+
           '<button class="ibx-cp" type="button" data-ibxcopy="'+escAttr(ph)+'" title="کپی شماره" aria-label="کپی شماره">⧉</button>'
           :'<em>— شماره‌ای ثبت نکرده —</em>')+'</span></span>'+
@@ -2472,6 +2493,47 @@ function personCard(o){
     '</div>'+
     '<div class="ibx-body"'+(op?'':' hidden')+'>'+o.body+'</div></div>';
 }
+/* ---------- ویرایش درजाی هویت کاربر (نام + شماره) ----------
+   همان‌جا که نمایش داده می‌شود: اگر گفتگو سروری باشد با `?action=who` ذخیره می‌شود
+   (در who.json، پس پیام‌های کاربر دست‌نخورده می‌مانند)؛ اگر محلی باشد روی D.messages. */
+function whoEditorStart(card,key,nm0,ph0){
+  if(!card||card.querySelector('.who-edit'))return;
+  var idEl=card.querySelector('.ibx-id');if(!idEl)return;
+  var btn=card.querySelector('[data-whosed]')||{};
+  var nm=nm0!=null?nm0:(btn.dataset?btn.dataset.whoN:'');
+  if(nm==null||nm==='')nm=(card.querySelector('.ibx-id b')||{}).textContent||'';
+  var ph=ph0!=null?String(ph0):String(btn.dataset?btn.dataset.whoP:'');
+  if(!ph){var phEl=card.querySelector('.ibx-ph a')||card.querySelector('.ibx-ph em');ph=whoPhone(phEl&&phEl.textContent)}
+  card.dataset.whoPrev=idEl.innerHTML;
+  idEl.innerHTML='<span class="who-edit">'+
+    '<label class="field"><span>نام</span><input class="we-n" maxlength="60" placeholder="بی‌نام" value="'+escAttr(String(nm).trim())+'"></label>'+
+    '<label class="field"><span>شمارهٔ تلفن</span><input class="we-p" dir="ltr" inputmode="tel" maxlength="15" placeholder="0912…" value="'+escAttr(ph)+'"></label>'+
+    '<span class="form-actions"><button class="pbtn primary" type="button" data-whosave="'+escAttr(key)+'">✓ ذخیره</button>'+
+    '<button class="pbtn" type="button" data-whocancel="'+escAttr(key)+'">✕ بی‌خیال</button>'+
+    '<em class="hint">Enter = ذخیره · Esc = بستن</em></span></span>';
+  var f=idEl.querySelector('.we-n');if(f&&f.focus)f.focus();
+}
+function whoEditorStop(card){
+  var idEl=card&&card.querySelector('.ibx-id');if(!idEl)return;
+  if(card.dataset.whoPrev!=null){idEl.innerHTML=card.dataset.whoPrev;delete card.dataset.whoPrev}
+}
+function whoApply(key,nm,ph){
+  nm=String(nm||'').trim().slice(0,60);ph=whoPhone(ph);
+  if(ph.length&&ph.length<10){toast('شمارهٔ تلفن کامل نیست');return}
+  if(key.indexOf('l:')===0){
+    var n=0;
+    (D.messages||[]).forEach(function(m){if(m&&m.me&&('l:'+(m.sid||'local'))===key){m.who={name:nm,phone:ph};n++}});
+    if(W)W=D;save();renderChatFull();renderAdmin();
+    toast(n?'نام و شمارهٔ '+num(n)+' پیام این کاربر عوض شد ✓':'هویتی برای این گفتگو پیدا نشد');
+    return;
+  }
+  if(!API.on){toast('بک‌اند وصل نیست — فقط گفتگوهای محلی این‌جا ویرایش می‌شوند');return}
+  taCall('who',{sid:key.slice(1),name:nm,phone:ph}).then(function(j){
+    if(!j||j.ok===false){toast((j&&j.error)||'ذخیره نشد');return}
+    apiThreads(function(){renderAdmin();toast('نام و شمارهٔ این کاربر در صندوق ذخیره شد ✓')});
+  }).catch(function(){toast('ذخیره نشد — اتصال')});
+}
+
 function localGroups(M){
   var groups={},order=[];
   (M.messages||[]).forEach(function(m,ix){
@@ -3451,6 +3513,7 @@ function adm(open){
     if(API.on&&D.ig&&D.ig.autoSync)igSyncFromServer(false);}
   $('#adminPanel').classList.toggle('open',open);
   document.body.style.overflow=open?'hidden':'';
+  renderSocial();   /* قلمیِ «عوض کردن آیدی» روی کاشی‌ها با ورود/خروج ادمین روشن و خاموش می‌شود */
   if(!open){W=null;var n=$('#admSetupNote');if(n)n.remove()}
 }
 /* میان‌بُر: Ctrl+S در پنل باز = ذخیره */
@@ -3759,6 +3822,23 @@ document.addEventListener('click',function(e){
   if(near('#whoEdit')){bar0();var we=$('#whoName');if(we)we.focus();return}
   var icp=near('[data-ibxcopy]');
   if(icp){copy(String(icp.dataset.ibxcopy),'شماره تلفن کپی شد ✓');return}
+  var wsv=near('[data-whosave]');
+  if(wsv){var cw=wsv.closest('.ibx-card');
+    whoApply(String(wsv.dataset.whosave||''),(cw.querySelector('.we-n')||{}).value,(cw.querySelector('.we-p')||{}).value);return}
+  var wcn=near('[data-whocancel]');if(wcn){whoEditorStop(wcn.closest('.ibx-card'));return}
+  var wsd=near('[data-whosed]');
+  if(wsd){whoEditorStart(wsd.closest('.ibx-card'),String(wsd.dataset.whosed||''),wsd.dataset.whoN,wsd.dataset.whoP);return}
+  var sei=near('[data-socedit]');
+  if(sei){e.preventDefault();e.stopPropagation();
+    admTab='contacts';renderAdmin();var bd0=$('#admBody');if(bd0)bd0.scrollTop=0;
+    var srow=bd0&&bd0.querySelector('[data-bf="id"][data-i="'+sei.dataset.socedit+'"]');
+    if(srow&&srow.focus){srow.focus();if(srow.select)srow.select();
+      var rc=srow.closest('.row-card');if(rc&&rc.scrollIntoView)rc.scrollIntoView({block:'center'});
+      toast('آیدی را عوض کنید — با «انتشار» روی سایت می‌نشیند')}
+    else{toast('تب شبکه‌های اجتماعی باز شد')}
+    if(!isAuth()){adm(false);toast('اول وارد حساب ادمین شوید')}
+    return}
+  if(near('.who-edit'))return;
   var ito=near('[data-ibxto]');
   if(ito){var kk=ito.dataset.ibxto;IBX_OPEN[kk]=!IBX_OPEN[kk];
     var card=ito.closest('.ibx-card');
@@ -3770,7 +3850,11 @@ document.addEventListener('click',function(e){
   var at=near('[data-adm-tab]');if(at){admTab=at.dataset.admTab;renderAdmin();return}
   var gt=near('[data-goto-tab]');
   if(gt){admTab=gt.dataset.gotoTab;renderAdmin();var bd=$('#admBody');if(bd)bd.scrollTop=0;
-    var tb=$('#admTabs [data-adm-tab="'+admTab+'"]');if(tb&&tb.scrollIntoView)tb.scrollIntoView({inline:'center',block:'nearest'});return}
+    var tb=$('#admTabs [data-adm-tab="'+admTab+'"]');if(tb&&tb.scrollIntoView)tb.scrollIntoView({inline:'center',block:'nearest'});
+    var fq=gt.dataset.focus;
+    if(fq&&bd){var fp=fq.split(':'),fi=bd.querySelector('[data-bf="'+fp[0]+'"][data-i="'+(fp[1]||'')+'"]');
+      if(fi&&fi.focus){fi.focus();if(fi.select)fi.select();var fr=fi.closest('.row-card');if(fr&&fr.scrollIntoView)fr.scrollIntoView({block:'center'})}}
+    return}
   if(near('#admSave')){admSave();return}
   if(near('#admExport')){admExport();return}
   if(near('#admImport')){$('#admFile').click();return}
@@ -3872,6 +3956,7 @@ function igApplyStoriesToForm(){var el=$('#igStories');if(el)el.value=JSON.strin
 document.addEventListener('keydown',function(e){
   if((e.key==='Enter'||e.key===' ')&&document.activeElement&&document.activeElement.id==='brandName'){e.preventDefault();adminOnly()}
   if(e.key==='Escape'){
+    if(e.target&&e.target.closest&&e.target.closest('.who-edit')){whoEditorStop(e.target.closest('.ibx-card'));return}
     if($('#story').classList.contains('open'))closeStory();
     else if($('#lightbox').classList.contains('open'))closeLB();
     else if($('#loginWrap').classList.contains('open'))loginSheet(false);
@@ -3885,6 +3970,9 @@ document.addEventListener('keydown',function(e){
     if(e.key==='ArrowRight')stepLB(isFa()?-1:1);
     if(e.key==='Enter'&&(e.target.id==='whoName'||e.target.id==='whoPhone')){
       e.preventDefault();var nx=e.target.id==='whoName'?$('#whoPhone'):$('#chatText');if(nx)nx.focus();return}
+    if(e.key==='Enter'&&e.target&&e.target.closest&&e.target.closest('.who-edit')){
+      var wc=e.target.closest('.ibx-card'),wb=wc&&wc.querySelector('[data-whosave]');
+      if(wb){e.preventDefault();wb.click()}return}
     if(e.key==='Enter'||e.key===' '){var hd=e.target&&e.target.closest&&e.target.closest('[data-ibxto]');
       if(hd){e.preventDefault();hd.click();return}}
     if(e.key==='Enter'){
@@ -3965,7 +4053,7 @@ $('#logPass').addEventListener('input',function(){$('#logErr').textContent=''});
 clock();setInterval(clock,15000);
 /* ---------- قلاب عیب‌یابی (کنسول مرورگر و تست‌ها) ----------
    فقط خواندنی است و برایعیب‌یابی سریع روی هاست مفید است: titanali.D ،titanali.API … */
-window.titanali={ver:'1.0.10',
+window.titanali={ver:'1.0.11',
   get D(){return D},get API(){return API},get SESS(){return SESS},get W(){return W},
   isAuth:isAuth,likeCount:likeCount,dlCount:dlCount,cmtList:cmtList,
   like:toggleLike,download:doDownload,comment:addComment,renderAll:renderAll,renderChatFull:renderChatFull,go:go,

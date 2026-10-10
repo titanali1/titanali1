@@ -195,6 +195,33 @@ const A = (n, c) => { c ? (ok++, console.log('  ✓ ' + n)) : (fail++, console.l
   click($('#admBody [data-ibxto]')); await sleep(90);
   A('کلیک روی نام، گفتگو را باز می‌کند', $('#admBody .ibx-body').hidden === false && !!$('#admBody [data-sendrep]'));
   A('دکمهٔ کپی شماره هست', !!$('#admBody [data-ibxcopy]'));
+  console.log('— ویرایش درجا (حالت محلی)');
+  A('قلمیِ ویرایش روی کارت هست', !!$('#admBody [data-whosed]'));
+  click($('#admBody [data-whosed]')); await sleep(60);
+  A('فرم درجا باز شد', !!$('#admBody .who-edit') && !!$('#admBody .we-n') && !!$('#admBody .we-p'));
+  type($('#admBody .we-n'), 'سارا م.'); type($('#admBody .we-p'), '09351112233');
+  click($('#admBody [data-whosave]')); await sleep(90);
+  A('نام تازه روی کارت نشست', /سارا م\./.test(($('#admBody .ibx-id b') || {}).textContent || ''));
+  A('شمارهٔ تازه روی کارت نشست', /۰۹۳۵ ۱۱۱ ۲۲۳۳/.test(($('#admBody .ibx-ph') || {}).textContent || ''));
+  A('هویت روی پیام‌های محلی ذخیره شد',
+    (T().D.messages || []).some(m => m.me && m.who && m.who.name === 'سارا م.' && m.who.phone === '09351112233'));
+  A('شمارهٔ کوتاه رد می‌شود', (() => {
+    click($('#admBody [data-whosed]'));
+    const el = $('#admBody .who-edit .we-p'); if (!el) return false;
+    el.value = '123'; click($('#admBody [data-whosave]'));
+    return /کامل نیست/.test($('#toast') ? $('#toast').textContent : '');
+  })());
+  A('تب صندوق بسته نمی‌شود وقتی داخل فرم کلیک می‌کنی', $('#admBody .ibx-body').hidden === false);
+  console.log('— قلمی روی کاشی ارتباطات (سایت، فقط برای ادمین)');
+  A('کاشی‌های ارتباط برای ادمین قلمی دارند', $$('#socTiles .tile-ed[data-socedit]').length >= 1);
+  T().renderAll(); await sleep(50);
+  click($('#socTiles .tile-ed')); await sleep(80);
+  A('کلیک روی قلمی، تب شبکه‌ها را باز و فیلد آیدی را فوکوس می‌کند',
+    /شبکه‌های اجتماعی/.test(($('#admTabs .adm-tab.on') || {}).textContent || '') &&
+    !!$('#admBody [data-bf="id"]') && !!doc.activeElement &&
+    doc.activeElement.dataset && doc.activeElement.dataset.bf === 'id');
+  A('آدرس هدفِ قلمی، شمارهٔ ردیف را می‌برد', /^0$/.test(($('#socTiles .tile-ed') || {}).dataset ? $('#socTiles .tile-ed').dataset.socedit : ''));
+  click($('#admTabs [data-adm-tab="inbox"]')); await sleep(70);   // تب را برمی‌گردانیم تا تست‌های بعدی به هم نریزند
   const rep = $('#admBody .rep-form textarea'); type(rep, 'بله، سه روزه آماده است');
   click($('#admBody [data-sendrep]')); await sleep(140);
   A('پاسخ کارگاه از همان کارت ثبت شد', T().D.messages.some(m => !m.me && /سه روزه/.test(m.text || '')));

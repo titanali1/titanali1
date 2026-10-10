@@ -22,7 +22,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 
-define('TA_VER', '1.0.10');
+define('TA_VER', '1.0.11');
 define('TA_TOKEN_TTL', 43200);          /* ۱۲ ساعت نشست ادمین */
 
 /* =====================================================================
@@ -765,7 +765,12 @@ if ($ACTION === 'inbox') {
         usort($t, 'ta_cmp_ts');
         $threads[$k]['items'] = $t;
         $threads[$k]['unreadForAdmin'] = ta_unread_for_admin($v['sid']);
+        if (isset($WM[$v['sid']]) && is_array($WM[$v['sid']])) {   /* اصلاحیهٔ ادمین: نام/شمارهٔ درست‌تر */
+            if ($WM[$v['sid']]['name'] !== '') { $threads[$k]['name'] = $WM[$v['sid']]['name']; }
+            if ($WM[$v['sid']]['phone'] !== '') { $threads[$k]['phone'] = $WM[$v['sid']]['phone']; }
+        }
     }
+    $WM = ta_who_map();
     usort($threads, 'ta_cmp_last');
     $nu = 0;
     foreach ($threads as $v) { $nu += $v['unreadForAdmin']; }
@@ -823,6 +828,41 @@ if ($ACTION === 'thread_del') {
     ta_put('inbox.json', $keep);
     ta_unlock($lk);
     ta_out(200, array('ok' => true, 'total' => count($keep)));
+}
+
+/* ---------- هویت کاربر: نام و شمارهٔ تلفن (لایهٔ اصلاحی ادمین) ----------
+   پیام‌های کاربر دست‌نخورده می‌مانند؛ اصلاحیه در who.json نشسته و هنگام خواندن صندوق رویش می‌آید. */
+function ta_who_map()
+{
+    $m = ta_read('who.json', array());
+    $out = array();
+    if (!is_array($m)) { return $out; }
+    foreach ($m as $k => $v) {
+        if (is_array($v)) { $out[$k] = array('name' => (string) (isset($v['name']) ? $v['name'] : ''),
+                                             'phone' => (string) (isset($v['phone']) ? $v['phone'] : '')); }
+    }
+    return $out;
+}
+
+if ($ACTION === 'who') {
+    $w  = ta_need_admin();
+    $b  = ta_body();
+    $sid = ta_sane_sid(isset($b['sid']) ? $b['sid'] : '');
+    if ($sid === '') ta_out(400, array('ok' => false, 'error' => 'sid لازم است'));
+    $nm = ta_str(isset($b['name']) ? $b['name'] : '', 60);
+    $ph = substr(ta_digits(isset($b['phone']) ? $b['phone'] : ''), 0, 15);
+    $lk = ta_lock();
+    $map = ta_read('who.json', array());
+    if (!is_array($map)) { $map = array(); }
+    if ($nm === '' && $ph === '') {
+        unset($map[$sid]);
+    } else {
+        $map[$sid] = array('name' => $nm, 'phone' => $ph, 'at' => time(), 'by' => $w['name']);
+    }
+    if (count($map) > 5000) { $map = array_slice($map, -5000, null, true); }
+    ta_put('who.json', $map);
+    ta_unlock($lk);
+    ta_out(200, array('ok' => true, 'sid' => $sid, 'name' => $nm, 'phone' => $ph));
 }
 
 /* ---------- فایل‌ها ---------- */

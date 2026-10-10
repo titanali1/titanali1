@@ -18,6 +18,7 @@ vc.on('error', (...a) => errs.push('console.error: ' + a.join(' ')));
 const SRV = { content: null, rev: 0, baked: null, published: null, updated: 1, users: [], tokens: {}, social: { likes: {}, dl: {}, comments: {} }, inbox: [] };
 let CONFIRM = true;
 
+const WHO = {};   // نسخهٔ ساختگیِ who.json (اصلاحیهٔ نام/شماره توسط ادمین)
 function handle(action, body, qs, tok) {
   calls.push({ action, body });
   const J = (o, st) => ({ obj: Object.assign({ ok: true }, o), status: st || 200 });
@@ -78,11 +79,12 @@ function handle(action, body, qs, tok) {
     case 'inbox': {
       if (!authed) return { obj: { ok: false, error: '۴۰' }, status: 401 };
       const items = SRV.inbox.slice().sort((a, b) => a.ts - b.ts);
+      const last = items.filter(x => x.from !== 'admin').slice(-1)[0] || {};
       const g = items.filter(x => x.from !== 'admin')[0] || {};
       return J({
         threads: [{
           sid: SRV.inbox.length ? SRV.inbox[0].sid : 'x', n: items.length, last: Date.now(), items,
-          name: g.name || '', phone: g.phone || '',
+        name: WHO[last.sid] && WHO[last.sid].name || g.name || '', phone: WHO[last.sid] && WHO[last.sid].phone || g.phone || '',
           imgs: items.filter(x => x.file && /^image\//.test(String(x.file.type || ''))).length,
           unreadForAdmin: items.filter(x => x.from !== 'admin').length,
           answered: items.filter(x => x.from === 'admin').length
@@ -90,6 +92,11 @@ function handle(action, body, qs, tok) {
         total: items.length, unread: items.filter(x => x.from !== 'admin').length
       });
     }
+    case 'who':
+      if (!authed) return { obj: { ok: false, error: '۴۰۱' }, status: 401 };
+      if (!body || !body.sid) return { obj: { ok: false, error: 'sid لازم است' }, status: 400 };
+      WHO[body.sid] = { name: String(body.name || ''), phone: String(body.phone || '').replace(/\D/g, '') };
+      return J({ sid: body.sid, name: WHO[body.sid].name, phone: WHO[body.sid].phone });
     case 'reply':
       if (!authed) return { obj: { ok: false, error: '۴۰۱' }, status: 401 };
       SRV.inbox.push({ mid: 'm' + (SRV.inbox.length + 1), sid: body.sid, from: 'admin', name: 'ادمین', text: body.text, ts: Date.now() + 1 });
@@ -282,6 +289,24 @@ SRV.social = { likes: { 0: 7 }, dl: { 0: 2 }, comments: {} };
   A('متن پیام کاربر در کارت است', /سلام، سایز ۳۸/.test($('#admBody .ibx-body').textContent));
   A('تصویر ارسالی کاربر نمایش داده شد', !!$('#admBody .ibx-imgs img') && /action=file/.test($('#admBody .ibx-imgs img').getAttribute('src')));
   A('فرم پاسخ همین‌جا است', !!$('#admBody .ibx-body [data-ssend]'));
+  console.log('— ویرایش درجا: نام و شمارهٔ کاربر، همان‌جا که نمایش داده می‌شود');
+  A('قلمیِ ویرایش روی کارت ادمین هست', !!$('#admBody [data-whosed]'));
+  click($('#admBody [data-whosed]')); await sleep(70);
+  A('فرم درجا با نام و شمارهٔ فعلی پر شد',
+    !!$('#admBody .who-edit') && /سارا محمدی/.test($('#admBody .we-n').value) && /09121234567/.test($('#admBody .we-p').value));
+  type($('#admBody .we-n'), 'سارا محمدی‌نیا (مشتری VIP)');
+  type($('#admBody .we-p'), '۰۹۱۲۹۸۷۶۵۴۳'); calls.length = 0;
+  click($('#admBody [data-whosave]')); await sleep(280);
+  A('who به سرور رفت', calls.some(c => c.action === 'who' && /VIP/.test(c.body.name) && c.body.phone === '09129876543'));
+  A('سرور اصلاحیه را نگه داشت', WHO[T().D.sid] && /VIP/.test(WHO[T().D.sid].name));
+  A('کارت با نام و شمارهٔ تازه redraw شد',
+    /VIP/.test(($('#admBody .ibx-id b') || {}).textContent || '') && /۰۹۱۲ ۹۸۷ ۶۵۴۳/.test(($('#admBody .ibx-ph') || {}).textContent || ''));
+  A('پیام‌های کاربر دست‌نخورده ماند', SRV.inbox.some(r => r.name === 'سارا محمدی'));
+  click($('#admBody [data-whosed]')); await sleep(70);
+  $('#admBody .we-n').value = 'با Esc';
+  $('#admBody .we-n').dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+  await sleep(60);
+  A('Esc فرم را می‌بندد و چیزی ذخیره نمی‌شود', !$('#admBody .who-edit') && /VIP/.test($('#admBody .ibx-id b').textContent));
   A('کارت باز با رندر دوباره باز می‌ماند', ($('#admBody .ibx-card') || {}).classList.contains('open'));
 
   console.log('— حذف کامنت توسط ادمین');
