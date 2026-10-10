@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /deploy/
 Disallow: /dist/
-Sitemap: https://titanali.ir/sitemap.xml
+Sitemap: https://titanali1.ir/sitemap.xml

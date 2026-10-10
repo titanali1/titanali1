@@ -369,7 +369,9 @@ if ($ACTION === 'health') {
                       'needSetup' => !ta_installed(), 'rev' => ta_rev(),
                       'writable' => is_writable(ta_cfg()['dataDir']),
                       'php' => PHP_MAJOR_VERSION . '.' . PHP_MINOR_VERSION,
-                      'file' => ta_cfg()['dataDir'] . '/titanali-data'));
+                      'dataDir' => ta_cfg()['dataDir'],
+                      'host' => isset($_SERVER['HTTP_HOST']) ? preg_replace('/[^A-Za-z0-9.:-]/', '', $_SERVER['HTTP_HOST']) : '',
+                      'domain' => (defined('TA_DOMAIN') ? TA_DOMAIN : '')));
 }
 
 if ($ACTION === 'install') {

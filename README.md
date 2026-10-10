@@ -190,10 +190,10 @@ python3 deploy/make-cpanel.py      # dist/titanali-cpanel.zip
 ### دامنه و SSL
 - **SSL/TLS Status → Run AutoSSL** (یا Let's Encrypt) را بزنید؛ `.htaccess` جابه‌جایی `http → https` را انجام می‌دهد.
 - **سرویس‌ورکر فقط روی HTTPS** ثبت می‌شود؛ روی `http://ip` یا تست محلی بی‌اثر است (عمدًا).
-- در **Domains → titanali.ir** مطمئن شوید `Document root` به `public_html` می‌خورد و `www` هم نام‌های جایگزین دارد.
-- `canonical` و لینک‌های OG روی `https://titanali.ir/` تنظیم شده‌اند. اگر دامنه فرق کرد، این دو خط و `SITE` در `deploy/make-cpanel.py` و `robots.txt`/`sitemap.xml` را عوض کنید.
+- در **Domains → titanali1.ir** مطمئن شوید `Document root` به `public_html` می‌خورد و `www` هم نام‌های جایگزین دارد.
+- `canonical` و لینک‌های OG روی `https://titanali1.ir/` تنظیم شده‌اند. اگر دامنه فرق کرد، این دو خط و `SITE` در `deploy/make-cpanel.py` و `robots.txt`/`sitemap.xml` را عوض کنید.
 
-### در زیرپوشه (مثلاً `titanali.ir/site/`)
+### در زیرپوشه (مثلاً `titanali1.ir/site/`)
 همه‌ی مسیرها نسبی‌اند (`./sw.js`، `./site.webmanifest`)، پس بدون تغییر کار می‌کند؛ فقط اگر خطای ۴۰۴ روی `sw.js` دیدید، `RewriteBase /` را در `.htaccess` به `RewriteBase /site/` عوض کنید.
 
 ### اگر بعد از آپلود ۵۰۰ گرفتم
@@ -213,4 +213,4 @@ python3 deploy/make-cpanel.py      # dist/titanali-cpanel.zip
 ## انتشار (گیت‌هاب پیجز)
 
 - **GitHub Pages:** [`.github/workflows/pages.yml`](.github/workflows/pages.yml) با هر پوش روی `main` ریشه‌ی مخزن را منتشر می‌کند (Settings → Pages → *GitHub Actions*).
-- **شبکه‌های اجتماعی:** `canonical` و OG روی `https://titanali.ir/` تنظیم شده؛ `og.png` (1200×630) و `apple-touch-icon.png` را کنار `index.html` بگذارید تا پیش‌نمایش لینک کامل شود.
+- **شبکه‌های اجتماعی:** `canonical` و OG روی `https://titanali1.ir/` تنظیم شده؛ `og.png` (1200×630) و `apple-touch-icon.png` را کنار `index.html` بگذارید تا پیش‌نمایش لینک کامل شود.

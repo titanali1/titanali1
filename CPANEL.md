@@ -97,7 +97,7 @@
 - cPanel → **Domains** → دامنه را ببینید: **Document Root** باید `/home/USER/public_html` باشد. برای دامنهٔ دوم: **Create A New Domain** و Document Root را روی `public_html` یا زیرپوشهٔ خودش بگذارید.
 - **www**: در همان صفحه، گزینه‌های **www.yoursite.com → redirects to yoursite.com** (یا برعکس) را روشن کنید تا دوباره‌نویسی دوگانه ایجاد نشود. `.htaccess` ما `www` را دست نمی‌زند؛ اگر هاست شما «Force https://… with www» را در **Domains** دارد، همان را انتخاب کنید.
 - دامنه را به IP هاست وصل کنید: **A record** برای `@` و `CNAME` برای `www` (یا DNS区的 در cPanel → **Zone Editor**). TTL را روی ۳۰۰ بگذارید تا سریع جابه‌جا شود.
-- **canonical و OG** در `index.html` روی `https://titanali.ir/` قفل شده‌اند. اگر دامنه فرق دارد، این سه را عوض کنید و بسته را بازسازی کنید:
+- **canonical و OG** در `index.html` روی `https://titanali1.ir/` قفل شده‌اند. اگر دامنه فرق دارد، این سه را عوض کنید و بسته را بازسازی کنید:
   - `index.html` → `<link rel="canonical">`، `<meta property="og:url">`، `<meta property="og:image">`، `<meta name="twitter:image">`
   - `deploy/make-cpanel.py` → ثابت `SITE`
   - `deploy/files/robots.txt` و `sitemap.xml` (با اجرای اسکریپت دوباره ساخته می‌شوند)

@@ -23,7 +23,7 @@
 <meta name="author" content="titanali">
 <meta name="robots" content="index, follow">
 <meta name="format-detection" content="telephone=no">
-<link rel="canonical" href="https://titanali.ir/">
+<link rel="canonical" href="https://titanali1.ir/">
 
 <!-- پیش‌نمایش لینک (تلگرام / واتساپ / ایکس / فیسبوک) -->
 <meta property="og:type" content="profile">
@@ -31,15 +31,15 @@
 <meta property="og:locale" content="fa_IR">
 <meta property="og:title" id="ogTitle" content="titanali | طراحی و دوخت">
 <meta property="og:description" id="ogDesc" content="طراحی و دوخت تیتانلی — طرح‌های جدید، پلیواری، تمام کش، دانوکی، بنوک ها.">
-<meta property="og:url" content="https://titanali.ir/">
-<meta property="og:image" content="https://titanali.ir/og.png">
+<meta property="og:url" content="https://titanali1.ir/">
+<meta property="og:image" content="https://titanali1.ir/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="titanali | طراحی و دوخت">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" id="twTitle" content="titanali | طراحی و دوخت">
 <meta name="twitter:description" id="twDesc" content="طراحی و دوخت تیتانلی — طرح‌های جدید، پلیواری، تمام کش، دانوکی، بنوک ها.">
-<meta name="twitter:image" content="https://titanali.ir/og.png">
+<meta name="twitter:image" content="https://titanali1.ir/og.png">
 
 <style>
 /* =====================================================================
@@ -920,9 +920,9 @@ var DEFAULTS={
   contacts:[
     {label:'تلگرام (سفارش)',kind:'telegram',id:'@titanali',c:'#229ed9'},
     {label:'واتساپ',kind:'whatsapp',id:'+989120000000',c:'#25d366'},
-    {label:'ایمیل',kind:'email',id:'hi@titanali.ir',c:'#ff375f'},
+    {label:'ایمیل',kind:'email',id:'hi@titanali1.ir',c:'#ff375f'},
     {label:'اینستاگرام',kind:'instagram',id:'@titanali',c:'#c13584'},
-    {label:'وب‌سایت',kind:'website',id:'titanali.ir',c:'#0a84ff'},
+    {label:'وب‌سایت',kind:'website',id:'titanali1.ir',c:'#0a84ff'},
     {label:'گیت‌هاب',kind:'github',id:'github.com/titanali',c:'#8b949e'}
   ],
   /* ⚠️ نام کاربری و رمز پیش‌فرض ادمین — از همین‌جا عوضش کنید (و بسازید) */
@@ -1196,7 +1196,9 @@ function sendChat(){
   var ta=$('#chatText'),v=ta.value.trim();
   if(!v&&!PFILE){toast(isFa()?'متن یا فایل را بفرستید':'Write a text or attach a file');return}
   var fl=PFILE;
-  D.messages.push({me:true,text:v,ts:Date.now(),file:fl||undefined,sid:D.sid});
+  var mine={me:true,text:v,ts:Date.now(),file:fl||undefined,sid:D.sid};
+  D.messages.push(mine);
+  if(W)W.messages=(W.messages||[]).concat([mine]);   /* پنلِ باز: صندوق بی‌دریغ پیام‌های تازه را ببیند */
   PFILE=null;renderPending();ta.value='';ta.style.height='auto';
   save();renderChatFull();
   if(API.on){
@@ -1581,7 +1583,7 @@ function adminsTable(){
       '<label class="field"><span>رمز عبور</span><input data-af="p" data-i="'+i+'" value="'+escAttr(a.p||'')+'"></label></div>'+
       '<label class="field"><span>نام نمایشی در پنل</span><input data-af="name" data-i="'+i+'" value="'+escAttr(a.name||'')+'"></label></div>'}).join('')+
     '<button class="add-row" data-aadd>＋ افزودن ادمین تازه</button>'+
-    '<p class="hint">⚠️ این احراز هویت سمت کلاینت است: چون فایل HTML عمومی است، هر کسی با دیدن کد می‌تواند نام کاربری/رمز را ببیند. برای محافظت واقعی، رمز را سمت سرور (Pages + Basic Auth یا بک‌اند) بررسی کنید.</p>';
+    '<p class="hint">⚠️ این احراز هویت سمت کلاینت است: چون فایل HTML عمومی است، هر کسی با دیدن کد می‌تواند نام کاربری/رمز را ببیند. برای محافظت واقعی، بک‌اند <b>api.php</b> را نصب کنید تا رمز هَش‌شده روی سرور بررسی شود (تب «همگام‌سازی سرور»).</p>';
 }
 
 /* ---------- پیوست فایل در گفتگو (توضیح قبل از ارسال) ---------- */
@@ -1978,7 +1980,7 @@ function admSave(){
   W.cats=(W.cats||[]).filter(function(c){return c&&c.t});
   if(galFilter!=='all'&&!W.cats.some(function(c){return c.t===galFilter}))galFilter='all';
   if(admTab==='admins'&&SESS)SESS.u=(W.admins.filter(function(x){return x.name===SESS.name})[0]||W.admins[0]).u;
-  D=W;
+  D=clone(W);          /* کپی، نه خودِ W — وگرنه یک ذخیرهٔ ردشده روی دادهٔ زنده اثر می‌گذارد */
   if(save()){renderAll();toast(t('saved'));if($('#adminPanel').classList.contains('open'))renderAdmin();apiQueuePush()}
 }
 function admExport(){

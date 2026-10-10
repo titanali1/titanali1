@@ -19,7 +19,7 @@ PUBLIC = ['index.html', '.htaccess', '404.html', 'sw.js', 'api.php', 'titanali-c
           'robots.txt', 'sitemap.xml', 'apple-touch-icon.png', 'icon-192.png', 'icon-512.png',
           'maskable-512.png', 'og.png']
 COPIES = ['.htaccess', 'sw.js', '404.html', 'robots.txt', 'sitemap.xml', 'titanali-config.sample.php']  # منبعشان deploy/files/ است
-SITE = 'https://titanali.ir/'
+SITE = 'https://titanali1.ir/'
 BRAND, TAG_FA, TAG_EN = 'titanali', 'طراحی و دوخت', 'Design & Tailoring · Tehran'
 
 os.makedirs(DIST, exist_ok=True)
