@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">تیتانلی — طراحی و دوخت</string>
+    <string name="shortcut_gallery">طرح‌ها</string>
+    <string name="shortcut_chat">گفتگو برای سفارش</string>
+    <string name="offline_note">اینترنت نیست — طرح‌های ذخیره‌شده را نشان می‌دهیم. برای پاسخ گرفتن، بعداً دوباره تلاش کنید.</string>
+    <string name="retry">تلاش دوباره</string>
+    <string name="open_in_browser">باز کردن در مرورگر</string>
+    <string name="copy_link">کپی لینک</string>
+    <string name="back_again">یک بار دیگر «بازگشت» را بزنید تا برنامه بسته شود</string>
+    <string name="download_started">فایل دریافت شد ⤓</string>
+    <string name="no_app_for_link">برنامه‌ای برای باز کردن این لینک پیدا نشد</string>
+    <string name="copied">کپی شد ✓</string>
+    <string name="share_title">هم‌رسانی تیتانلی</string>
+</resources>

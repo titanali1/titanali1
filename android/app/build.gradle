@@ -1,0 +1,106 @@
+plugins {
+    id 'com.android.application'
+}
+
+def gp = new Properties()
+file("$rootDir/gradle.properties").withInputStream { gp.load(it) }
+def cfg = { String k, String dflt -> gp.getProperty(k, dflt) }
+
+// keystore.properties اختیاری است؛ نبودش = ساخت بدون امضا (برای تست)
+def ksFile = file("$rootDir/keystore.properties")
+def ks = new Properties()
+if (ksFile.isFile()) ksFile.withInputStream { ks.load(it) }
+
+android {
+    namespace 'ir.titanali1.app'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId cfg('titanali.appId', 'ir.titanali1.app')
+        minSdk 24            // اندروید ۷ — ۹۹٪ دستگاه‌های امروز
+        targetSdk 36         // الزام گوگل‌پلی از ۳۱ مرداد ۱۴۰۵ (و مایکت ≥ ۳۴ از ۹ آبان ۱۴۰۵)
+        versionCode Integer.parseInt(cfg('titanali.versionCode', '10008'))
+        versionName cfg('titanali.versionName', '1.0.8')
+
+        buildConfigField 'String', 'APP_HOST', '"' + cfg('titanali.appHost', 'app.titanali1.ir') + '"'
+        buildConfigField 'String', 'SITE_URL', '"' + cfg('titanali.site', 'https://titanali1.ir/') + '"'
+        buildConfigField 'String', 'API_URL', '"' + cfg('titanali.api', 'https://titanali1.ir/api.php') + '"'
+        buildConfigField 'boolean', 'REMOTE_FIRST', cfg('titanali.remoteFirst', 'false')
+
+        // فقط دو زبان بسته می‌شود (حجم کمتر)
+        resConfigs 'fa', 'en'
+    }
+
+    signingConfigs {
+        if (ksFile.isFile()) {
+            release {
+                storeFile rootProject.file(ks.getProperty('storeFile'))
+                storePassword ks.getProperty('storePassword')
+                keyAlias ks.getProperty('keyAlias')
+                keyPassword ks.getProperty('keyPassword')
+                enableV1Signing true
+                enableV2Signing true
+                enableV3Signing true
+            }
+        }
+    }
+
+    buildTypes {
+        debug {
+            applicationIdSuffix '.debug'
+            versionNameSuffix '-debug'
+            minifyEnabled false
+        }
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (ksFile.isFile()) signingConfig signingConfigs.release
+        }
+    }
+
+    buildFeatures { buildConfig true }
+    lint { abortOnError false; checkReleaseBuilds false }
+    packaging { resources { excludes += ['/META-INF/**', 'kotlin/**'] } }
+    // کتابخانهٔ native نداریم → نگرانی ۱۶KB page size مطرح نیست
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'androidx.webkit:webkit:1.11.0'
+}
+
+// ───────── همیشه همراه‌ترین نسخهٔ سایت داخل assets بسته شود ─────────
+def siteHtml = file("$rootDir/../index.html")
+
+tasks.register('syncSiteAssets', Copy) {
+    group = 'titanali'
+    description = 'کپی index.html سایت به assets/web (پیش از build اجرا می‌شود)'
+    from(siteHtml)
+    into file("$projectDir/src/main/assets/web")
+    doFirst {
+        if (!siteHtml.isFile()) {
+            throw new GradleException('index.html ریشهٔ مخزن پیدا نشد؛ پوسته را با python3 tools/prepare-web.py بسازید.')
+        }
+    }
+    inputs.file(siteHtml)
+    outputs.dir(file("$projectDir/src/main/assets/web"))
+}
+
+tasks.named('preBuild') { dependsOn 'syncSiteAssets' }
+
+tasks.register('appInfo') {
+    group = 'titanali'
+    description = 'چاپ شناسه، نسخه و حالت اجرا'
+    doLast {
+        println "appId        : ${android.defaultConfig.applicationId}"
+        println "version      : ${android.defaultConfig.versionName} (code ${android.defaultConfig.versionCode})"
+        println "minSdk       : ${android.defaultConfig.minSdk}   targetSdk: ${android.defaultConfig.targetSdk}"
+        println "app origin   : https://${cfg('titanali.appHost', 'app.titanali1.ir')}"
+        println "site         : ${cfg('titanali.site', '')}"
+        println "api          : ${cfg('titanali.api', '')}"
+        println "remote first : ${cfg('titanali.remoteFirst', 'false')}"
+        println "keystore     : " + (ksFile.isFile() ? 'found (release will be signed)' : 'MISSING -> unsigned')
+    }
+}

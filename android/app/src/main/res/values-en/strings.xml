@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Titanali — Design &amp; Tailoring</string>
+    <string name="shortcut_gallery">Designs</string>
+    <string name="shortcut_chat">Chat to order</string>
+    <string name="offline_note">You are offline — showing the saved designs. Try again to get a reply from the studio.</string>
+    <string name="retry">Retry</string>
+    <string name="open_in_browser">Open in browser</string>
+    <string name="copy_link">Copy link</string>
+    <string name="back_again">Press Back again to exit</string>
+    <string name="download_started">File downloaded ⤓</string>
+    <string name="no_app_for_link">No app can open this link</string>
+    <string name="copied">Copied ✓</string>
+    <string name="share_title">Share Titanali</string>
+</resources>

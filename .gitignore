@@ -1,0 +1,10 @@
+dist/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+node_modules/
+.mockapi/
+
+# خروجی انتشار پنل (روی هاست کنار index.html / در تست محلی)
+titanali-content.json

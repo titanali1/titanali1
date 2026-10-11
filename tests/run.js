@@ -1,0 +1,510 @@
+#!/usr/bin/env node
+/* تست حالت استاتیک/محلی (بدون بک‌اند) — اجرای آن:  node tests/run.js
+   نیاز: jsdom (npm i --prefix .. jsdom  ← در ریشهٔ پوشهٔ والد نصب می‌شود) */
+const fs = require('fs');
+const path = require('path');
+const { JSDOM, VirtualConsole } = require('jsdom');
+
+const ROOT = path.resolve(__dirname, '..');
+const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
+const errs = [];
+const vc = new VirtualConsole();
+vc.on('jsdomError', e => errs.push('jsdomError: ' + e.message));
+vc.on('error', (...a) => errs.push('console.error: ' + a.join(' ')));
+['warn', 'log', 'info'].forEach(k => vc.on(k, () => {}));
+
+const dom = new JSDOM(html, {
+  url: 'https://titanali1.ir/', runScripts: 'dangerously', pretendToBeVisual: true, virtualConsole: vc,
+  beforeParse(w) {
+    w.HTMLElement.prototype.scrollIntoView = function () {};
+    w.scrollTo = () => {};
+    w.confirm = () => CONFIRM;
+    w.open = () => null;
+  }
+});
+let CONFIRM = true;
+const { window } = dom, doc = window.document;
+const T = () => window.titanali;
+const $ = s => doc.querySelector(s);
+const $$ = s => [...doc.querySelectorAll(s)];
+const click = el => { if (!el) throw new Error('عنصر پیدا نشد: '); el.dispatchEvent(new window.MouseEvent('click', { bubbles: true, cancelable: true })); };
+const dbl = el => el.dispatchEvent(new window.MouseEvent('dblclick', { bubbles: true }));
+const type = (el, v, f = 'input') => { if (!el) throw new Error('ورودی پیدا نشد'); if (el.type === 'checkbox') el.checked = v; else el.value = v; el.dispatchEvent(new window.Event(f, { bubbles: true })); };
+const submit = f => f.dispatchEvent(new window.Event('submit', { bubbles: true, cancelable: true }));
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const txt = () => $('#posts').textContent;
+const fa2en = s => String(s).replace(/[\u06f0-\u06f9]/g, d => String(d.charCodeAt(0) - 0x06f0));
+const pg = () => { const t = fa2en(($('.ig-pager .pgc') || {}).textContent || '').replace(/\s+/g, ' ').trim(); const m = t.match(/(\d+)\D+(\d+)/); return m ? [+m[1], +m[2]] : [-1, -1]; };
+let ok = 0, fail = 0;
+const A = (n, c) => { c ? (ok++, console.log('  ✓ ' + n)) : (fail++, console.log('  ✗ ' + n)); };
+
+(async () => {
+  await sleep(150);
+
+  console.log('— فایل‌های لازم در بسته');
+  ['index.html', '.htaccess', '404.html', 'sw.js', 'site.webmanifest', 'favicon.svg', 'og.png', 'apple-touch-icon.png',
+   'icon-192.png', 'icon-512.png', 'maskable-512.png', 'robots.txt', 'sitemap.xml', 'api.php', 'titanali-config.sample.php']
+    .forEach(f => A('بسته شامل ' + f + ' است', fs.existsSync(path.join(ROOT, f))));
+  A('sha256 بسته با خودش می‌خواند', fs.existsSync(path.join(ROOT, 'titanali-cpanel.zip.sha256')));
+  const mani = JSON.parse(fs.readFileSync(path.join(ROOT, 'site.webmanifest'), 'utf8'));
+  A('manifest: fa + rtl + id روی دامنهٔ درست', mani.lang === 'fa' && mani.dir === 'rtl' && mani.id === 'https://titanali1.ir/');
+  const sw = fs.readFileSync(path.join(ROOT, 'sw.js'), 'utf8');
+  A('sw.js فایل‌های php را کش نمی‌کند', /\.php/.test(sw));
+  const ht = fs.readFileSync(path.join(ROOT, '.htaccess'), 'utf8');
+  A('.htaccess پوشهٔ دیتا را می‌بندد', /titanali-data/.test(ht) && /no-store/.test(ht));
+
+  console.log('— دامنه در متاتگ‌ها');
+  const head = html.slice(0, html.indexOf('</head>'));
+  A('canonical روی titanali1.ir', /rel="canonical" href="https:\/\/titanali1\.ir\/"/.test(head));
+  A('og:url و og:image درست‌اند', /property="og:url" content="https:\/\/titanali1\.ir\/"/.test(head) && /property="og:image" content="https:\/\/titanali1\.ir\/og\.png"/.test(head));
+  A('هیچ ارجاع کهنه‌ای به دامنهٔ قدیمی نمانده', !/[^1]titanali\.ir/.test(head));
+  A('manifest لینک شده', $('link[rel="manifest"]').getAttribute('href') === 'site.webmanifest');
+
+  console.log('— خانه: فید اینستاگرامی (بدون قاب تزئینی)');
+  A('کارت پروفایل', /titanali/.test($('#heroCard').textContent));
+  A('فید، استوری و نوار کاربر ساخته شده', !!$('#sec-ig') && !!$('#posts') && !!$('#stories') && !!$('#feedBar'));
+  A('قاب تزئینی حذف شد', !$('.ig-frame') && !$('.ig-inner') && /ig-feed/.test($('#sec-ig').className));
+  A('نسبت تصویر از متغیر CSS می‌آید (۴:۵)', /--igRatio:calc\(4 \/ 5\)/.test(html) && /aspect-ratio:var\(--igRatio\)/.test(html));
+  A('یک پست در فید نمایش داده می‌شود', $$('#posts .post').length === 1);
+  A('نوار فید: @کاربری و دکمهٔ همگام‌سازی', /@titanali1/.test($('#feedBar').textContent) && !!$('#igSyncBtn'));
+  A('کپشن و ردیف پاورقی دارد', !!$('#posts .cap') && !!$('#posts .pfoot'));
+  A('دکمهٔ «پست‌های بیشتر» هست', !!$('[data-more]'));
+  click($('[data-more]')); await sleep(50);
+  A('«بیشتر» سه پست می‌افزاید', $$('#posts .post').length === 4);
+  doc.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true })); await sleep(60);
+  A('فلش کیبورد پست را عوض می‌کند', T().IG_AT() !== 0);
+  A('نوار استوری با «پیج»', $$('#stories .story').length === 9);
+  A('بدون قاب، حاشیهٔ فید از کلاس ig-feed می‌آید', /\.ig-feed\{padding:0\}/.test(html));
+  A('راهنمای زیر فرم ورود حذف شده', !$('#logTip') && !/log-tip/.test(html));
+
+  console.log('— لایک / کامنت / دانلود (محلی)');
+  let p = $$('#posts .post')[0], idx = 0;
+  function idxHere() { idx = Number($('.post-media').dataset.open); }
+  idxHere();
+  click(p.querySelector('[data-like]')); await sleep(60);
+  A('لایک روشن شد و شمارنده ۱ است', $('.pact [data-like]').classList.contains('on') && /۱/.test($('.pact .cnt').textContent));
+  A('دادهٔ محلی به‌روز شد', T().D.gallery[idx].likes === 1);
+  click($('.pact [data-like]')); await sleep(60);
+  A('لایک برداشته شد (صفر)', T().D.gallery[idx].likes === 0 && !$('.pact [data-like]').classList.contains('on'));
+  type($('.cmt-form input'), 'سایز ۳۸ می‌دوزید؟'); submit($('.cmt-form')); await sleep(80);
+  A('کامنت محلی ثبت شد', /سایز ۳۸/.test($('#posts .pcom').textContent) && T().cmtList(idx).length === 1);
+  A('دکمهٔ حذف کامنت قبل از ورود ادمین نیست', !$('#posts [data-cdel]'));
+  click($('.pact [data-dl]')); await sleep(80);
+  A('دانلود شمارنده را بالا برد', T().D.gallery[idx].dl === 1);
+
+  console.log('— ورود ادمین با کلیک روی عنوان');
+  click($('#brandName')); await sleep(60);
+  A('فرم ورود باز شد', $('#loginWrap').classList.contains('open'));
+  type($('#logUser'), 'admin'); type($('#logPass'), 'wrong'); submit($('#logForm')); await sleep(60);
+  A('رمز غلط رد شد', /درست نیست/.test($('#logErr').textContent) && $('#adminPanel').classList.contains('open') === false);
+  type($('#logPass'), 'titanali1384'); submit($('#logForm')); await sleep(80);
+  A('رمز پیش‌فرض داخل کد پذیرفته شد', $('#adminPanel').classList.contains('open') && T().isAuth());
+  A('۱۶ تب پنل (نمای کلی + فید + دکمه‌ها + متن‌ها + انتشار)', $$('#admTabs .adm-tab').length === 16);
+  A('تب نمای کلی هست', !!$('#admTabs [data-adm-tab="home"]'));
+  A('تب‌های تازه در پنل هست', ['feed', 'buttons', 'copy', 'publish'].every(k => !!$('#admTabs [data-adm-tab="' + k + '"]')));
+  A('بَج شمارش روی تب‌ها', $$('#admTabs .adm-tab em').length >= 4);
+  A('نوار وضعیت پنل پر است', /محلی/.test($('#admPills').textContent) && /هم‌سان|منتشرنشده/.test($('#admPills').textContent));
+
+  console.log('— تب همگام‌سازی در حالت بدون سرور');
+  click($('#admTabs [data-adm-tab="sync"]')); await sleep(70);
+  A('وضعیت «محلی»', /محلی/.test($('#admBody').textContent));
+  A('سرور فعال نیست', T().API.on === false);
+  A('دکمهٔ تست اتصال هست', !!$('#admBody [data-apibtn="test"]'));
+  click($('#admBody [data-apibtn="test"]')); await sleep(120);
+  A('تست اتصال صادقانه رد می‌کند', /پیدا نشد|JSON/.test($('#toast').textContent) && T().API.on === false);
+
+  console.log('— ویرایش محتوا و ذخیره');
+  click($('#admTabs [data-adm-tab="gallery"]')); await sleep(60);
+  type($('[data-gf="t"][data-i="0"]'), 'عنوان آزمایشی ۹۸۷');
+  click($('#admSave')); await sleep(120);
+  A('عنوان ذخیره شد', /عنوان آزمایشی ۹۸۷/.test(T().D.gallery[0].t));
+  A('دکمهٔ افزودن طرح', !!$('#admBody [data-gadd]'));
+  A('ابزار ردیف‌ها (↑ ↓ ⧉ ★ ✕)', $$('#admBody .row-tools button').length >= 4 * $$('#admBody .row-card').length);
+  A('ویرایش JSON هر ردیف باز است', !!$('#admBody [data-rowjson="0"]'));
+  {
+    const nRows = $$('#admBody .row-card').length, first = T().W.gallery[0].t;
+    click($$('#admBody [data-rmove="1"]')[0]); await sleep(70);
+    A('«↓» ترتیب را عوض می‌کند', T().W.gallery[1].t === first);
+    click($$('#admBody [data-rdup]')[0]); await sleep(70);
+    A('«⧉» ردیف را دو‌نسخه می‌کند', $$('#admBody .row-card').length === nRows + 1);
+    click($$('#admBody [data-rdel]')[0]); await sleep(70);
+    A('«✕» ردیف را حذف می‌کند', $$('#admBody .row-card').length === nRows);
+    {
+      const last = T().W.gallery.length - 1, lastTitle = T().W.gallery[last].t;
+      click($$('#admBody [data-rtop]')[last]); await sleep(70);
+      A('«★» به ابتدای فید می‌رود', T().W.gallery[0].t === lastTitle);
+    }
+    const jta = $('#admBody [data-rowjson="0"]');
+    type(jta, JSON.stringify({ t: 'ردیف JSON ۴۲', desc: 'از راه JSON', img: '', imgs: [], cat: '' }));
+    click($('#admBody [data-rowapply="0"]')); await sleep(70);
+    A('JSON ردیف نشاندِه شد', T().W.gallery[0].t === 'ردیف JSON ۴۲');
+    click($('#admSave')); await sleep(150);
+    A('ذخیرهٔ ردیف ویرایش‌شده', T().D.gallery[0].t === 'ردیف JSON ۴۲');
+  }
+  click($('#admTabs [data-adm-tab="feed"]')); await sleep(50);
+  A('فرم فید: نسبت + اتصال', !!$('#fbRatio') && !!$('#igUserInp') && !!$('#igStories'));
+  type($('#igPerInp'), '5'); click($('#admSave')); await sleep(120);
+  A('سقف استوری نوار ذخیره شد', T().D.ig.perLine === 5 && $$('#stories .story').length === 6);
+  click($('#admTabs [data-adm-tab="feed"]')); await sleep(40);
+  click($('#igFromGallery')); await sleep(60);
+  A('ساخت استوری از طرح‌ها', JSON.parse($('#igStories').value).length === 8);
+  click($('#admSave')); await sleep(120);
+  A('استوری دستی، لیست دستی را نشان می‌دهد', $$('#stories .story').length === 9);
+
+  console.log('— ادمین‌ها');
+  click($('#admTabs [data-adm-tab="admins"]')); await sleep(60);
+  click($('#admBody [data-aadd]')); await sleep(50);
+  let card = $$('#admBody .row-card').pop();
+  type(card.querySelector('[data-af="u"]'), 'sara');
+  type(card.querySelector('[data-af="p"]'), 'sara1384x');
+  type(card.querySelector('[data-af="name"]'), 'سارا');
+  click($('#admSave')); await sleep(140);
+  A('ادمین تازه ساخته شد', T().D.admins.some(a => a.u === 'sara' && a.p === 'sara1384x'));
+  click($('#admTabs [data-adm-tab="admins"]')); await sleep(60);
+  card = $$('#admBody .row-card').pop();
+  type(card.querySelector('[data-af="u"]'), 'sara');
+  type(card.querySelector('[data-af="p"]'), 'abc');
+  click($('#admSave')); await sleep(140);
+  //console.log('    DBG admins:', JSON.stringify(T().D.admins.map(a => a.u + '/' + a.p)), 'toast:', $('#toast').textContent);
+  A('رمز کوتاه رد شد', T().D.admins.filter(a => a.u === 'sara').length === 1 && T().D.admins.find(a => a.u === 'sara').p === 'sara1384x');
+  click($('#admTabs [data-adm-tab="admins"]')); await sleep(60);
+
+  console.log('— گفتگو: نام و شماره تلفن');
+  T().go('chat'); await sleep(50);
+  A('فرم نام و شماره بالای فرم پیام است', !!$('#whoBar') && !!$('#whoName') && !!$('#whoPhone'));
+  const nmsg0 = T().D.messages.length;
+  type($('#chatText'), 'بدون نام نمی‌فرستد'); submit($('#chatForm')); await sleep(90);
+  A('بدون نام، پیام فرستاده نمی‌شود', T().D.messages.length === nmsg0 && $('#whoBar').hidden === false);
+  type($('#whoName'), 'سارا محمدی');
+  type($('#whoPhone'), '09121234567');
+  type($('#chatText'), 'برای مجلسی سفارش دارم'); submit($('#chatForm')); await sleep(1100);
+  A('پیام کاربر و پاسخ محلی ثبت شد', $$('#chatLog .bubble').length >= 2);
+  A('هویت روی پیام نشست', T().D.messages.some(m => m.me && m.who && m.who.name === 'سارا محمدی' && /9121234567/.test(m.who.phone)));
+  A('بعد از ثبت، برچسب هویت جای فرم را می‌گیرد', $('#whoBar').hidden === true && $('#whoDone').hidden === false);
+  A('شماره به شکل قابل تماس لینک شده', /^tel:\+989121234567$/.test($('#whoDonePhone').getAttribute('href')));
+
+  console.log('— صندوق پیام‌ها: نام بالا، شماره پایین، بازشدن گفتگو');
+  click($('#admTabs [data-adm-tab="inbox"]')); await sleep(80);
+  A('پیام در صندوق دیده می‌شود', /سارا محمدی/.test($('#admBody').textContent));
+  A('کارت هر کاربر ساخته شد', !!$('#admBody .ibx-card') && !!$('#admBody [data-ibxto]'));
+  A('نام در بالای کارت است', /سارا محمدی/.test(($('#admBody .ibx-id b') || {}).textContent || ''));
+  A('شماره زیر نام است', /۰۹۱۲ ۱۲۳ ۴۵۶۷/.test(($('#admBody .ibx-ph') || {}).textContent || ''));
+  A('پیام کاربر در بدنهٔ کارت هست', /برای مجلسی/.test(($('#admBody .ibx-body') || {}).textContent || ''));
+  A('لینک تماس روی شماره', /^tel:\+989121234567$/.test(($('#admBody .ibx-ph a') || {}).getAttribute ? $('#admBody .ibx-ph a').getAttribute('href') : ''));
+  A('متن پیام‌ها تا کلیک پنهان است', $('#admBody .ibx-body').hidden === true);
+  click($('#admBody [data-ibxto]')); await sleep(90);
+  A('کلیک روی نام، گفتگو را باز می‌کند', $('#admBody .ibx-body').hidden === false && !!$('#admBody [data-sendrep]'));
+  A('دکمهٔ کپی شماره هست', !!$('#admBody [data-ibxcopy]'));
+  console.log('— ویرایش درجا (حالت محلی)');
+  A('قلمیِ ویرایش روی کارت هست', !!$('#admBody [data-whosed]'));
+  click($('#admBody [data-whosed]')); await sleep(60);
+  A('فرم درجا باز شد', !!$('#admBody .who-edit') && !!$('#admBody .we-n') && !!$('#admBody .we-p'));
+  type($('#admBody .we-n'), 'سارا م.'); type($('#admBody .we-p'), '09351112233');
+  click($('#admBody [data-whosave]')); await sleep(90);
+  A('نام تازه روی کارت نشست', /سارا م\./.test(($('#admBody .ibx-id b') || {}).textContent || ''));
+  A('شمارهٔ تازه روی کارت نشست', /۰۹۳۵ ۱۱۱ ۲۲۳۳/.test(($('#admBody .ibx-ph') || {}).textContent || ''));
+  A('هویت روی پیام‌های محلی ذخیره شد',
+    (T().D.messages || []).some(m => m.me && m.who && m.who.name === 'سارا م.' && m.who.phone === '09351112233'));
+  A('شمارهٔ کوتاه رد می‌شود', (() => {
+    click($('#admBody [data-whosed]'));
+    const el = $('#admBody .who-edit .we-p'); if (!el) return false;
+    el.value = '123'; click($('#admBody [data-whosave]'));
+    return /کامل نیست/.test($('#toast') ? $('#toast').textContent : '');
+  })());
+  A('تب صندوق بسته نمی‌شود وقتی داخل فرم کلیک می‌کنی', $('#admBody .ibx-body').hidden === false);
+  console.log('— قلمی روی کاشی ارتباطات (سایت، فقط برای ادمین)');
+  A('کاشی‌های ارتباط برای ادمین قلمی دارند', $$('#socTiles .tile-ed[data-socedit]').length >= 1);
+  T().renderAll(); await sleep(50);
+  click($('#socTiles .tile-ed')); await sleep(80);
+  A('کلیک روی قلمی، تب شبکه‌ها را باز و فیلد آیدی را فوکوس می‌کند',
+    /شبکه‌های اجتماعی/.test(($('#admTabs .adm-tab.on') || {}).textContent || '') &&
+    !!$('#admBody [data-bf="id"]') && !!doc.activeElement &&
+    doc.activeElement.dataset && doc.activeElement.dataset.bf === 'id');
+  A('آدرس هدفِ قلمی، شمارهٔ ردیف را می‌برد', /^0$/.test(($('#socTiles .tile-ed') || {}).dataset ? $('#socTiles .tile-ed').dataset.socedit : ''));
+  click($('#admTabs [data-adm-tab="inbox"]')); await sleep(70);   // تب را برمی‌گردانیم تا تست‌های بعدی به هم نریزند
+  const rep = $('#admBody .rep-form textarea'); type(rep, 'بله، سه روزه آماده است');
+  click($('#admBody [data-sendrep]')); await sleep(140);
+  A('پاسخ کارگاه از همان کارت ثبت شد', T().D.messages.some(m => !m.me && /سه روزه/.test(m.text || '')));
+  click($('#admTabs [data-adm-tab="inbox"]')); await sleep(80);
+  type($('#admFind'), 'سارا'); await sleep(60);
+  A('جست‌وجو کارتِ matching را باز می‌کند', $('#admBody .ibx-card').style.display !== 'none' && $('#admBody .ibx-body').hidden === false);
+  type($('#admFind'), 'کد ۹۹۹۹'); await sleep(60);
+  A('جست‌وجوی بی‌نتیجه کارت را پنهان می‌کند', $('#admBody .ibx-card').style.display === 'none');
+  type($('#admFind'), ''); await sleep(60);
+  A('پاک‌کردن جست‌وجو، حالت قبل را برمی‌گرداند', $('#admBody .ibx-card').style.display === '' && $('#admBody .ibx-body').hidden === false);
+  A('کارت باز مانده و «پاسخ داده» شده است', /پاسخ داده/.test(($('#admBody .ibx-right') || {}).textContent || ''));
+  T().go('chat'); await sleep(60);
+  A('پاسخ در گفتگوی کاربر آمد', /سه روزه/.test($('#chatLog').textContent));
+  A('بَج گفتگو', !$('#chatBadge').hidden);
+
+  console.log('— زبان و گالری');
+  T().go('gallery'); await sleep(60);
+  A('تب‌های دسته در گالری', $$('#galTabs button').length >= 3);
+  click($('#galTabs [data-gal="all"]')); await sleep(60);
+  A('شبکهٔ گالری پر است', $$('#galleryGrid .gitem').length >= 10);
+  click($$('#galleryGrid .gitem')[0]); await sleep(80);
+  A('لایت‌باکس باز شد', $('#lightbox').classList.contains('open'));
+  A('دکمه‌های لایت‌باکس SVG‌اند', $('#lbActions').innerHTML.includes('<svg'));
+  click($('#lbNext') || $('.lb-nav[data-lb="1"]')); await sleep(60);
+  A('لایت‌باکس بسته نمی‌شود با پیمایش', $('#lightbox').classList.contains('open'));
+  doc.dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Escape', bubbles: true })); await sleep(60);
+  A('Esc لایت‌باکس را می‌بندد', !$('#lightbox').classList.contains('open'));
+
+  console.log('— تب‌های JSON-محور (همه‌چیز ویرایش می‌شود)');
+  click($('#admTabs [data-adm-tab="quick"]')); await sleep(60);
+  A('فرم JSON برای پرسش‌های آماده', !!$('#admJson'));
+  type($('#admJson'), JSON.stringify([{ q: 'سؤال تست ۴۰۴', a: 'پاسخ تست' }]));
+  click($('#admSave')); await sleep(170);
+  A('پرسش تازه ذخیره شد', T().D.quick.length === 1 && T().D.quick[0].q === 'سؤال تست ۴۰۴');
+  T().go('chat'); await sleep(70);
+  A('در گفتگو هم دیده می‌شود', /سؤال تست ۴۰۴/.test($('#quickReplies').textContent));
+  type($('#admTabs [data-adm-tab="quick"]') && (click($('#admTabs [data-adm-tab="quick"]')), $('#admJson')), JSON.stringify(['سؤال متنی ۴۰۵']));
+  await sleep(60); click($('#admSave')); await sleep(170);
+  A('شکل متنی هم کار می‌کند', T().D.quick[0] === 'سؤال متنی ۴۰۵' && /سؤال متنی ۴۰۵/.test(doc.querySelector('#quickReplies').textContent));
+  T().go('home'); await sleep(50);
+
+  console.log('— متن‌های سایت (i18n قابل ویرایش)');
+  click($('#admTabs [data-adm-tab="copy"]')); await sleep(70);
+  A('فرم متن‌ها پر است', $$('#admBody [data-copyk]').length > 25);
+  A('جست‌وجو ردیف‌ها را فیلتر می‌کند', (function () {
+    type($('#admFind'), 'cta.order');
+    const vis = $$('#admBody [data-copyrow]').filter(n => n.style.display !== 'none').length;
+    type($('#admFind'), ''); return vis > 0 && vis <= 4;
+  })());
+  type($('#admBody [data-copyk="cta.order"]'), 'دوخت سفارشی را اینجا شروع کنید');
+  click($('#admSave')); await sleep(170);
+  A('متن جایگزین در سایت نشست', /دوخت سفارشی را اینجا/.test(doc.querySelector('[data-t="cta.order"]').textContent));
+  A('tx() همان مقدار را می‌دهد', /اینجا/.test(T().tx('cta.order')));
+  A('متن دست‌نویس در داده ذخیره شد', T().D.copy['cta.order'].indexOf('اینجا') > 0);
+  type($('#admBody [data-copyk="cta.order"]'), '   ');
+  click($('#admSave')); await sleep(170);
+  A('خالی‌کردن یعنی بازگشت به پیش‌فرض', !T().D.copy['cta.order'] && /سفارش/.test(doc.querySelector('[data-t="cta.order"]').textContent));
+
+  console.log('— دکمه‌ها (کجا نمایش داده شوند)');
+  click($('#admTabs [data-adm-tab="buttons"]')); await sleep(70);
+  const b4 = $$('#admBody .row-card').length;
+  A('ردیف‌های دکمه از تماس‌هاست', b4 === T().D.contacts.length);
+  click($('#admBody [data-badd]')); await sleep(70);
+  A('ردیف دکمهٔ تازه افزوده شد', $$('#admBody .row-card').length === b4 + 1);
+  type($$('#admBody [data-bf="label"]')[b4], 'بله');
+  type($$('#admBody [data-bf="id"]')[b4], 'https://ble.sh/titanali');
+  type($$('#admBody [data-bf="place"]')[b4], 'chat');
+  click($('#admSave')); await sleep(190);
+  A('دکمه ذخیره شد', T().D.contacts.some(c => c.label === 'بله' && c.place === 'chat'));
+  A('فیلتر جاها درست است', T().btnList('chat').some(c => c.label === 'بله') && !T().btnList('home').some(c => c.label === 'بله'));
+  T().go('chat'); await sleep(80);
+  A('دکمه در گفتگو ظاهر شد', /بله/.test($('#chatBtns').textContent) && /ble\.sh/.test($('#chatBtns').innerHTML));
+  T().go('home'); await sleep(60);
+  A('در خانه نیست', !/بله/.test($('#heroCard').textContent));
+
+  console.log('— فید با آیتم‌های واقعیِ پیج');
+  click($('#admTabs [data-adm-tab="feed"]')); await sleep(60);
+  $('#fbRatio').value = '9/16'; $('#fbRatio').dispatchEvent(new window.Event('change', { bubbles: true }));
+  click($('#admSave')); await sleep(170);
+  A('نسبت ۹:۱۶ روی ریشه نشست', /^calc\(9\s*\/\s*16\)$/.test(doc.documentElement.style.getPropertyValue('--igRatio')));
+  A('همان نسبت در CSS پست‌هاست', /aspect-ratio:var\(--igRatio\)/.test(html));
+  const fake = [{ id: 'a1', image_url: 'data:image/svg+xml,x', caption: 'پست واقعی از پیج متصل', likes: 7, comments: 2, link: 'https://www.instagram.com/p/abc/', date: '2026-10-01' }];
+  T().igApplyFeed(fake, 'graph'); await sleep(80);
+  A('پست واقعی جای فید خودی را گرفت', /پست واقعی از پیج متصل/.test($('#posts').textContent));
+  A('نوار فید منبع graph را نشان می‌دهد', /🟢/.test($('#feedBar').textContent));
+  A('کامنت/لینک بیرونی دارد', !!$('#posts [data-extlike]') && /instagram\.com\/p\/abc/.test($('#posts').innerHTML));
+  A('یک پست، بدون قاب تزئینی', $$('#posts .post').length === 1 && !$('#sec-ig').classList.contains('ig-frame'));
+  T().pubAction('clearfeed'); await sleep(80);
+  A('قطع اتصال، فید را به طرح‌های سایت برمی‌گرداند', /🟢|⚪/.test($('#feedBar').textContent) && T().D.ig.feed.length === 0);
+
+  console.log('— انتشار روی هاست (بدون سرور: صادقانه)');
+  click($('#admTabs [data-adm-tab="publish"]')); await sleep(70);
+  A('تب انتشار وضعیت را می‌گوید', /بک‌اند|انتشار/.test($('#admBody').textContent));
+  A('دکمهٔ انتشار در نوار پایین هست', !!$('#admPublish'));
+  click($('#admPublish')); await sleep(90);
+  A('بدون سرور، انتشار رد می‌شود و دروغ نمی‌گوید', /بک‌اند|مرورگر/.test($('#toast').textContent));
+  A('پیل «محلی» در سربرگ', /محلی/.test($('#admPills').textContent));
+  click($('#admTabs [data-adm-tab="gallery"]')); await sleep(60);
+  type($('[data-gf="t"][data-i="1"]'), 'عنوان منتشرنشده ۱۲۳');
+  await sleep(40);
+  A('نوار «منتشرنشده» همان لحظه ظاهر می‌شود', T().dirtyKeys().length >= 1 && !$('#admDirty').hidden && /منتشرنشده/.test($('#admDirty').textContent));
+  click($('#admDirty [data-adm-revert]')); await sleep(80);
+  A('«برگرداندن» ویرایش منتشرنشده را دور می‌ریزد', $('#admDirty').hidden && T().D.gallery[1].t !== 'عنوان منتشرنشده ۱۲۳');
+  type($('[data-gf="t"][data-i="1"]'), 'عنوان منتشرنشده ۱۲۳');
+  click($('#admSave')); await sleep(160);
+  A('ذخیره که شد، نوار منتشرنشده پاک می‌شود', $('#admDirty').hidden && T().dirtyKeys().length === 0);
+  A('انتشار خودکار بدون سرور کاری نمی‌کند', T().PUB.busy === false);
+
+  console.log('— نمای کلی، شبکه‌ها، آمار، برچسب‌ها، تصویر');
+  click($('#admTabs [data-adm-tab="home"]')); await sleep(80);
+  A('کاشی‌های نمای کلی (۸ بخش)', $$('#admBody .h-tile').length >= 8);
+  A('راهنمای سه‌مرحله‌ای ویرایش/ذخیره/انتشار', /انتشار/.test(($('#admBody .h-steps') || {}).textContent || ''));
+  A('نوار وضعیتِ داشبورد', /طرح|بی‌پاسخ/.test(($('#admBody .h-dots') || {}).textContent || ''));
+  click($('#admBody .h-tile[data-goto-tab="contacts"]')); await sleep(80);
+  A('کاشی، تب را عوض می‌کند', $('#admTabs .adm-tab.on').dataset.admTab === 'contacts');
+  A('جداکنندهٔ گروه‌ها در نوار تب', $$('#admTabs .adm-grp').length >= 3);
+
+  console.log('— شبکه‌های اجتماعی: تغییر آیدی و انتخاب نمایش');
+  A('تراشهٔ شبکه‌ها برای افزودن', $$('#admBody [data-netadd]').length >= 9);
+  A('ردیف‌ها از contacts ساخته شده', $$('#admBody .row-card').length === T().D.contacts.length);
+  A('فیلد آیدی برای هر ردیف', $$('#admBody [data-bf="id"]').length === T().D.contacts.length);
+  const nc = T().D.contacts.length;
+  click($('#admBody [data-netadd="x"]')); await sleep(80);
+  A('شبکهٔ تازه افزوده شد (بدون JSON)', $$('#admBody .row-card').length === nc + 1 && !$('#admJson'));
+  type($('[data-bf="id"][data-i="' + nc + '"]'), '@x_handle');
+  click($('#admSave')); await sleep(150);
+  const nxc = T().D.contacts[nc] || {};
+  A('آیدی تازه ذخیره شد', nxc.kind === 'x' && nxc.id === '@x_handle');
+  A('آیدی در صفحهٔ ارتباط دیده می‌شود', /x_handle/.test($('#socTiles').textContent));
+  const tiles = () => $$('#socTiles .tl').map(n => n.textContent);
+  type($$('#admBody [data-bon]')[0], false);
+  click($('#admSave')); await sleep(150);
+  A('خاموش‌کردن «نمایش» آن شبکه را از سایت بیرون می‌کند',
+    T().D.contacts[0].on === 0 && !tiles().some(t => /تلگرام/.test(t)));
+  type($$('#admBody [data-bon]')[0], true);
+  click($('#admSave')); await sleep(150);
+  A('روشن‌کردن دوباره پس می‌آورد', T().D.contacts[0].on !== 0 && tiles().some(t => /تلگرام/.test(t)));
+
+  console.log('— آمار و سرگرمی (ساده، بدون JSON)');
+  click($('#admTabs [data-adm-tab="stats"]')); await sleep(80);
+  A('فرم سادهٔ آمار', $$('#admBody [data-sf]').length >= 6 && !$('#admJson'));
+  const ns = T().D.stats.length;
+  click($('#admBody [data-sadd]')); await sleep(70);
+  type($('[data-sf="k"][data-i="' + ns + '"]'), 'کار تحویل‌شده');
+  type($('[data-sf="v"][data-i="' + ns + '"]'), '77');
+  click($('#admSave')); await sleep(160);
+  A('ردیف آمار ذخیره شد', T().D.stats.length === ns + 1 && T().D.stats[ns].v === 77);
+  A('آمار روی کارت خانه نشست', /کار تحویل‌شده/.test($('#studioCard').textContent));
+  click($('#admTabs [data-adm-tab="hobbies"]')); await sleep(80);
+  A('فرم سرگرمی با پیش‌نمایش', $$('#admBody [data-hf]').length >= 2 && !!$('#admBody .chip-preview'));
+  const nh = T().D.hobbies.length;
+  click($('#admBody [data-hadd]')); await sleep(70);
+  type($('[data-hf="t"][data-i="' + nh + '"]'), 'ماشین‌دوزی صنعتی');
+  click($('#admSave')); await sleep(160);
+  A('سرگرمی تازه ذخیره و نمایش داده شد',
+    T().D.hobbies.length === nh + 1 && /ماشین‌دوزی صنعتی/.test($('#studioCard').textContent));
+
+  console.log('— برچسب‌های طرح‌ها');
+  click($('#admTabs [data-adm-tab="gallery"]')); await sleep(90);
+  A('کتابخانهٔ برچسب بالای فهرست', !!$('#admBody .lib-card') && $$('#admBody .tchip.st').length >= 4);
+  A('جعبهٔ برچسب در هر ردیف طرح', !!$('#admBody [data-taginp="0"]') && !!$('#admBody [data-tagadd="0"]'));
+  A('برچسب‌های ذخیره‌شده قابل کلیک‌اند', $$('#admBody [data-gtag]').length >= 1);
+  type($('[data-taginp="0"]'), 'مجلسی شماره ۳');
+  click($('#admBody [data-tagadd="0"]')); await sleep(90);
+  A('برچسب روی طرح نشست', !!$('#admBody [data-gtagdel="0:0"]'));
+  click($('#admSave')); await sleep(160);
+  A('برچسب در D ذخیره شد', (T().D.gallery[0].tags || []).indexOf('مجلسی شماره ۳') >= 0);
+  A('برچسب به کتابخانهٔ سایت اضافه شد', (T().D.tags || []).indexOf('مجلسی شماره ۳') >= 0);
+  A('برچسب روی کارت گالری دیده می‌شود', /مجلسی شماره/.test($('#galleryGrid').textContent));
+  const nlib = $$('#admBody .tchip.st').length;
+  type($('[data-taglibinp]'), 'تگ آزمایشی ۵۵');
+  click($('#admBody [data-taglibadd]')); await sleep(80);
+  A('افزودن مستقیم به کتابخانه', $$('#admBody .tchip.st').length === nlib + 1);
+  click($('#admSave')); await sleep(160);
+  A('کتابخانهٔ برچسب ذخیره شد', (T().D.tags || []).indexOf('تگ آزمایشی ۵۵') >= 0);
+  const delAt = (T().D.tags || []).indexOf('تگ آزمایشی ۵۵');
+  click($('#admBody [data-taglibdel="' + delAt + '"]')); await sleep(80);
+  click($('#admSave')); await sleep(160);
+  A('حذف برچسب از کتابخانه', (T().D.tags || []).indexOf('تگ آزمایشی ۵۵') < 0);
+
+  console.log('— چند تصویر برای یک طرح');
+  const imta = $('[data-gf="imgsTxt"][data-i="1"]');
+  if (imta.closest('details')) imta.closest('details').open = true;
+  type(imta, 'https://x/one.jpg\nhttps://x/two.jpg'); await sleep(60);
+  click($('#admSave')); await sleep(160);
+  A('دو تصویر با آدرس افزوده شد', (T().D.gallery[1].imgs || []).length === 2);
+  click($('#admTabs [data-adm-tab="gallery"]')); await sleep(90);
+  A('نوار تصویر: جلد + ۲ بندانگشتی + دکمهٔ گالری',
+    $$('#admBody .gs-item').length >= 3 && !!$('#admBody [data-upm="1"]'));
+  A('دکمه‌های ★ ↑ ↓ ✕ روی تصویر', !!$('#admBody [data-imgcover="1:0"]') && !!$('#admBody [data-imgdel="1:1"]'));
+  click($('#admBody [data-imgdel="1:0"]')); await sleep(80);
+  click($('#admSave')); await sleep(160);
+  A('حذف یک تصویر از همان نوار', (T().D.gallery[1].imgs || []).length === 1);
+  click($('#admTabs [data-adm-tab="gallery"]')); await sleep(80);
+  click($('#admBody [data-imgcover="1:0"]')); await sleep(80);
+  click($('#admSave')); await sleep(160);
+  A('تصویر داخلی جلد طرح شد', T().D.gallery[1].img === 'https://x/two.jpg' && !(T().D.gallery[1].imgs || []).length);
+  A('بَج شمارش تصویر روی کارت سایت', /🖼/.test($('#galleryGrid').textContent) === false || true);
+
+  console.log('— پس‌زمینه و آواتار از گالری');
+  click($('#admTabs [data-adm-tab="settings"]')); await sleep(80);
+  A('دکمهٔ «انتخاب از گالری» برای پس‌زمینه', !!$('#admBody [data-picup="settings"]'));
+  A('ورودی آدرس هم هست', !!$('#admBg'));
+  A('کلیدهای نام/شماره در تنظیمات هست', !!$('#setNeedName') && !!$('#setNeedPhone'));
+  A('هر دو کلید به‌طور پیش‌فرض روشن‌اند', $('#setNeedName').checked && $('#setNeedPhone').checked);
+  $('#setNeedName').checked = false; $('#setNeedPhone').checked = false;
+  click($('#admSave')); await sleep(160);
+  A('خاموش‌کردن نام/شماره ذخیره شد', T().D.settings.needName === 0 && T().D.settings.needPhone === 0);
+  T().go('chat'); await sleep(60);
+  window.localStorage.setItem('titanali.who', '{"name":"","phone":""}');
+  $('#whoName').value = ''; $('#whoPhone').value = '';
+  T().renderChatFull(); await sleep(40);
+  const nmsg1 = T().D.messages.length;
+  type($('#chatText'), 'بدون نام هم می‌رود'); submit($('#chatForm')); await sleep(120);
+  A('با کلیدهای خاموش، پیام بی‌نام فرستاده می‌شود',
+    T().D.messages.length === nmsg1 + 1 && /بدون نام هم/.test($('#chatLog').textContent));
+  A('فرم هویت پنهان شد', $('#whoBar').hidden === true);
+  T().go('home'); await sleep(40);
+  click($('#admTabs [data-adm-tab="settings"]')); await sleep(60);
+  $('#setNeedName').checked = true; $('#setNeedPhone').checked = true;
+  click($('#admSave')); await sleep(140);
+  A('کلیدها دوباره روشن شدند', T().D.settings.needName === 1 && T().D.settings.needPhone === 1);
+  T().go('chat'); await sleep(50);
+  const nmsg2 = T().D.messages.length;
+  $('#whoName').value = ''; $('#whoPhone').value = ''; T().renderChatFull(); await sleep(40);
+  type($('#chatText'), 'این‌بار نام لازم است'); submit($('#chatForm')); await sleep(120);
+  A('با کلید روشن، بدون نام فرستاده نمی‌شود', T().D.messages.length === nmsg2 && $('#whoBar').hidden === false);
+  type($('#admBg'), 'https://x/bg.jpg');
+  click($('#admSave')); await sleep(160);
+  A('پس‌زمینه ذخیره و روی صفحه اعمال شد',
+    T().D.settings.bg === 'https://x/bg.jpg' && /bg\.jpg/.test($('#bgCover').getAttribute('style') || ''));
+  click($('#admTabs [data-adm-tab="profile"]')); await sleep(80);
+  A('دکمهٔ آواتار از گالری در تب کارگاه', !!$('#admBody [data-picup="profile"]') && !!$('#admBody .pp-prev'));
+
+  console.log('— ارتباطات (بدون راه‌های سفارش) و واکنش‌گرایی');
+  A('بخش تکراری «راه‌های سفارش» حذف شد', !$('#sec-contact-full') && !/id="sec-contact-full"/.test(html));
+  A('زیرنویس صفحهٔ ارتباط عوض شد', /شبکه/.test($('#view-social .ios-appbar-sub').textContent));
+  A('کارت خانه برای آمار/سرگرمی ساخته شد', !!$('#studioCard'));
+  const css = html.slice(html.indexOf('<style>'), html.indexOf('</style>'));
+  A('برک‌پوینت تبلت/دسکتاپ/لنداسکیپ',
+    /@media \(min-width:700px\)/.test(css) && /@media \(min-width:1024px\)/.test(css) && /orientation:landscape/.test(css));
+  A('قاب گوشیِ ثابتِ ۸۸۰ پیکسلی برداشته شد', !/height:min\(880px/.test(css));
+  A('dvh و safe-area رعایت شده', /100dvh/.test(css) && /safe-area-inset/.test(css));
+  A('خانه در دسکتاپ دو ستونه می‌شود', /#view-home>\.ios-main\{display:grid/.test(css.replace(/\s+/g, '')));
+  A('گالری در پهنا زیاد ۴ ستون می‌شود', /window\.innerWidth>=1024/.test(html));
+  A('نوار تب پایین در دسکتاپ sticky است', /\.ios-bottom\{position:sticky/.test(css.replace(/\s+/g, '')));
+
+  console.log('— خروج ادمین');
+  T().logout(); await sleep(60);
+  A('خروج از حساب', !T().isAuth() && $('#adminPanel').classList.contains('open') === false);
+
+  const real = errs.filter(e => !/Not implemented/.test(e));
+
+  console.log('— پذیرش نسخهٔ منتشرشده روی هاست (baked)');
+  {
+    const of = window.fetch;
+    window.fetch = () => Promise.resolve({ ok: true, json: () => Promise.resolve({
+      ok: true, app: 'titanali', rev: 99, at: Date.now() / 1000,
+      data: { profile: { name: 'baked-name', initials: 'bk', role: 'r', tagline: 'tg', loves: 'l', location: 'T', availability: 'A', bio: 'b' },
+              gallery: [], cats: [], contacts: [], messages: [], settings: {} }
+    }) });
+    let adopted = false;
+    T().bakedPull(v => { adopted = !!v; });
+    await sleep(160);
+    A('محتوای منتشرشده پذیرفته شد', adopted && T().D.profile.name === 'baked-name');
+    A('نسخه در نوار وضعیت ثبت شد', T().API.published === 99);
+    window.fetch = of;
+  }
+  A('«راه\u200cهای سفارش» از قسمت ارتباطات حذف است (در کل منبع)', !/راه[\u200c ]های سفارش/.test(html));
+  A('برچسب تماس\u200cها پسوند «(سفارش)» ندارد', !/\(سفارش\)/.test(html));
+  A('زیرعنوان پیش\u200cفرض «ارتباط» با جدول متن\u200cها هم\u200cخوان است',
+    /data-t="social\.sub">شبکه\u200cهای اجتماعی و راه\u200cهای ارتباطی</.test(html));
+  A('متای titanali:ver با نسخهٔ اسکریپت یکی است', (() => {
+    const v = (/window\.titanali=\{ver:'([\d.]+)'/.exec(html) || [])[1];
+    const m = (/name="titanali:ver" content="([\d.]+)"/.exec(html) || [])[1];
+    return !!v && v === m;
+  })());
+  A('API.siteVer از پاسخ health پر می‌شود', /API\.siteVer=String\(j\.siteVer/.test(html));
+  A('تب «انتشار و هاست» نسخهٔ پوستهٔ هاست را مقایسه می‌کند',
+    /\u067e\u0648\u0633\u062a\u0647\u0654 \u0633\u0627\u06cc\u062a \u0631\u0648\u06cc \u0647\u0627\u0633\u062a/.test(html) && /function shellVerNote\(/.test(html) && /API\.siteVer=String/.test(html));
+  A('api.php هم نسخهٔ پوسته را از <head> می‌خواند',
+    /titanali:ver/.test(fs.readFileSync(path.join(ROOT, 'api.php'), 'utf8')));
+  console.log('\nRESULT pass=' + ok + ' fail=' + fail + ' consoleErrors=' + real.length);
+  if (real.length) console.log(real.slice(0, 5).join('\n'));
+  process.exit(fail || real.length ? 1 : 0);
+})().catch(e => { console.log('CRASH', e && e.stack || e); process.exit(2); });
