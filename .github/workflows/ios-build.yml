@@ -1,0 +1,71 @@
+name: iOS — unsigned Mac build
+
+# Explicitly owner-authorized build on this Arena branch only. NOT a deployment.
+on:
+  push:
+    branches: [arena/8d0a451b-titanali1]
+    paths:
+      - titanali-ios.zip
+      - titanali-ios.zip.sha256
+      - .github/workflows/ios-build.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-unsigned-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - name: Read only this branch
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Verify and extract the authorized public source
+        shell: bash
+        run: |
+          set -euo pipefail
+          shasum -a 256 -c titanali-ios.zip.sha256
+          unzip -q titanali-ios.zip -d "$RUNNER_TEMP/ios-source"
+          mkdir -p "$RUNNER_TEMP/ios-output"
+      - name: Build real iPhoneOS ARM64 app without signing
+        shell: bash
+        env:
+          TA_BUILD_OUTPUT: ${{ runner.temp }}/ios-output
+          TA_DERIVED_DATA: ${{ runner.temp }}/ios-device-derived
+          TA_SPM_CACHE: ${{ runner.temp }}/ios-spm
+        run: bash "$RUNNER_TEMP/ios-source/Titanali-iOS/tools/macos_build_unsigned.sh"
+      - name: Compile and execute simulator XCTest
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP/ios-source/Titanali-iOS"
+          DEVICE_ID=$(xcrun simctl list devices available -j | python3 -c 'import json,sys;d=json.load(sys.stdin);p=[x["udid"] for r,items in d["devices"].items() if "iOS" in r for x in items if "iPhone" in x["name"] and x.get("isAvailable")];sys.exit("No iPhone simulator available") if not p else print(p[0])')
+          xcodebuild -project Titanali.xcodeproj -scheme Titanali -configuration Debug \
+            -destination "platform=iOS Simulator,id=$DEVICE_ID" \
+            -derivedDataPath "$RUNNER_TEMP/ios-simulator-derived" \
+            -clonedSourcePackagesDirPath "$RUNNER_TEMP/ios-spm" \
+            -resultBundlePath "$RUNNER_TEMP/ios-output/Simulator-tests.xcresult" \
+            CODE_SIGNING_ALLOWED=NO test 2>&1 | tee "$RUNNER_TEMP/ios-output/simulator-tests.log"
+      - name: Save unsigned IPA and truthful build evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: Titanali-iOS-unsigned-${{ github.run_number }}
+          path: ${{ runner.temp }}/ios-output/
+          if-no-files-found: warn
+          retention-days: 7
+      - name: Explain artifact limitations
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '## Build-only iOS result'
+            echo 'No server deployment, signing credentials or store submission were used.'
+            echo 'If produced, the IPA is an UNSIGNED DEBUG ARM64 device build, not an installable public release.'
+            echo 'Google iOS client IDs remain unconfigured. Physical-device QA, signing and iapps acceptance are pending.'
+          } >> "$GITHUB_STEP_SUMMARY"
