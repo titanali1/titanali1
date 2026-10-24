@@ -1,8 +1,13 @@
 name: iOS — unsigned Mac build
 
-# Owner-authorized build completed. Manual build-only definition; no push trigger or deployment.
+# Owner-authorized iOS rebuild with public OAuth IDs; build/test only, no deployment.
 on:
-  workflow_dispatch:
+  push:
+    branches: [arena/8d0a451b-titanali1]
+    paths:
+      - titanali-ios.zip
+      - titanali-ios.zip.sha256
+      - .github/workflows/ios-build.yml
 
 permissions:
   contents: write
@@ -63,7 +68,7 @@ jobs:
             echo '## Build-only iOS result'
             echo 'No server deployment, signing credentials or store submission were used.'
             echo 'If produced, the IPA is an UNSIGNED DEBUG ARM64 device build, not an installable public release.'
-            echo 'Google iOS client IDs remain unconfigured. Physical-device QA, signing and iapps acceptance are pending.'
+            echo 'Owner-provided public OAuth IDs are built in and structurally checked; live Google login, server match, physical-device QA, signing and iapps acceptance remain unverified.'
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Return build files through this authorized branch
