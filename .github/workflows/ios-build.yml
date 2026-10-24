@@ -1,13 +1,8 @@
 name: iOS — unsigned Mac build
 
-# Owner-authorized iOS rebuild with public OAuth IDs; build/test only, no deployment.
+# Authorized OAuth rebuild completed. Manual build-only definition; no automatic deployment.
 on:
-  push:
-    branches: [arena/8d0a451b-titanali1]
-    paths:
-      - titanali-ios.zip
-      - titanali-ios.zip.sha256
-      - .github/workflows/ios-build.yml
+  workflow_dispatch:
 
 permissions:
   contents: write
