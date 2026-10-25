@@ -2,10 +2,6 @@ name: iOS — unsigned Mac build
 
 # Authorized APNs source validation completed. Manual build-only; no automatic deployment.
 on:
-  # One-off authorized build validation; manual-only is restored after the run.
-  push:
-    branches: ['arena/8d0a451b-titanali1']
-    paths: ['.github/workflows/ios-build.yml']
   workflow_dispatch:
 
 permissions:
